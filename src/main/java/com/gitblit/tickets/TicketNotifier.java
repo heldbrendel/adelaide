@@ -17,6 +17,7 @@ package com.gitblit.tickets;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -34,10 +35,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gitblit.Constants;
@@ -74,6 +75,8 @@ import com.gitblit.utils.StringUtils;
  *
  */
 public class TicketNotifier {
+
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	protected final Map<Long, Mailing> queue = new TreeMap<Long, Mailing>();
 
@@ -152,7 +155,7 @@ public class TicketNotifier {
 
 			return mailing;
 		} catch (Exception e) {
-			Logger.getLogger(getClass()).error("failed to queue mailing for #" + ticket.number, e);
+			logger.error("failed to queue mailing for #" + ticket.number, e);
 		}
 		return null;
 	}
@@ -203,7 +206,7 @@ public class TicketNotifier {
 				diffstat = DiffUtils.getDiffStat(repo, base, patchset.tip);
 				commits = JGitUtils.getRevLog(repo, base, patchset.tip);
 			} catch (Exception e) {
-				Logger.getLogger(getClass()).error("failed to get changed paths", e);
+				logger.error("failed to get changed paths", e);
 			} finally {
 				if (repo != null) {
 					repo.close();

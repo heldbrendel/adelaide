@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.server.HttpConfiguration;
@@ -184,35 +183,6 @@ public class GitBlitServer {
 		if (!StringUtils.isEmpty(params.settingsfile)) {
 			if (new File(params.settingsfile).exists()) {
 				settings = new FileSettings(params.settingsfile);
-			}
-		}
-
-		if (params.dailyLogFile) {
-			// Configure log4j for daily log file generation
-			InputStream is = null;
-			try {
-				is = getClass().getResourceAsStream("/log4j.properties");
-				Properties loggingProperties = new Properties();
-				loggingProperties.load(is);
-
-				loggingProperties.put("log4j.appender.R.File", new File(baseFolder, "logs/gitblit.log").getAbsolutePath());
-				loggingProperties.put("log4j.rootCategory", "INFO, R");
-
-				if (settings.getBoolean(Keys.web.debugMode, false)) {
-					loggingProperties.put("log4j.logger.com.gitblit", "DEBUG");
-				}
-
-				PropertyConfigurator.configure(loggingProperties);
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					if (is != null) {
-						is.close();
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 			}
 		}
 
