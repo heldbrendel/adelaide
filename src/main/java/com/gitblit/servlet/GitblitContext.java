@@ -15,46 +15,11 @@
  */
 package com.gitblit.servlet;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.gitblit.Constants;
-import com.gitblit.FileSettings;
-import com.gitblit.IStoredSettings;
-import com.gitblit.Keys;
-import com.gitblit.WebXmlSettings;
+import com.gitblit.*;
 import com.gitblit.extensions.LifeCycleListener;
 import com.gitblit.guice.CoreModule;
 import com.gitblit.guice.WebModule;
-import com.gitblit.manager.IAuthenticationManager;
-import com.gitblit.manager.IFederationManager;
-import com.gitblit.manager.IFilestoreManager;
-import com.gitblit.manager.IGitblit;
-import com.gitblit.manager.IManager;
-import com.gitblit.manager.INotificationManager;
-import com.gitblit.manager.IPluginManager;
-import com.gitblit.manager.IProjectManager;
-import com.gitblit.manager.IRepositoryManager;
-import com.gitblit.manager.IRuntimeManager;
-import com.gitblit.manager.IServicesManager;
-import com.gitblit.manager.IUserManager;
+import com.gitblit.manager.*;
 import com.gitblit.tickets.ITicketService;
 import com.gitblit.transport.ssh.IPublicKeyManager;
 import com.gitblit.utils.ContainerUtils;
@@ -63,6 +28,19 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import java.io.*;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * This class is the main entry point for the entire webapp.  It is a singleton
@@ -169,7 +147,7 @@ public class GitblitContext extends GuiceServletContextListener {
 
 			// if the base folder dosen't match the default assume they don't want to use express,
 			// this allows for other containers to customise the basefolder per context.
-			String defaultBase = Constants.contextFolder$ + "/WEB-INF/data";
+			String defaultBase = Constants.contextFolder$ + "/webapp/WEB-INF/data";
 			String base = getBaseFolderPath(defaultBase);
 			if (!StringUtils.isEmpty(System.getenv("OPENSHIFT_DATA_DIR")) && defaultBase.equals(base)) {
 				// RedHat OpenShift
@@ -353,7 +331,7 @@ public class GitblitContext extends GuiceServletContextListener {
 		logger.debug("configuring Gitblit WAR");
 		logger.info("WAR contextFolder is " + ((contextFolder != null) ? contextFolder.getAbsolutePath() : "<empty>"));
 
-		String webXmlPath = webxmlSettings.getString(Constants.baseFolder, Constants.contextFolder$ + "/WEB-INF/data");
+		String webXmlPath = webxmlSettings.getString(Constants.baseFolder, Constants.contextFolder$ + "/webapp/WEB-INF/data");
 
 		if (webXmlPath.contains(Constants.contextFolder$) && contextFolder == null) {
 			// warn about null contextFolder (issue-199)
@@ -371,7 +349,7 @@ public class GitblitContext extends GuiceServletContextListener {
 		baseFolder.mkdirs();
 
 		// try to extract the data folder resource to the baseFolder
-		extractResources(context, "/WEB-INF/data/", baseFolder);
+		extractResources(context, "/webapp/WEB-INF/data/", baseFolder);
 
 		// delegate all config to baseFolder/gitblit.properties file
 		File localSettings = new File(baseFolder, "gitblit.properties");
@@ -411,7 +389,7 @@ public class GitblitContext extends GuiceServletContextListener {
 		String path = webxmlSettings.getString(Keys.groovy.scriptsFolder, "groovy");
 		File localScripts = com.gitblit.utils.FileUtils.resolveParameter(Constants.baseFolder$, base, path);
 		if (!localScripts.exists()) {
-			File warScripts = new File(contextFolder, "/WEB-INF/data/groovy");
+			File warScripts = new File(contextFolder, "/webapp/WEB-INF/data/groovy");
 			if (!warScripts.equals(localScripts)) {
 				try {
 					com.gitblit.utils.FileUtils.copy(localScripts, warScripts.listFiles());
@@ -427,7 +405,7 @@ public class GitblitContext extends GuiceServletContextListener {
 		String gitignorePath = webxmlSettings.getString(Keys.git.gitignoreFolder, "gitignore");
 		File localGitignores = com.gitblit.utils.FileUtils.resolveParameter(Constants.baseFolder$, base, gitignorePath);
 		if (!localGitignores.exists()) {
-			File warGitignores = new File(contextFolder, "/WEB-INF/data/gitignore");
+			File warGitignores = new File(contextFolder, "/webapp/WEB-INF/data/gitignore");
 			if (!warGitignores.equals(localGitignores)) {
 				try {
 					com.gitblit.utils.FileUtils.copy(localGitignores, warGitignores.listFiles());
