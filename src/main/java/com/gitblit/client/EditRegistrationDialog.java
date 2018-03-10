@@ -15,30 +15,13 @@
  */
 package com.gitblit.client;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.Window;
+import com.gitblit.utils.StringUtils;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JRootPane;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-
-import com.gitblit.utils.StringUtils;
 
 /**
  * Dialog to create or edit a Gitblit registration.
@@ -80,15 +63,14 @@ public class EditRegistrationDialog extends JDialog {
 	}
 
 	private void initialize(GitblitRegistration reg, boolean isLogin) {
-		setIconImage(new ImageIcon(getClass().getResource("/gitblt-favicon.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/images/gitblt-favicon.png")).getImage());
 		canceled = true;
 		urlField = new JTextField(reg == null ? "" : reg.url, 30);
 		nameField = new JTextField(reg == null ? "" : reg.name);
 		accountField = new JTextField(reg == null ? "" : reg.account);
 		passwordField = new JPasswordField(reg == null ? "" : new String(reg.password));
 		savePassword = new JCheckBox("save password (passwords are NOT encrypted!)");
-		savePassword.setSelected(reg == null ? false
-				: (reg.password != null && reg.password.length > 0));
+        savePassword.setSelected(reg != null && (reg.password != null && reg.password.length > 0));
 
 		JPanel panel = new JPanel(new GridLayout(0, 1, 5, 5));
 		panel.add(newLabelPanel(Translation.get("gb.name"), nameField));

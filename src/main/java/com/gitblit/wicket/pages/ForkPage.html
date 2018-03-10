@@ -14,20 +14,42 @@
 		function refresh() { window.location.reload(); }
 	</script>
 </wicket:head>
-<wicket:extend>
+< wicket;
+:
+extend >
 <!-- need to specify body.onload -->
-<body onload="doLoad()">
+< body;
+onload = "doLoad()" >
 
-	<div class="row">
-		<div class="span6 offset3">
-			<div style="opacity:0.2;">
-				<center><img style="padding:10px" src="git-black_210x210.png"></img></center>
+    < div;
+class
+= "row" >
+    < div;
+class
+= "span6 offset3" >
+    < div;
+style = "opacity:0.2;" >
+    < center > < img;
+style = "padding:10px";
+src = "images/git-black_210x210.png" > < /img></;
+center >
 			</div>
-			<div wicket:id="forkText" class="pageTitle project" style="border:0;font-weight:bold; text-align:center;">[fork text]</div>
+< div;
+id = "forkText";
+class
+= "pageTitle project";
+style = "border:0;font-weight:bold; text-align:center;" > [fork text] < /div>
 		</div>
-		<div class="span4 offset4">
-			<div class="progress progress-striped active">
-  				<div class="bar" style="width: 100%;"></div>
+    < div;
+class
+= "span4 offset4" >
+    < div;
+class
+= "progress progress-striped active" >
+    < div;
+class
+= "bar";
+style = "width: 100%;" > < /div>
 			</div>
 		</div>
 	</div>
@@ -35,4 +57,4 @@
 
 </wicket:extend>	
 </body>
-</html>
+    < /html>;

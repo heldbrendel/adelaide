@@ -15,13 +15,11 @@
  */
 package com.gitblit.authority;
 
-import java.awt.Component;
-
-import javax.swing.ImageIcon;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-
 import com.gitblit.client.Translation;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
 
 /**
  * Displays a subscribed icon on the left of the repository name, if there is at
@@ -42,11 +40,11 @@ public class CertificateStatusRenderer extends DefaultTableCellRenderer {
 
 	public CertificateStatusRenderer() {
 		super();
-		unknownIcon = new ImageIcon(getClass().getResource("/bullet_white.png"));
-		revokedIcon = new ImageIcon(getClass().getResource("/bullet_delete.png"));
-		expiredIcon = new ImageIcon(getClass().getResource("/bullet_red.png"));
-		expiringIcon = new ImageIcon(getClass().getResource("/bullet_orange.png"));
-		okIcon = new ImageIcon(getClass().getResource("/bullet_green.png"));
+        unknownIcon = new ImageIcon(getClass().getResource("/images/bullet_white.png"));
+        revokedIcon = new ImageIcon(getClass().getResource("/images/bullet_delete.png"));
+        expiredIcon = new ImageIcon(getClass().getResource("/images/bullet_red.png"));
+        expiringIcon = new ImageIcon(getClass().getResource("/images/bullet_orange.png"));
+        okIcon = new ImageIcon(getClass().getResource("/images/bullet_green.png"));
 	}
 
 	@Override

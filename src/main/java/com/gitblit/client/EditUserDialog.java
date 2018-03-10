@@ -15,50 +15,23 @@
  */
 package com.gitblit.client;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JRootPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-
 import com.gitblit.Constants;
 import com.gitblit.Constants.AccessRestrictionType;
 import com.gitblit.Constants.AuthorizationControl;
 import com.gitblit.Constants.PermissionType;
 import com.gitblit.Constants.RegistrantType;
 import com.gitblit.Keys;
-import com.gitblit.models.RegistrantAccessPermission;
-import com.gitblit.models.RepositoryModel;
-import com.gitblit.models.ServerSettings;
-import com.gitblit.models.TeamModel;
-import com.gitblit.models.UserModel;
+import com.gitblit.models.*;
 import com.gitblit.utils.StringUtils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.text.MessageFormat;
+import java.util.*;
+import java.util.List;
 
 public class EditUserDialog extends JDialog {
 
@@ -126,7 +99,7 @@ public class EditUserDialog extends JDialog {
 		initialize(protocolVersion, anUser);
 		setModal(true);
 		setTitle(Translation.get("gb.edit") + ": " + anUser.username);
-		setIconImage(new ImageIcon(getClass().getResource("/gitblt-favicon.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/images/gitblt-favicon.png")).getImage());
 	}
 
 	@Override

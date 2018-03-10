@@ -15,38 +15,18 @@
  */
 package com.gitblit.client;
 
-import java.awt.BorderLayout;
-import java.awt.Cursor;
-import java.awt.FlowLayout;
-import java.awt.Insets;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.util.List;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingWorker;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
 import com.gitblit.Constants;
 import com.gitblit.models.FeedEntryModel;
 import com.gitblit.models.RepositoryModel;
 import com.gitblit.utils.StringUtils;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * The search dialog allows searching of a repository branch. This matches the
@@ -92,7 +72,7 @@ public class SearchDialog extends JFrame {
 		this.gitblit = gitblit;
 		this.isSearch = isSearch;
 		setTitle(Translation.get(isSearch ? "gb.search" : "gb.log"));
-		setIconImage(new ImageIcon(getClass().getResource("/gitblt-favicon.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/images/gitblt-favicon.png")).getImage());
 		initialize();
 		setSize(900, 550);
 	}
@@ -162,7 +142,7 @@ public class SearchDialog extends JFrame {
 		NameRenderer nameRenderer = new NameRenderer();
 		tableModel = new FeedEntryTableModel();
 		header = new HeaderPanel(Translation.get(isSearch ? "gb.search" : "gb.log"),
-				isSearch ? "search-icon.png" : "commit_changes_16x16.png");
+                isSearch ? "search-icon.png" : "images/commit_changes_16x16.png");
 		table = Utils.newTable(tableModel, Utils.DATE_FORMAT);
 
 		String name = table.getColumnName(FeedEntryTableModel.Columns.Author.ordinal());

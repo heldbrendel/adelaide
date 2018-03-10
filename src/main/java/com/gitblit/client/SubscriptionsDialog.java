@@ -15,27 +15,16 @@
  */
 package com.gitblit.client;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Insets;
+import com.gitblit.models.FeedModel;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.List;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JRootPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.KeyStroke;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import com.gitblit.models.FeedModel;
 
 /**
  * Displays a list of repository branches and allows the user to check or
@@ -58,7 +47,7 @@ public abstract class SubscriptionsDialog extends JDialog {
 		super();
 		this.feeds = registrations;
 		setTitle(Translation.get("gb.subscribe"));
-		setIconImage(new ImageIcon(getClass().getResource("/gitblt-favicon.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/images/gitblt-favicon.png")).getImage());
 		initialize();
 		setSize(600, 400);
 	}
@@ -149,7 +138,7 @@ public abstract class SubscriptionsDialog extends JDialog {
 				return insets;
 			}
 		};
-		centerPanel.add(new HeaderPanel(Translation.get("gb.subscribe") + "...", "feed_16x16.png"),
+        centerPanel.add(new HeaderPanel(Translation.get("gb.subscribe") + "...", "images/feed_16x16.png"),
 				BorderLayout.NORTH);
 		centerPanel.add(new JScrollPane(feedsTable), BorderLayout.CENTER);
 		centerPanel.add(controls, BorderLayout.SOUTH);

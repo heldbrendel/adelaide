@@ -15,25 +15,6 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.wicket.Component;
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.image.ContextImage;
-import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
-import org.apache.wicket.protocol.http.WebRequest;
-import org.apache.wicket.protocol.http.request.WebClientInfo;
-
 import com.gitblit.Constants.AccessPermission;
 import com.gitblit.Constants.AccessRestrictionType;
 import com.gitblit.Keys;
@@ -45,6 +26,23 @@ import com.gitblit.utils.StringUtils;
 import com.gitblit.wicket.ExternalImage;
 import com.gitblit.wicket.GitBlitWebSession;
 import com.gitblit.wicket.WicketUtils;
+import org.apache.wicket.Component;
+import org.apache.wicket.RequestCycle;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.image.ContextImage;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.protocol.http.WebRequest;
+import org.apache.wicket.protocol.http.request.WebClientInfo;
+
+import javax.servlet.http.HttpServletRequest;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Smart repository url panel which can display multiple Gitblit repository urls
@@ -163,7 +161,7 @@ public class RepositoryUrlPanel extends BasePanel {
 
 		// access restriction icon and tooltip
 		if (repository.isMirror) {
-			urlPanel.add(WicketUtils.newImage("accessRestrictionIcon", "mirror_16x16.png",
+            urlPanel.add(WicketUtils.newImage("accessRestrictionIcon", "images/mirror_16x16.png",
 					getString("gb.isMirror")));
 		} else if (app().services().isServingRepositories()) {
 			switch (repository.accessRestriction) {
@@ -171,15 +169,15 @@ public class RepositoryUrlPanel extends BasePanel {
 				urlPanel.add(WicketUtils.newClearPixel("accessRestrictionIcon").setVisible(false));
 				break;
 			case PUSH:
-				urlPanel.add(WicketUtils.newImage("accessRestrictionIcon", "lock_go_16x16.png",
+                urlPanel.add(WicketUtils.newImage("accessRestrictionIcon", "images/lock_go_16x16.png",
 						getAccessRestrictions().get(repository.accessRestriction)));
 				break;
 			case CLONE:
-				urlPanel.add(WicketUtils.newImage("accessRestrictionIcon", "lock_pull_16x16.png",
+                urlPanel.add(WicketUtils.newImage("accessRestrictionIcon", "images/lock_pull_16x16.png",
 						getAccessRestrictions().get(repository.accessRestriction)));
 				break;
 			case VIEW:
-				urlPanel.add(WicketUtils.newImage("accessRestrictionIcon", "shield_16x16.png",
+                urlPanel.add(WicketUtils.newImage("accessRestrictionIcon", "images/shield_16x16.png",
 						getAccessRestrictions().get(repository.accessRestriction)));
 				break;
 			default:
@@ -351,14 +349,14 @@ public class RepositoryUrlPanel extends BasePanel {
 			// clippy: flash-based copy & paste
 			Fragment copyFragment = new Fragment("copyFunction", "clippyPanel", this);
 			String baseUrl = WicketUtils.getGitblitURL(getRequest());
-			ShockWaveComponent clippy = new ShockWaveComponent("clippy", baseUrl + "/clippy.swf");
+            ShockWaveComponent clippy = new ShockWaveComponent("clippy", baseUrl + "/flash/clippy.swf");
 			clippy.setValue("flashVars", "text=" + StringUtils.encodeURL(text));
 			copyFragment.add(clippy);
 			return copyFragment;
 		} else {
 			// javascript: manual copy & paste with modal browser prompt dialog
 			Fragment copyFragment = new Fragment("copyFunction", "jsPanel", this);
-			ContextImage img = WicketUtils.newImage("copyIcon", "clippy.png");
+            ContextImage img = WicketUtils.newImage("copyIcon", "images/clippy.png");
 			img.add(new JavascriptTextPrompt("onclick", "Copy to Clipboard (Ctrl+C, Enter)", text));
 			copyFragment.add(img);
 			return copyFragment;

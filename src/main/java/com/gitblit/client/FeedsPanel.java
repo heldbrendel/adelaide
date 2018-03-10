@@ -15,36 +15,22 @@
  */
 package com.gitblit.client;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Insets;
-import java.awt.Rectangle;
+import com.gitblit.models.FeedEntryModel;
+import com.gitblit.models.FeedModel;
+import com.gitblit.utils.StringUtils;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.RowFilter;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableRowSorter;
-
-import com.gitblit.models.FeedEntryModel;
-import com.gitblit.models.FeedModel;
-import com.gitblit.utils.StringUtils;
 
 /**
  * RSS Feeds Panel displays recent entries and launches the browser to view the
@@ -163,7 +149,7 @@ public abstract class FeedsPanel extends JPanel {
 
 		NameRenderer nameRenderer = new NameRenderer();
 		tableModel = new FeedEntryTableModel();
-		header = new HeaderPanel(Translation.get("gb.activity"), "feed_16x16.png");
+        header = new HeaderPanel(Translation.get("gb.activity"), "images/feed_16x16.png");
 		table = Utils.newTable(tableModel, Utils.DATE_FORMAT);
 		defaultSorter = new TableRowSorter<FeedEntryTableModel>(tableModel);
 		String name = table.getColumnName(FeedEntryTableModel.Columns.Author.ordinal());

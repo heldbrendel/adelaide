@@ -15,10 +15,15 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
+import com.gitblit.Constants;
+import com.gitblit.Keys;
+import com.gitblit.models.RefModel;
+import com.gitblit.servlet.BranchGraphServlet;
+import com.gitblit.utils.JGitUtils;
+import com.gitblit.utils.StringUtils;
+import com.gitblit.wicket.ExternalImage;
+import com.gitblit.wicket.WicketUtils;
+import com.gitblit.wicket.pages.*;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -32,19 +37,9 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-import com.gitblit.Constants;
-import com.gitblit.Keys;
-import com.gitblit.models.RefModel;
-import com.gitblit.servlet.BranchGraphServlet;
-import com.gitblit.utils.JGitUtils;
-import com.gitblit.utils.StringUtils;
-import com.gitblit.wicket.ExternalImage;
-import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.pages.CommitDiffPage;
-import com.gitblit.wicket.pages.CommitPage;
-import com.gitblit.wicket.pages.GitSearchPage;
-import com.gitblit.wicket.pages.LogPage;
-import com.gitblit.wicket.pages.TreePage;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class LogPanel extends BasePanel {
 
@@ -124,7 +119,7 @@ public class LogPanel extends BasePanel {
 
 				// merge icon
 				if (isMerge) {
-					item.add(WicketUtils.newImage("commitIcon", "commit_merge_16x16.png"));
+                    item.add(WicketUtils.newImage("commitIcon", "images/commit_merge_16x16.png"));
 				} else {
 					item.add(WicketUtils.newBlankImage("commitIcon"));
 				}

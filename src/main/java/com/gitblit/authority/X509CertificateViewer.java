@@ -15,28 +15,17 @@
  */
 package com.gitblit.authority;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import com.gitblit.client.HeaderPanel;
+import com.gitblit.client.Translation;
+import com.gitblit.utils.StringUtils;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.text.DateFormat;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-
-import com.gitblit.client.HeaderPanel;
-import com.gitblit.client.Translation;
-import com.gitblit.utils.StringUtils;
 
 public class X509CertificateViewer extends JDialog {
 
@@ -96,7 +85,7 @@ public class X509CertificateViewer extends JDialog {
 
 		content.add(controls, BorderLayout.SOUTH);
 
-		getContentPane().add(new HeaderPanel(Translation.get("gb.certificate"), "rosette_16x16.png"), BorderLayout.NORTH);
+        getContentPane().add(new HeaderPanel(Translation.get("gb.certificate"), "images/rosette_16x16.png"), BorderLayout.NORTH);
 		getContentPane().add(content, BorderLayout.CENTER);
 		pack();
 

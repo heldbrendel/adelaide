@@ -15,26 +15,16 @@
  */
 package com.gitblit.authority;
 
-import java.awt.BorderLayout;
-import java.awt.Frame;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Date;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
 import com.gitblit.client.HeaderPanel;
 import com.gitblit.client.Translation;
 import com.gitblit.utils.StringUtils;
 import com.toedter.calendar.JDateChooser;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Date;
 
 public class NewSSLCertificateDialog extends JDialog {
 
@@ -101,7 +91,7 @@ public class NewSSLCertificateDialog extends JDialog {
 		content.add(panel, BorderLayout.CENTER);
 		content.add(controls, BorderLayout.SOUTH);
 
-		getContentPane().add(new HeaderPanel(Translation.get("gb.newSSLCertificate"), "rosette_16x16.png"), BorderLayout.NORTH);
+        getContentPane().add(new HeaderPanel(Translation.get("gb.newSSLCertificate"), "images/rosette_16x16.png"), BorderLayout.NORTH);
 		getContentPane().add(content, BorderLayout.CENTER);
 		pack();
 

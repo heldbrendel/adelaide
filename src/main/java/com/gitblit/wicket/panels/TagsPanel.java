@@ -15,8 +15,12 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.util.List;
-
+import com.gitblit.models.RefModel;
+import com.gitblit.servlet.RawServlet;
+import com.gitblit.utils.JGitUtils;
+import com.gitblit.utils.StringUtils;
+import com.gitblit.wicket.WicketUtils;
+import com.gitblit.wicket.pages.*;
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -30,17 +34,7 @@ import org.apache.wicket.model.StringResourceModel;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 
-import com.gitblit.models.RefModel;
-import com.gitblit.servlet.RawServlet;
-import com.gitblit.utils.JGitUtils;
-import com.gitblit.utils.StringUtils;
-import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.pages.BlobPage;
-import com.gitblit.wicket.pages.CommitPage;
-import com.gitblit.wicket.pages.LogPage;
-import com.gitblit.wicket.pages.TagPage;
-import com.gitblit.wicket.pages.TagsPage;
-import com.gitblit.wicket.pages.TreePage;
+import java.util.List;
 
 public class TagsPanel extends BasePanel {
 
@@ -97,7 +91,7 @@ public class TagsPanel extends BasePanel {
 
 				if (linkClass.equals(BlobPage.class)) {
 					// Blob Tag Object
-					item.add(WicketUtils.newImage("tagIcon", "file_16x16.png"));
+                    item.add(WicketUtils.newImage("tagIcon", "images/file_16x16.png"));
 					LinkPanel messageLink = new LinkPanel("tagDescription", "list", message, TagPage.class,
 							WicketUtils.newObjectParameter(repositoryName, entry.getObjectId()
 									.getName()));
@@ -124,7 +118,7 @@ public class TagsPanel extends BasePanel {
 					// TODO Tree Tag Object
 					// Standard Tag Object
 					if (entry.isAnnotatedTag()) {
-						item.add(WicketUtils.newImage("tagIcon", "tag_16x16.png"));
+                        item.add(WicketUtils.newImage("tagIcon", "images/tag_16x16.png"));
 						LinkPanel messageLink = new LinkPanel("tagDescription", "list", message, TagPage.class,
 								WicketUtils.newObjectParameter(repositoryName, entry.getObjectId()
 										.getName()));

@@ -15,6 +15,16 @@
  */
 package com.gitblit.utils;
 
+import com.gitblit.Constants;
+import com.gitblit.Constants.FeedObjectType;
+import com.gitblit.GitBlitException;
+import com.gitblit.models.FeedEntryModel;
+import com.sun.syndication.feed.synd.*;
+import com.sun.syndication.io.FeedException;
+import com.sun.syndication.io.SyndFeedInput;
+import com.sun.syndication.io.SyndFeedOutput;
+import com.sun.syndication.io.XmlReader;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,24 +33,6 @@ import java.net.URLConnection;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.gitblit.Constants;
-import com.gitblit.Constants.FeedObjectType;
-import com.gitblit.GitBlitException;
-import com.gitblit.models.FeedEntryModel;
-import com.sun.syndication.feed.synd.SyndCategory;
-import com.sun.syndication.feed.synd.SyndCategoryImpl;
-import com.sun.syndication.feed.synd.SyndContent;
-import com.sun.syndication.feed.synd.SyndContentImpl;
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndEntryImpl;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.feed.synd.SyndFeedImpl;
-import com.sun.syndication.feed.synd.SyndImageImpl;
-import com.sun.syndication.io.FeedException;
-import com.sun.syndication.io.SyndFeedInput;
-import com.sun.syndication.io.SyndFeedOutput;
-import com.sun.syndication.io.XmlReader;
 
 /**
  * Utility class for RSS feeds.
@@ -78,7 +70,7 @@ public class SyndicationUtils {
 		}
 		SyndImageImpl image = new SyndImageImpl();
 		image.setTitle(Constants.NAME);
-		image.setUrl(hostUrl + "/gitblt_25.png");
+        image.setUrl(hostUrl + "/images/gitblt_25.png");
 		image.setLink(hostUrl);
 		feed.setImage(image);
 

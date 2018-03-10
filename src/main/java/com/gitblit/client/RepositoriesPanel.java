@@ -15,37 +15,6 @@
  */
 package com.gitblit.client;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.RowFilter;
-import javax.swing.SwingConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableRowSorter;
-
 import com.gitblit.Constants;
 import com.gitblit.Constants.RpcRequest;
 import com.gitblit.Keys;
@@ -53,6 +22,20 @@ import com.gitblit.models.FeedModel;
 import com.gitblit.models.RegistrantAccessPermission;
 import com.gitblit.models.RepositoryModel;
 import com.gitblit.utils.StringUtils;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * RSS Feeds Panel displays recent entries and launches the browser to view the
@@ -274,7 +257,7 @@ public abstract class RepositoriesPanel extends JPanel {
 		repositoryControls.add(searchRepository);
 
 		setLayout(new BorderLayout(Utils.MARGIN, Utils.MARGIN));
-		header = new HeaderPanel(Translation.get("gb.repositories"), "git-orange-16x16.png");
+        header = new HeaderPanel(Translation.get("gb.repositories"), "images/git-orange-16x16.png");
 		add(header, BorderLayout.NORTH);
 		add(repositoryTablePanel, BorderLayout.CENTER);
 		add(repositoryControls, BorderLayout.SOUTH);

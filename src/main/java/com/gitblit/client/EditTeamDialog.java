@@ -15,35 +15,6 @@
  */
 package com.gitblit.client;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRootPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-
 import com.gitblit.Constants;
 import com.gitblit.Constants.AccessRestrictionType;
 import com.gitblit.Constants.AuthorizationControl;
@@ -54,6 +25,15 @@ import com.gitblit.models.RepositoryModel;
 import com.gitblit.models.ServerSettings;
 import com.gitblit.models.TeamModel;
 import com.gitblit.utils.StringUtils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.text.MessageFormat;
+import java.util.*;
+import java.util.List;
 
 public class EditTeamDialog extends JDialog {
 
@@ -109,7 +89,7 @@ public class EditTeamDialog extends JDialog {
 		initialize(protocolVersion, aTeam);
 		setModal(true);
 		setTitle(Translation.get("gb.edit") + ": " + aTeam.name);
-		setIconImage(new ImageIcon(getClass().getResource("/gitblt-favicon.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/images/gitblt-favicon.png")).getImage());
 	}
 
 	@Override

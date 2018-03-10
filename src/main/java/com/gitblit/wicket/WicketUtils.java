@@ -15,17 +15,17 @@
  */
 package com.gitblit.wicket;
 
-import java.text.DateFormat;
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TimeZone;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.gitblit.Constants;
+import com.gitblit.Constants.AccessPermission;
+import com.gitblit.Constants.FederationPullStatus;
+import com.gitblit.IStoredSettings;
+import com.gitblit.Keys;
+import com.gitblit.models.FederationModel;
+import com.gitblit.models.Metric;
+import com.gitblit.utils.DiffUtils.DiffComparator;
+import com.gitblit.utils.HttpUtils;
+import com.gitblit.utils.StringUtils;
+import com.gitblit.utils.TimeUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.Request;
@@ -41,17 +41,11 @@ import org.apache.wicket.protocol.http.WebRequest;
 import org.apache.wicket.resource.ContextRelativeResource;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 
-import com.gitblit.Constants;
-import com.gitblit.Constants.AccessPermission;
-import com.gitblit.Constants.FederationPullStatus;
-import com.gitblit.IStoredSettings;
-import com.gitblit.Keys;
-import com.gitblit.models.FederationModel;
-import com.gitblit.models.Metric;
-import com.gitblit.utils.DiffUtils.DiffComparator;
-import com.gitblit.utils.HttpUtils;
-import com.gitblit.utils.StringUtils;
-import com.gitblit.utils.TimeUtils;
+import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class WicketUtils {
 
@@ -138,21 +132,21 @@ public class WicketUtils {
 		switch (status) {
 		case MIRRORED:
 		case PULLED:
-			filename = "bullet_green.png";
+			filename = "images/bullet_green.png";
 			break;
 		case SKIPPED:
-			filename = "bullet_yellow.png";
+			filename = "images/bullet_yellow.png";
 			break;
 		case FAILED:
-			filename = "bullet_red.png";
+			filename = "images/bullet_red.png";
 			break;
 		case EXCLUDED:
-			filename = "bullet_white.png";
+			filename = "images/bullet_white.png";
 			break;
 		case PENDING:
 		case NOCHANGE:
 		default:
-			filename = "bullet_black.png";
+			filename = "images/bullet_black.png";
 		}
 		return WicketUtils.newImage(wicketId, filename, status.name());
 	}
@@ -160,65 +154,65 @@ public class WicketUtils {
 	public static ContextImage getFileImage(String wicketId, String filename) {
 		filename = filename.toLowerCase();
 		if (filename.endsWith(".java")) {
-			return newImage(wicketId, "file_java_16x16.png");
+			return newImage(wicketId, "images/file_java_16x16.png");
 		} else if (filename.endsWith(".rb")) {
-			return newImage(wicketId, "file_ruby_16x16.png");
+			return newImage(wicketId, "images/file_ruby_16x16.png");
 		} else if (filename.endsWith(".php")) {
-			return newImage(wicketId, "file_php_16x16.png");
+			return newImage(wicketId, "images/file_php_16x16.png");
 		} else if (filename.endsWith(".cs")) {
-			return newImage(wicketId, "file_cs_16x16.png");
+			return newImage(wicketId, "images/file_cs_16x16.png");
 		} else if (filename.endsWith(".cpp")) {
-			return newImage(wicketId, "file_cpp_16x16.png");
+			return newImage(wicketId, "images/file_cpp_16x16.png");
 		} else if (filename.endsWith(".c")) {
-			return newImage(wicketId, "file_c_16x16.png");
+			return newImage(wicketId, "images/file_c_16x16.png");
 		} else if (filename.endsWith(".h")) {
-			return newImage(wicketId, "file_h_16x16.png");
+			return newImage(wicketId, "images/file_h_16x16.png");
 		} else if (filename.endsWith(".sln")) {
-			return newImage(wicketId, "file_vs_16x16.png");
+			return newImage(wicketId, "images/file_vs_16x16.png");
 		} else if (filename.endsWith(".csv") || filename.endsWith(".xls")
 				|| filename.endsWith(".xlsx")) {
-			return newImage(wicketId, "file_excel_16x16.png");
+			return newImage(wicketId, "images/file_excel_16x16.png");
 		} else if (filename.endsWith(".doc") || filename.endsWith(".docx")) {
-			return newImage(wicketId, "file_doc_16x16.png");
+			return newImage(wicketId, "images/file_doc_16x16.png");
 		} else if (filename.endsWith(".ppt") || filename.endsWith(".pptx")) {
-			return newImage(wicketId, "file_ppt_16x16.png");
+			return newImage(wicketId, "images/file_ppt_16x16.png");
 		} else if (filename.endsWith(".zip")) {
-			return newImage(wicketId, "file_zip_16x16.png");
+			return newImage(wicketId, "images/file_zip_16x16.png");
 		} else if (filename.endsWith(".pdf")) {
-			return newImage(wicketId, "file_acrobat_16x16.png");
+			return newImage(wicketId, "images/file_acrobat_16x16.png");
 		} else if (filename.endsWith(".htm") || filename.endsWith(".html")) {
-			return newImage(wicketId, "file_world_16x16.png");
+			return newImage(wicketId, "images/file_world_16x16.png");
 		} else if (filename.endsWith(".xml")) {
-			return newImage(wicketId, "file_code_16x16.png");
+			return newImage(wicketId, "images/file_code_16x16.png");
 		} else if (filename.endsWith(".properties")) {
-			return newImage(wicketId, "file_settings_16x16.png");
+			return newImage(wicketId, "images/file_settings_16x16.png");
 		}
 
 		String ext = StringUtils.getFileExtension(filename).toLowerCase();
 		IStoredSettings settings = GitBlitWebApp.get().settings();
 		if (MarkupProcessor.getMarkupExtensions(settings).contains(ext)) {
-			return newImage(wicketId, "file_world_16x16.png");
+			return newImage(wicketId, "images/file_world_16x16.png");
 		}
-		return newImage(wicketId, "file_16x16.png");
+		return newImage(wicketId, "images/file_16x16.png");
 	}
 
 	public static ContextImage getRegistrationImage(String wicketId, FederationModel registration,
 			Component c) {
 		if (registration.isResultData()) {
-			return WicketUtils.newImage(wicketId, "information_16x16.png",
+			return WicketUtils.newImage(wicketId, "images/information_16x16.png",
 					c.getString("gb.federationResults"));
 		} else {
-			return WicketUtils.newImage(wicketId, "arrow_left.png",
+			return WicketUtils.newImage(wicketId, "images/arrow_left.png",
 					c.getString("gb.federationRegistration"));
 		}
 	}
 
 	public static ContextImage newClearPixel(String wicketId) {
-		return newImage(wicketId, "pixel.png");
+		return newImage(wicketId, "images/pixel.png");
 	}
 
 	public static ContextImage newBlankImage(String wicketId) {
-		return newImage(wicketId, "blank.png");
+		return newImage(wicketId, "images/blank.png");
 	}
 
 	public static ContextImage newImage(String wicketId, String file) {

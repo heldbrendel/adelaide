@@ -15,15 +15,17 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import com.gitblit.Constants.AccessRestrictionType;
+import com.gitblit.Keys;
+import com.gitblit.models.ProjectModel;
+import com.gitblit.models.RepositoryModel;
+import com.gitblit.models.UserModel;
+import com.gitblit.utils.ArrayUtils;
+import com.gitblit.utils.ModelUtils;
+import com.gitblit.utils.StringUtils;
+import com.gitblit.wicket.GitBlitWebSession;
+import com.gitblit.wicket.WicketUtils;
+import com.gitblit.wicket.pages.*;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
@@ -39,21 +41,7 @@ import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
-import com.gitblit.Constants.AccessRestrictionType;
-import com.gitblit.Keys;
-import com.gitblit.models.ProjectModel;
-import com.gitblit.models.RepositoryModel;
-import com.gitblit.models.UserModel;
-import com.gitblit.utils.ArrayUtils;
-import com.gitblit.utils.ModelUtils;
-import com.gitblit.utils.StringUtils;
-import com.gitblit.wicket.GitBlitWebSession;
-import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.pages.BasePage;
-import com.gitblit.wicket.pages.ProjectPage;
-import com.gitblit.wicket.pages.RepositoriesPage;
-import com.gitblit.wicket.pages.SummaryPage;
-import com.gitblit.wicket.pages.UserPage;
+import java.util.*;
 
 public class RepositoriesPanel extends BasePanel {
 
@@ -225,28 +213,28 @@ public class RepositoriesPanel extends BasePanel {
 				}
 
 				if (entry.isSparkleshared()) {
-					row.add(WicketUtils.newImage("sparkleshareIcon", "star_16x16.png",
+                    row.add(WicketUtils.newImage("sparkleshareIcon", "images/star_16x16.png",
 							getString("gb.isSparkleshared")));
 				} else {
 					row.add(WicketUtils.newClearPixel("sparkleshareIcon").setVisible(false));
 				}
 
 				if (!entry.isMirror && entry.isFrozen) {
-					row.add(WicketUtils.newImage("frozenIcon", "cold_16x16.png",
+                    row.add(WicketUtils.newImage("frozenIcon", "images/cold_16x16.png",
 							getString("gb.isFrozen")));
 				} else {
 					row.add(WicketUtils.newClearPixel("frozenIcon").setVisible(false));
 				}
 
 				if (entry.isFederated) {
-					row.add(WicketUtils.newImage("federatedIcon", "federated_16x16.png",
+                    row.add(WicketUtils.newImage("federatedIcon", "images/federated_16x16.png",
 							getString("gb.isFederated")));
 				} else {
 					row.add(WicketUtils.newClearPixel("federatedIcon").setVisible(false));
 				}
 
 				if (entry.isMirror) {
-					row.add(WicketUtils.newImage("accessRestrictionIcon", "mirror_16x16.png",
+                    row.add(WicketUtils.newImage("accessRestrictionIcon", "images/mirror_16x16.png",
 							getString("gb.isMirror")));
 				} else {
 					switch (entry.accessRestriction) {
@@ -254,15 +242,15 @@ public class RepositoriesPanel extends BasePanel {
 						row.add(WicketUtils.newBlankImage("accessRestrictionIcon"));
 						break;
 					case PUSH:
-						row.add(WicketUtils.newImage("accessRestrictionIcon", "lock_go_16x16.png",
+                        row.add(WicketUtils.newImage("accessRestrictionIcon", "images/lock_go_16x16.png",
 								accessRestrictionTranslations.get(entry.accessRestriction)));
 						break;
 					case CLONE:
-						row.add(WicketUtils.newImage("accessRestrictionIcon", "lock_pull_16x16.png",
+                        row.add(WicketUtils.newImage("accessRestrictionIcon", "images/lock_pull_16x16.png",
 								accessRestrictionTranslations.get(entry.accessRestriction)));
 						break;
 					case VIEW:
-						row.add(WicketUtils.newImage("accessRestrictionIcon", "shield_16x16.png",
+                        row.add(WicketUtils.newImage("accessRestrictionIcon", "images/shield_16x16.png",
 								accessRestrictionTranslations.get(entry.accessRestriction)));
 						break;
 					default:
@@ -342,8 +330,8 @@ public class RepositoriesPanel extends BasePanel {
 	}
 
 	protected enum SortBy {
-		repository, description, owner, date;
-	}
+        repository, description, owner, date
+    }
 
 	protected OrderByBorder newSort(String wicketId, SortBy field, SortableDataProvider<?> dp,
 			final DataView<?> dataView) {

@@ -15,51 +15,6 @@
  */
 package com.gitblit.client;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JRootPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.ListCellRenderer;
-import javax.swing.ScrollPaneConstants;
-
-import org.eclipse.jgit.lib.Repository;
-
 import com.gitblit.Constants.AccessRestrictionType;
 import com.gitblit.Constants.AuthorizationControl;
 import com.gitblit.Constants.FederationStrategy;
@@ -68,6 +23,14 @@ import com.gitblit.models.RegistrantAccessPermission;
 import com.gitblit.models.RepositoryModel;
 import com.gitblit.utils.ArrayUtils;
 import com.gitblit.utils.StringUtils;
+import org.eclipse.jgit.lib.Repository;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.text.MessageFormat;
+import java.util.*;
+import java.util.List;
 
 /**
  * Dialog to create/edit a repository.
@@ -171,7 +134,7 @@ public class EditRepositoryDialog extends JDialog {
 		setResizable(false);
 		setTitle(Translation.get("gb.edit") + ": " + aRepository.name);
 		setIconImage(new ImageIcon(getClass()
-				.getResource("/gitblt-favicon.png")).getImage());
+                .getResource("/images/gitblt-favicon.png")).getImage());
 	}
 
 	@Override

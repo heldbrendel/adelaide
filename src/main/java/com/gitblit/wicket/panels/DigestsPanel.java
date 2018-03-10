@@ -15,20 +15,6 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.text.DateFormat;
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
-
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
-import org.eclipse.jgit.lib.PersonIdent;
-
 import com.gitblit.Constants;
 import com.gitblit.Keys;
 import com.gitblit.models.DailyLogEntry;
@@ -36,12 +22,20 @@ import com.gitblit.models.RepositoryCommit;
 import com.gitblit.utils.StringUtils;
 import com.gitblit.utils.TimeUtils;
 import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.pages.CommitPage;
-import com.gitblit.wicket.pages.ComparePage;
-import com.gitblit.wicket.pages.SummaryPage;
-import com.gitblit.wicket.pages.TagPage;
-import com.gitblit.wicket.pages.TicketsPage;
-import com.gitblit.wicket.pages.TreePage;
+import com.gitblit.wicket.pages.*;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.eclipse.jgit.lib.PersonIdent;
+
+import java.text.DateFormat;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
 public class DigestsPanel extends BasePanel {
 
@@ -220,7 +214,7 @@ public class DigestsPanel extends BasePanel {
 
 						// merge icon
 						if (commit.getParentCount() > 1) {
-							commitItem.add(WicketUtils.newImage("commitIcon", "commit_merge_16x16.png"));
+                            commitItem.add(WicketUtils.newImage("commitIcon", "images/commit_merge_16x16.png"));
 						} else {
 							commitItem.add(WicketUtils.newBlankImage("commitIcon"));
 						}

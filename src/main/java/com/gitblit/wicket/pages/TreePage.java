@@ -15,9 +15,20 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.io.OutputStream;
-import java.util.List;
-
+import com.gitblit.models.PathModel;
+import com.gitblit.models.SubmoduleModel;
+import com.gitblit.models.UserModel;
+import com.gitblit.servlet.RawServlet;
+import com.gitblit.utils.ByteFormat;
+import com.gitblit.utils.JGitUtils;
+import com.gitblit.wicket.CacheControl;
+import com.gitblit.wicket.CacheControl.LastModified;
+import com.gitblit.wicket.GitBlitWebSession;
+import com.gitblit.wicket.WicketUtils;
+import com.gitblit.wicket.panels.CommitHeaderPanel;
+import com.gitblit.wicket.panels.CompressedDownloadsPanel;
+import com.gitblit.wicket.panels.LinkPanel;
+import com.gitblit.wicket.panels.PathBreadcrumbsPanel;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -34,20 +45,8 @@ import org.eclipse.jgit.lib.FileMode;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-import com.gitblit.models.PathModel;
-import com.gitblit.models.SubmoduleModel;
-import com.gitblit.models.UserModel;
-import com.gitblit.servlet.RawServlet;
-import com.gitblit.utils.ByteFormat;
-import com.gitblit.utils.JGitUtils;
-import com.gitblit.wicket.CacheControl;
-import com.gitblit.wicket.GitBlitWebSession;
-import com.gitblit.wicket.CacheControl.LastModified;
-import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.panels.CommitHeaderPanel;
-import com.gitblit.wicket.panels.CompressedDownloadsPanel;
-import com.gitblit.wicket.panels.LinkPanel;
-import com.gitblit.wicket.panels.PathBreadcrumbsPanel;
+import java.io.OutputStream;
+import java.util.List;
 
 @CacheControl(LastModified.BOOT)
 public class TreePage extends RepositoryPage {
@@ -111,7 +110,7 @@ public class TreePage extends RepositoryPage {
 				} else {
 					if (entry.isTree()) {
 						// folder/tree link
-						item.add(WicketUtils.newImage("pathIcon", "folder_16x16.png"));
+                        item.add(WicketUtils.newImage("pathIcon", "images/folder_16x16.png"));
 						item.add(new Label("pathSize", ""));
 						item.add(new LinkPanel("pathName", "list", entry.name, TreePage.class,
 								WicketUtils.newPathParameter(repositoryName, id,
@@ -138,7 +137,7 @@ public class TreePage extends RepositoryPage {
 						submodulePath = submodule.gitblitPath;
 						hasSubmodule = submodule.hasSubmodule;
 
-						item.add(WicketUtils.newImage("pathIcon", "git-orange-16x16.png"));
+                        item.add(WicketUtils.newImage("pathIcon", "images/git-orange-16x16.png"));
 						item.add(new Label("pathSize", ""));
 						item.add(new LinkPanel("pathName", "list", entry.name + " @ " +
 								getShortObjectId(submoduleId), TreePage.class,

@@ -15,24 +15,21 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.gitblit.Constants;
+import com.gitblit.Constants.AccessPermission;
+import com.gitblit.Constants.AccessRestrictionType;
+import com.gitblit.Constants.AuthorizationControl;
+import com.gitblit.Constants.FederationStrategy;
+import com.gitblit.Keys;
+import com.gitblit.models.ProjectModel;
+import com.gitblit.models.TeamModel;
+import com.gitblit.models.UserModel;
+import com.gitblit.utils.StringUtils;
+import com.gitblit.utils.TimeUtils;
+import com.gitblit.wicket.CacheControl;
+import com.gitblit.wicket.GitBlitWebApp;
+import com.gitblit.wicket.GitBlitWebSession;
+import com.gitblit.wicket.WicketUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
@@ -53,21 +50,12 @@ import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gitblit.Constants;
-import com.gitblit.Constants.AccessPermission;
-import com.gitblit.Constants.AccessRestrictionType;
-import com.gitblit.Constants.AuthorizationControl;
-import com.gitblit.Constants.FederationStrategy;
-import com.gitblit.Keys;
-import com.gitblit.models.ProjectModel;
-import com.gitblit.models.TeamModel;
-import com.gitblit.models.UserModel;
-import com.gitblit.utils.StringUtils;
-import com.gitblit.utils.TimeUtils;
-import com.gitblit.wicket.CacheControl;
-import com.gitblit.wicket.GitBlitWebApp;
-import com.gitblit.wicket.GitBlitWebSession;
-import com.gitblit.wicket.WicketUtils;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.MessageFormat;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public abstract class BasePage extends SessionPage {
 
@@ -97,7 +85,7 @@ public abstract class BasePage extends SessionPage {
 			add(CSSPackageResource.getHeaderContribution("bootstrap/css/bootstrap-responsive.css"));
 		}
 		if (app().settings().getBoolean(Keys.web.hideHeader, false)) {
-			add(CSSPackageResource.getHeaderContribution("hideheader.css"));
+            add(CSSPackageResource.getHeaderContribution("stylesheets/hideheader.css"));
 		}
 	}
 

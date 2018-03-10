@@ -15,32 +15,17 @@
  */
 package com.gitblit.authority;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Date;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-
-import org.bouncycastle.util.Arrays;
-
 import com.gitblit.client.HeaderPanel;
 import com.gitblit.client.Translation;
 import com.gitblit.utils.StringUtils;
 import com.toedter.calendar.JDateChooser;
+import org.bouncycastle.util.Arrays;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Date;
 
 public class NewClientCertificateDialog extends JDialog {
 
@@ -128,7 +113,7 @@ public class NewClientCertificateDialog extends JDialog {
 		content.add(panel, BorderLayout.NORTH);
 		content.add(controls, BorderLayout.SOUTH);
 
-		getContentPane().add(new HeaderPanel(Translation.get("gb.newCertificate") + " (" + displayname + ")", "rosette_16x16.png"), BorderLayout.NORTH);
+        getContentPane().add(new HeaderPanel(Translation.get("gb.newCertificate") + " (" + displayname + ")", "images/rosette_16x16.png"), BorderLayout.NORTH);
 		getContentPane().add(content, BorderLayout.CENTER);
 		pack();
 

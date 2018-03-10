@@ -15,8 +15,20 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.util.List;
-
+import com.gitblit.models.PathModel;
+import com.gitblit.models.UserModel;
+import com.gitblit.servlet.RawServlet;
+import com.gitblit.utils.ByteFormat;
+import com.gitblit.utils.JGitUtils;
+import com.gitblit.utils.StringUtils;
+import com.gitblit.wicket.CacheControl;
+import com.gitblit.wicket.CacheControl.LastModified;
+import com.gitblit.wicket.GitBlitWebSession;
+import com.gitblit.wicket.MarkupProcessor;
+import com.gitblit.wicket.MarkupProcessor.MarkupDocument;
+import com.gitblit.wicket.MarkupProcessor.MarkupSyntax;
+import com.gitblit.wicket.WicketUtils;
+import com.gitblit.wicket.panels.LinkPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
@@ -27,25 +39,10 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
-import org.apache.wicket.model.StringResourceModel;
-import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-import com.gitblit.models.PathModel;
-import com.gitblit.models.UserModel;
-import com.gitblit.servlet.RawServlet;
-import com.gitblit.utils.ByteFormat;
-import com.gitblit.utils.JGitUtils;
-import com.gitblit.utils.StringUtils;
-import com.gitblit.wicket.CacheControl;
-import com.gitblit.wicket.GitBlitWebSession;
-import com.gitblit.wicket.CacheControl.LastModified;
-import com.gitblit.wicket.MarkupProcessor;
-import com.gitblit.wicket.MarkupProcessor.MarkupDocument;
-import com.gitblit.wicket.MarkupProcessor.MarkupSyntax;
-import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.panels.LinkPanel;
+import java.util.List;
 
 @CacheControl(LastModified.REPOSITORY)
 public class DocsPage extends RepositoryPage {
@@ -152,7 +149,7 @@ public class DocsPage extends RepositoryPage {
 			@Override
 			public void populateItem(final Item<PathModel> item) {
 				PathModel entry = item.getModelObject();
-				item.add(WicketUtils.newImage("docIcon", "file_world_16x16.png"));
+                item.add(WicketUtils.newImage("docIcon", "images/file_world_16x16.png"));
 				item.add(new Label("docSize", byteFormat.format(entry.size)));
 				item.add(new LinkPanel("docName", "list", StringUtils.stripFileExtension(entry.name),
 						DocPage.class, WicketUtils.newPathParameter(repositoryName, commitId, entry.path)));

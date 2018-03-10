@@ -15,17 +15,12 @@
  */
 package com.gitblit.client;
 
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.io.Serializable;
-
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.table.TableCellRenderer;
-
 import com.gitblit.models.RepositoryModel;
+
+import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
+import java.io.Serializable;
 
 /**
  * Renders the type indicators (tickets, frozen, access restriction, etc) in a
@@ -60,16 +55,16 @@ public class IndicatorsRenderer extends JPanel implements TableCellRenderer, Ser
 
 	public IndicatorsRenderer() {
 		super(new FlowLayout(FlowLayout.RIGHT, 1, 0));
-		blankIcon = new ImageIcon(getClass().getResource("/blank.png"));
-		pushIcon = new ImageIcon(getClass().getResource("/lock_go_16x16.png"));
-		pullIcon = new ImageIcon(getClass().getResource("/lock_pull_16x16.png"));
-		viewIcon = new ImageIcon(getClass().getResource("/shield_16x16.png"));
-		doxIcon = new ImageIcon(getClass().getResource("/book_16x16.png"));
-		frozenIcon = new ImageIcon(getClass().getResource("/cold_16x16.png"));
-		federatedIcon = new ImageIcon(getClass().getResource("/federated_16x16.png"));
-		forkIcon = new ImageIcon(getClass().getResource("/commit_divide_16x16.png"));
-		sparkleshareIcon = new ImageIcon(getClass().getResource("/star_16x16.png"));
-		mirrorIcon = new ImageIcon(getClass().getResource("/mirror_16x16.png"));
+        blankIcon = new ImageIcon(getClass().getResource("/images/blank.png"));
+        pushIcon = new ImageIcon(getClass().getResource("/images/lock_go_16x16.png"));
+        pullIcon = new ImageIcon(getClass().getResource("/images/lock_pull_16x16.png"));
+        viewIcon = new ImageIcon(getClass().getResource("/images/shield_16x16.png"));
+        doxIcon = new ImageIcon(getClass().getResource("/images/book_16x16.png"));
+        frozenIcon = new ImageIcon(getClass().getResource("/images/cold_16x16.png"));
+        federatedIcon = new ImageIcon(getClass().getResource("/images/federated_16x16.png"));
+        forkIcon = new ImageIcon(getClass().getResource("/images/commit_divide_16x16.png"));
+        sparkleshareIcon = new ImageIcon(getClass().getResource("/images/star_16x16.png"));
+        mirrorIcon = new ImageIcon(getClass().getResource("/images/mirror_16x16.png"));
 	}
 
 	@Override

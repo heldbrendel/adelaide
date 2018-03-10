@@ -15,92 +15,37 @@
  */
 package com.gitblit.authority;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Desktop;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.BufferedInputStream;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.net.URI;
-import java.security.PrivateKey;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-
-import javax.mail.Message;
-import javax.swing.ImageIcon;
-import javax.swing.InputVerifier;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-import javax.swing.RowFilter;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableRowSorter;
-
+import com.gitblit.*;
+import com.gitblit.client.HeaderPanel;
+import com.gitblit.client.Translation;
+import com.gitblit.models.Mailing;
+import com.gitblit.models.UserModel;
+import com.gitblit.service.MailService;
+import com.gitblit.utils.*;
+import com.gitblit.utils.X509Utils.RevocationReason;
+import com.gitblit.utils.X509Utils.X509Log;
+import com.gitblit.utils.X509Utils.X509Metadata;
 import org.eclipse.jgit.errors.ConfigInvalidException;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.storage.file.FileBasedConfig;
 import org.eclipse.jgit.util.FS;
 import org.slf4j.LoggerFactory;
 
-import com.gitblit.ConfigUserService;
-import com.gitblit.Constants;
-import com.gitblit.FileSettings;
-import com.gitblit.IStoredSettings;
-import com.gitblit.IUserService;
-import com.gitblit.Keys;
-import com.gitblit.client.HeaderPanel;
-import com.gitblit.client.Translation;
-import com.gitblit.models.Mailing;
-import com.gitblit.models.UserModel;
-import com.gitblit.service.MailService;
-import com.gitblit.utils.ArrayUtils;
-import com.gitblit.utils.FileUtils;
-import com.gitblit.utils.StringUtils;
-import com.gitblit.utils.TimeUtils;
-import com.gitblit.utils.X509Utils;
-import com.gitblit.utils.X509Utils.RevocationReason;
-import com.gitblit.utils.X509Utils.X509Log;
-import com.gitblit.utils.X509Utils.X509Metadata;
-import com.gitblit.wicket.GitBlitWebSession;
+import javax.mail.Message;
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.net.URI;
+import java.security.PrivateKey;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.text.MessageFormat;
+import java.util.*;
+import java.util.List;
 
 /**
  * Simple GUI tool for administering Gitblit client certificates.
@@ -174,7 +119,7 @@ public class GitblitAuthority extends JFrame implements X509Log {
 	}
 
 	public void initialize(String baseFolder) {
-		setIconImage(new ImageIcon(getClass().getResource("/gitblt-favicon.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/images/gitblt-favicon.png")).getImage());
 		setTitle("Gitblit Certificate Authority v" + Constants.getVersion() + " (" + Constants.getBuildDate() + ")");
 		setContentPane(getUI());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -543,11 +488,11 @@ public class GitblitAuthority extends JFrame implements X509Log {
 				return Utils.INSETS;
 			}
 		};
-		usersPanel.add(new HeaderPanel(Translation.get("gb.users"), "users_16x16.png"), BorderLayout.NORTH);
+        usersPanel.add(new HeaderPanel(Translation.get("gb.users"), "images/users_16x16.png"), BorderLayout.NORTH);
 		usersPanel.add(new JScrollPane(table), BorderLayout.CENTER);
 		usersPanel.setMinimumSize(new Dimension(400, 10));
 
-		certificateDefaultsButton = new JButton(new ImageIcon(getClass().getResource("/settings_16x16.png")));
+        certificateDefaultsButton = new JButton(new ImageIcon(getClass().getResource("/images/settings_16x16.png")));
 		certificateDefaultsButton.setFocusable(false);
 		certificateDefaultsButton.setToolTipText(Translation.get("gb.newCertificateDefaults"));
 		certificateDefaultsButton.addActionListener(new ActionListener() {
@@ -605,7 +550,7 @@ public class GitblitAuthority extends JFrame implements X509Log {
 
 				int result = JOptionPane.showConfirmDialog(GitblitAuthority.this,
 						panel, Translation.get("gb.newCertificateDefaults"), JOptionPane.OK_CANCEL_OPTION,
-						JOptionPane.QUESTION_MESSAGE, new ImageIcon(getClass().getResource("/settings_32x32.png")));
+                        JOptionPane.QUESTION_MESSAGE, new ImageIcon(getClass().getResource("/images/settings_32x32.png")));
 				if (result == JOptionPane.OK_OPTION) {
 					try {
 						oids.update(metadata);
@@ -623,7 +568,7 @@ public class GitblitAuthority extends JFrame implements X509Log {
 			}
 		});
 
-		newSSLCertificate = new JButton(new ImageIcon(getClass().getResource("/rosette_16x16.png")));
+        newSSLCertificate = new JButton(new ImageIcon(getClass().getResource("/images/rosette_16x16.png")));
 		newSSLCertificate.setFocusable(false);
 		newSSLCertificate.setToolTipText(Translation.get("gb.newSSLCertificate"));
 		newSSLCertificate.addActionListener(new ActionListener() {
@@ -643,7 +588,7 @@ public class GitblitAuthority extends JFrame implements X509Log {
 				AuthorityWorker worker = new AuthorityWorker(GitblitAuthority.this) {
 
 					@Override
-					protected Boolean doRequest() throws IOException {
+                    protected Boolean doRequest() {
 						if (!prepareX509Infrastructure()) {
 							return false;
 						}
@@ -687,7 +632,7 @@ public class GitblitAuthority extends JFrame implements X509Log {
 			}
 		});
 
-		JButton emailBundle = new JButton(new ImageIcon(getClass().getResource("/mail_16x16.png")));
+        JButton emailBundle = new JButton(new ImageIcon(getClass().getResource("/images/mail_16x16.png")));
 		emailBundle.setFocusable(false);
 		emailBundle.setToolTipText(Translation.get("gb.emailCertificateBundle"));
 		emailBundle.addActionListener(new ActionListener() {
@@ -709,7 +654,7 @@ public class GitblitAuthority extends JFrame implements X509Log {
 
 				AuthorityWorker worker = new AuthorityWorker(GitblitAuthority.this) {
 					@Override
-					protected Boolean doRequest() throws IOException {
+                    protected Boolean doRequest() {
 						X509Metadata metadata = new X509Metadata(ucm.user.username, "whocares");
 						metadata.serverHostname = gitblitSettings.getString(Keys.web.siteName, Constants.NAME);
 						if (StringUtils.isEmpty(metadata.serverHostname)) {
@@ -730,7 +675,7 @@ public class GitblitAuthority extends JFrame implements X509Log {
 			}
 		});
 
-		JButton logButton = new JButton(new ImageIcon(getClass().getResource("/script_16x16.png")));
+        JButton logButton = new JButton(new ImageIcon(getClass().getResource("/images/script_16x16.png")));
 		logButton.setFocusable(false);
 		logButton.setToolTipText(Translation.get("gb.log"));
 		logButton.addActionListener(new ActionListener() {

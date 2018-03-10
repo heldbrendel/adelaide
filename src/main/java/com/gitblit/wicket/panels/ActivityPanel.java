@@ -15,27 +15,21 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
-import org.eclipse.jgit.lib.Repository;
-
 import com.gitblit.Constants;
 import com.gitblit.Keys;
 import com.gitblit.models.Activity;
 import com.gitblit.models.RepositoryCommit;
 import com.gitblit.utils.StringUtils;
 import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.pages.CommitDiffPage;
-import com.gitblit.wicket.pages.CommitPage;
-import com.gitblit.wicket.pages.GitSearchPage;
-import com.gitblit.wicket.pages.LogPage;
-import com.gitblit.wicket.pages.SummaryPage;
-import com.gitblit.wicket.pages.TreePage;
+import com.gitblit.wicket.pages.*;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.eclipse.jgit.lib.Repository;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Renders activity in day-blocks in reverse-chronological order.
@@ -81,7 +75,7 @@ public class ActivityPanel extends BasePanel {
 						// merge icon
 						if (commit.getParentCount() > 1) {
 							commitItem.add(WicketUtils.newImage("commitIcon",
-									"commit_merge_16x16.png"));
+									"images/commit_merge_16x16.png"));
 						} else {
 							commitItem.add(WicketUtils.newBlankImage("commitIcon").setVisible(false));
 						}

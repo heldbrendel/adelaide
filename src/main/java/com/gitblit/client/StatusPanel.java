@@ -15,26 +15,16 @@
  */
 package com.gitblit.client;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-
 import com.gitblit.Constants;
 import com.gitblit.Constants.RpcRequest;
 import com.gitblit.models.ServerStatus;
 import com.gitblit.utils.ByteFormat;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 
 /**
  * This panel displays the server status.
@@ -112,7 +102,7 @@ public class StatusPanel extends JPanel {
 		JPanel controls = new JPanel(new FlowLayout(FlowLayout.CENTER, Utils.MARGIN, 0));
 		controls.add(refreshStatus);
 
-		header = new HeaderPanel(Translation.get("gb.status"), "health_16x16.png");
+        header = new HeaderPanel(Translation.get("gb.status"), "images/health_16x16.png");
 		setLayout(new BorderLayout(Utils.MARGIN, Utils.MARGIN));
 		add(header, BorderLayout.NORTH);
 		add(centerPanel, BorderLayout.CENTER);

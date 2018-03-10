@@ -15,12 +15,10 @@
  */
 package com.gitblit.client;
 
-import java.awt.Component;
-
-import javax.swing.ImageIcon;
-import javax.swing.JTable;
-
 import com.gitblit.models.RepositoryModel;
+
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Displays a subscribed icon on the left of the repository name, if there is at
@@ -42,8 +40,8 @@ public class SubscribedRepositoryRenderer extends NameRenderer {
 	public SubscribedRepositoryRenderer(GitblitClient gitblit) {
 		super();
 		this.gitblit = gitblit;
-		blankIcon = new ImageIcon(getClass().getResource("/blank.png"));
-		subscribedIcon = new ImageIcon(getClass().getResource("/bullet_feed.png"));
+        blankIcon = new ImageIcon(getClass().getResource("/images/blank.png"));
+        subscribedIcon = new ImageIcon(getClass().getResource("/images/bullet_feed.png"));
 	}
 
 	@Override

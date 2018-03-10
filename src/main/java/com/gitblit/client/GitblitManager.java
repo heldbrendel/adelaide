@@ -15,58 +15,25 @@
  */
 package com.gitblit.client;
 
-import java.awt.BorderLayout;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.ConnectException;
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.TimeZone;
-
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.KeyStroke;
-import javax.swing.SwingWorker;
-import javax.swing.UIManager;
-
-import org.eclipse.jgit.errors.ConfigInvalidException;
-import org.eclipse.jgit.lib.StoredConfig;
-import org.eclipse.jgit.storage.file.FileBasedConfig;
-import org.eclipse.jgit.util.FS;
-
 import com.gitblit.Constants;
 import com.gitblit.GitBlitException.ForbiddenException;
 import com.gitblit.models.FeedModel;
 import com.gitblit.utils.Base64;
 import com.gitblit.utils.StringUtils;
+import org.eclipse.jgit.errors.ConfigInvalidException;
+import org.eclipse.jgit.lib.StoredConfig;
+import org.eclipse.jgit.storage.file.FileBasedConfig;
+import org.eclipse.jgit.util.FS;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.net.ConnectException;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.List;
 
 /**
  * Gitblit Manager issues JSON RPC requests to a Gitblit server.
@@ -95,7 +62,7 @@ public class GitblitManager extends JFrame implements RegistrationsDialog.Regist
 
 	private void initialize() {
 		setContentPane(getCenterPanel());
-		setIconImage(new ImageIcon(getClass().getResource("/gitblt-favicon.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/images/gitblt-favicon.png")).getImage());
 		setTitle("Gitblit Manager v" + Constants.getVersion() + " (" + Constants.getBuildDate() + ")");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
@@ -271,7 +238,7 @@ public class GitblitManager extends JFrame implements RegistrationsDialog.Regist
 
 	private void rebuildRecentMenu() {
 		recentMenu.removeAll();
-		ImageIcon icon = new ImageIcon(getClass().getResource("/gitblt-favicon.png"));
+        ImageIcon icon = new ImageIcon(getClass().getResource("/images/gitblt-favicon.png"));
 		List<GitblitRegistration> list = new ArrayList<GitblitRegistration>(registrations.values());
 		Collections.sort(list, new Comparator<GitblitRegistration>() {
 			@Override

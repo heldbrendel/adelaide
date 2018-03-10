@@ -15,10 +15,11 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.gitblit.Constants.AccessRestrictionType;
+import com.gitblit.Constants.AuthorizationControl;
+import com.gitblit.Keys;
+import com.gitblit.models.RepositoryModel;
+import com.gitblit.wicket.WicketUtils;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Radio;
@@ -29,11 +30,9 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
-import com.gitblit.Constants.AccessRestrictionType;
-import com.gitblit.Constants.AuthorizationControl;
-import com.gitblit.Keys;
-import com.gitblit.models.RepositoryModel;
-import com.gitblit.wicket.WicketUtils;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A radio group panel of the 5 available authorization/access restriction combinations.
@@ -67,31 +66,31 @@ public class AccessPolicyPanel extends BasePanel {
 
 		AccessPolicy anonymousPolicy = new AccessPolicy(getString("gb.anonymousPolicy"),
 				getString("gb.anonymousPolicyDescription"),
-				"blank.png",
+                "images/blank.png",
 				AuthorizationControl.AUTHENTICATED,
 				AccessRestrictionType.NONE);
 
 		AccessPolicy authenticatedPushPolicy = new AccessPolicy(getString("gb.authenticatedPushPolicy"),
 				getString("gb.authenticatedPushPolicyDescription"),
-				"lock_go_16x16.png",
+                "images/lock_go_16x16.png",
 				AuthorizationControl.AUTHENTICATED,
 				AccessRestrictionType.PUSH);
 
 		AccessPolicy namedPushPolicy = new AccessPolicy(getString("gb.namedPushPolicy"),
 				getString("gb.namedPushPolicyDescription"),
-				"lock_go_16x16.png",
+                "images/lock_go_16x16.png",
 				AuthorizationControl.NAMED,
 				AccessRestrictionType.PUSH);
 
 		AccessPolicy clonePolicy = new AccessPolicy(getString("gb.clonePolicy"),
 				getString("gb.clonePolicyDescription"),
-				"lock_pull_16x16.png",
+                "images/lock_pull_16x16.png",
 				AuthorizationControl.NAMED,
 				AccessRestrictionType.CLONE);
 
 		AccessPolicy viewPolicy = new AccessPolicy(getString("gb.viewPolicy"),
 				getString("gb.viewPolicyDescription"),
-				"shield_16x16.png",
+                "images/shield_16x16.png",
 				AuthorizationControl.NAMED,
 				AccessRestrictionType.VIEW);
 

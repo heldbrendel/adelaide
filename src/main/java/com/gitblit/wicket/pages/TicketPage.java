@@ -15,28 +15,28 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.TreeSet;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.RestartResponseException;
+import com.gitblit.Constants;
+import com.gitblit.Constants.AccessPermission;
+import com.gitblit.Constants.AuthorizationControl;
+import com.gitblit.Keys;
+import com.gitblit.git.PatchsetCommand;
+import com.gitblit.git.PatchsetReceivePack;
+import com.gitblit.models.PathModel.PathChangeModel;
+import com.gitblit.models.*;
+import com.gitblit.models.TicketModel.*;
+import com.gitblit.tickets.TicketIndexer.Lucene;
+import com.gitblit.tickets.TicketLabel;
+import com.gitblit.tickets.TicketMilestone;
+import com.gitblit.tickets.TicketResponsible;
+import com.gitblit.utils.*;
+import com.gitblit.utils.JGitUtils.MergeStatus;
+import com.gitblit.wicket.GitBlitWebSession;
+import com.gitblit.wicket.TicketsUI;
+import com.gitblit.wicket.WicketUtils;
+import com.gitblit.wicket.panels.*;
+import com.gitblit.wicket.panels.BasePanel.JavascriptEventConfirmation;
+import com.gitblit.wicket.panels.BasePanel.JavascriptTextPrompt;
+import org.apache.wicket.*;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
@@ -58,51 +58,12 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-import com.gitblit.Constants;
-import com.gitblit.Constants.AccessPermission;
-import com.gitblit.Constants.AuthorizationControl;
-import com.gitblit.Keys;
-import com.gitblit.git.PatchsetCommand;
-import com.gitblit.git.PatchsetReceivePack;
-import com.gitblit.models.PathModel.PathChangeModel;
-import com.gitblit.models.RegistrantAccessPermission;
-import com.gitblit.models.RepositoryModel;
-import com.gitblit.models.RepositoryUrl;
-import com.gitblit.models.SubmoduleModel;
-import com.gitblit.models.TicketModel;
-import com.gitblit.models.TicketModel.Change;
-import com.gitblit.models.TicketModel.CommentSource;
-import com.gitblit.models.TicketModel.Field;
-import com.gitblit.models.TicketModel.Patchset;
-import com.gitblit.models.TicketModel.PatchsetType;
-import com.gitblit.models.TicketModel.Review;
-import com.gitblit.models.TicketModel.Score;
-import com.gitblit.models.TicketModel.Status;
-import com.gitblit.models.UserModel;
-import com.gitblit.tickets.TicketIndexer.Lucene;
-import com.gitblit.tickets.TicketLabel;
-import com.gitblit.tickets.TicketMilestone;
-import com.gitblit.tickets.TicketResponsible;
-import com.gitblit.utils.ArrayUtils;
-import com.gitblit.utils.JGitUtils;
-import com.gitblit.utils.JGitUtils.MergeStatus;
-import com.gitblit.utils.CommitCache;
-import com.gitblit.utils.MarkdownUtils;
-import com.gitblit.utils.RefLogUtils;
-import com.gitblit.utils.StringUtils;
-import com.gitblit.utils.TimeUtils;
-import com.gitblit.wicket.GitBlitWebSession;
-import com.gitblit.wicket.TicketsUI;
-import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.panels.AvatarImage;
-import com.gitblit.wicket.panels.BasePanel.JavascriptEventConfirmation;
-import com.gitblit.wicket.panels.BasePanel.JavascriptTextPrompt;
-import com.gitblit.wicket.panels.CommentPanel;
-import com.gitblit.wicket.panels.DiffStatPanel;
-import com.gitblit.wicket.panels.IconAjaxLink;
-import com.gitblit.wicket.panels.LinkPanel;
-import com.gitblit.wicket.panels.ShockWaveComponent;
-import com.gitblit.wicket.panels.SimpleAjaxLink;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * The ticket page handles viewing and updating a ticket.
@@ -1642,14 +1603,14 @@ public class TicketPage extends RepositoryPage {
 			// clippy: flash-based copy & paste
 			Fragment copyFragment = new Fragment(wicketId, "clippyPanel", this);
 			String baseUrl = WicketUtils.getGitblitURL(getRequest());
-			ShockWaveComponent clippy = new ShockWaveComponent("clippy", baseUrl + "/clippy.swf");
+            ShockWaveComponent clippy = new ShockWaveComponent("clippy", baseUrl + "/flash/clippy.swf");
 			clippy.setValue("flashVars", "text=" + StringUtils.encodeURL(text));
 			copyFragment.add(clippy);
 			return copyFragment;
 		} else {
 			// javascript: manual copy & paste with modal browser prompt dialog
 			Fragment copyFragment = new Fragment(wicketId, "jsPanel", this);
-			ContextImage img = WicketUtils.newImage("copyIcon", "clippy.png");
+            ContextImage img = WicketUtils.newImage("copyIcon", "images/clippy.png");
 			img.add(new JavascriptTextPrompt("onclick", "Copy to Clipboard (Ctrl+C, Enter)", text));
 			copyFragment.add(img);
 			return copyFragment;

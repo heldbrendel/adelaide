@@ -161,13 +161,6 @@ task copyClientAppsJson(type: Copy) {
     into 'src/main/java/'
 }
 
-task setup << {
-    println 'setup'
-}
-setup.dependsOn copyDistribution
-setup.dependsOn copyDefaultsProperties
-setup.dependsOn copyClientAppsJson
-
 task generatePropertiesKeys() {
     println 'generatePropertiesKeys'
     // TODO convert properties keys from $distributionDir/data/defaults.properties to class com.gitblit.Keys
@@ -176,6 +169,14 @@ task generatePropertiesKeys() {
 task copyResourcesToClasses(type: Copy) {
     println 'copyResourcesToClasses'
     from('src/main/resources') {
+        exclude 'thumbs.db'
+    }
+    into 'build/classes/java/main'
+}
+
+task copyWebappToClasses(type: Copy) {
+    println 'copyResourcesToClasses'
+    from('src/main/webapp') {
         exclude 'thumbs.db'
     }
     into 'build/classes/java/main'
@@ -197,28 +198,22 @@ task copyTemplateResources(type: Copy) {
     into 'build/classes/java/main'
 }
 
-task copyWebInf(type: Copy) {
-    println 'copyWebInf'
-    from('src/main/webapp/WEB-INF'){
-        include 'web.xml', 'weblogic.xml'
-    }
-    into 'build/classes/java/main/WEB-INF/'
-}
-
 task runGitBlit << {
     println 'run'
 }
 
-runGitBlit.dependsOn setup
+runGitBlit.dependsOn copyDistribution
+runGitBlit.dependsOn copyDefaultsProperties
+runGitBlit.dependsOn copyClientAppsJson
+
 runGitBlit.dependsOn generatePropertiesKeys
 runGitBlit.dependsOn compileJava
 
 runGitBlit.dependsOn copyResourcesToClasses
+runGitBlit.dependsOn copyWebappToClasses
 runGitBlit.dependsOn copyAdditionalToClasses
 runGitBlit.dependsOn copyTemplateResources
-runGitBlit.dependsOn copyWebInf
 
-compileJava.mustRunAfter setup
 compileJava.mustRunAfter generatePropertiesKeys
 
 run.dependsOn runGitBlit

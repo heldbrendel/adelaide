@@ -15,18 +15,17 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-
+import com.gitblit.servlet.RawServlet;
+import com.gitblit.utils.DiffUtils;
+import com.gitblit.utils.HtmlBuilder;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketURLEncoder;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffEntry.Side;
 import org.jsoup.nodes.Element;
 
-import com.gitblit.servlet.RawServlet;
-import com.gitblit.utils.DiffUtils;
-import com.gitblit.utils.HtmlBuilder;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * A {@link DiffUtils.BinaryDiffHandler BinaryDiffHandler} for images.
@@ -89,12 +88,12 @@ public class ImageDiffHandler implements DiffUtils.BinaryDiffHandler {
 				// Blink comparator: find Pluto!
 				controls.appendElement("a").attr("class", "imgdiff-link imgdiff-blink").attr("href", "#")
 						.attr("title", page.getString("gb.blinkComparator"))
-						.appendElement("img").attr("src", getStaticResourceUrl("blink32.png")).attr("width", "20");
+                        .appendElement("img").attr("src", getStaticResourceUrl("images/blink32.png")).attr("width", "20");
 				// Pixel subtraction, initially not displayed, will be shown by imgdiff.js depending on feature test.
 				// (Uses CSS mix-blend-mode, which isn't supported on all browsers yet).
 				controls.appendElement("a").attr("class", "imgdiff-link imgdiff-subtract").attr("href", "#")
 						.attr("title", page.getString("gb.imgdiffSubtract")).attr("style", "display:none;")
-						.appendElement("img").attr("src", getStaticResourceUrl("sub32.png")).attr("width", "20");
+                        .appendElement("img").attr("src", getStaticResourceUrl("images/sub32.png")).attr("width", "20");
 				return builder.toString();
 			}
 			break;

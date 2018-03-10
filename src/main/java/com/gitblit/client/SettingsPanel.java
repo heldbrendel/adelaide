@@ -15,37 +15,19 @@
  */
 package com.gitblit.client;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.RowFilter;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableRowSorter;
-
 import com.gitblit.Constants.RpcRequest;
 import com.gitblit.models.SettingModel;
 import com.gitblit.utils.StringUtils;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Settings panel displays a list of server settings and their associated
@@ -166,7 +148,7 @@ public class SettingsPanel extends JPanel {
 		settingsControls.add(editSetting);
 
 		setLayout(new BorderLayout(Utils.MARGIN, Utils.MARGIN));
-		header = new HeaderPanel(Translation.get("gb.settings"), "settings_16x16.png");
+        header = new HeaderPanel(Translation.get("gb.settings"), "images/settings_16x16.png");
 		add(header, BorderLayout.NORTH);
 		add(settingsTablePanel, BorderLayout.CENTER);
 		add(settingsControls, BorderLayout.SOUTH);
@@ -250,7 +232,7 @@ public class SettingsPanel extends JPanel {
 		String defaultOption = options[0];
 		int selection = JOptionPane.showOptionDialog(SettingsPanel.this, settingPanel,
 				settingModel.name, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-				new ImageIcon(getClass().getResource("/settings_16x16.png")), options,
+                new ImageIcon(getClass().getResource("/images/settings_16x16.png")), options,
 				defaultOption);
 		if (selection <= 0) {
 			return;

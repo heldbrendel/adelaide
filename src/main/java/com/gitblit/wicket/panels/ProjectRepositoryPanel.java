@@ -15,16 +15,6 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.util.Map;
-
-import org.apache.wicket.Component;
-import org.apache.wicket.Localizer;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.panel.Fragment;
-
 import com.gitblit.Constants.AccessRestrictionType;
 import com.gitblit.Keys;
 import com.gitblit.models.RepositoryModel;
@@ -38,6 +28,15 @@ import com.gitblit.wicket.pages.EditRepositoryPage;
 import com.gitblit.wicket.pages.LogPage;
 import com.gitblit.wicket.pages.SummaryPage;
 import com.gitblit.wicket.pages.TreePage;
+import org.apache.wicket.Component;
+import org.apache.wicket.Localizer;
+import org.apache.wicket.PageParameters;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.panel.Fragment;
+
+import java.util.Map;
 
 public class ProjectRepositoryPanel extends BasePanel {
 
@@ -82,19 +81,19 @@ public class ProjectRepositoryPanel extends BasePanel {
 		}
 
 		if (entry.isSparkleshared()) {
-			add(WicketUtils.newImage("sparkleshareIcon", "star_16x16.png", localizer.getString("gb.isSparkleshared", parent)));
+            add(WicketUtils.newImage("sparkleshareIcon", "images/star_16x16.png", localizer.getString("gb.isSparkleshared", parent)));
 		} else {
 			add(WicketUtils.newClearPixel("sparkleshareIcon").setVisible(false));
 		}
 
 		if (!entry.isMirror && entry.isFrozen) {
-			add(WicketUtils.newImage("frozenIcon", "cold_16x16.png", localizer.getString("gb.isFrozen", parent)));
+            add(WicketUtils.newImage("frozenIcon", "images/cold_16x16.png", localizer.getString("gb.isFrozen", parent)));
 		} else {
 			add(WicketUtils.newClearPixel("frozenIcon").setVisible(false));
 		}
 
 		if (entry.isFederated) {
-			add(WicketUtils.newImage("federatedIcon", "federated_16x16.png", localizer.getString("gb.isFederated", parent)));
+            add(WicketUtils.newImage("federatedIcon", "images/federated_16x16.png", localizer.getString("gb.isFederated", parent)));
 		} else {
 			add(WicketUtils.newClearPixel("federatedIcon").setVisible(false));
 		}

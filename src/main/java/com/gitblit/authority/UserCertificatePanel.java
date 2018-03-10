@@ -15,33 +15,24 @@
  */
 package com.gitblit.authority;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.security.cert.X509Certificate;
-import java.text.MessageFormat;
-import java.util.Date;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableRowSorter;
-
 import com.gitblit.client.HeaderPanel;
 import com.gitblit.client.Translation;
 import com.gitblit.models.UserModel;
 import com.gitblit.utils.X509Utils.RevocationReason;
 import com.gitblit.utils.X509Utils.X509Metadata;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.security.cert.X509Certificate;
+import java.text.MessageFormat;
+import java.util.Date;
 
 public abstract class UserCertificatePanel extends JPanel {
 
@@ -75,7 +66,7 @@ public abstract class UserCertificatePanel extends JPanel {
 		fp.add(oidsPanel, BorderLayout.NORTH);
 
 		JPanel fieldsPanel = new JPanel(new BorderLayout());
-		fieldsPanel.add(new HeaderPanel(Translation.get("gb.properties"), "vcard_16x16.png"), BorderLayout.NORTH);
+        fieldsPanel.add(new HeaderPanel(Translation.get("gb.properties"), "images/vcard_16x16.png"), BorderLayout.NORTH);
 		fieldsPanel.add(fp, BorderLayout.CENTER);
 
 		saveUserButton = new JButton(Translation.get("gb.save"));
@@ -105,7 +96,7 @@ public abstract class UserCertificatePanel extends JPanel {
 		fieldsPanel.add(userControls, BorderLayout.SOUTH);
 
 		JPanel certificatesPanel = new JPanel(new BorderLayout());
-		certificatesPanel.add(new HeaderPanel(Translation.get("gb.certificates"), "rosette_16x16.png"), BorderLayout.NORTH);
+        certificatesPanel.add(new HeaderPanel(Translation.get("gb.certificates"), "images/rosette_16x16.png"), BorderLayout.NORTH);
 		tableModel = new CertificatesTableModel();
 		table = Utils.newTable(tableModel, Utils.DATE_FORMAT);
 		table.setRowSorter(new TableRowSorter<CertificatesTableModel>(tableModel));
@@ -172,7 +163,7 @@ public abstract class UserCertificatePanel extends JPanel {
 
 					AuthorityWorker worker = new AuthorityWorker(UserCertificatePanel.this.owner) {
 						@Override
-						protected Boolean doRequest() throws IOException {
+                        protected Boolean doRequest() {
 							return newCertificate(ucm, metadata, sendEmail);
 						}
 
@@ -210,7 +201,7 @@ public abstract class UserCertificatePanel extends JPanel {
 
 					Object choice = JOptionPane.showInputDialog(UserCertificatePanel.this.owner,
 							Translation.get("gb.revokeCertificateReason"), Translation.get("gb.revokeCertificate"),
-							JOptionPane.PLAIN_MESSAGE, new ImageIcon(getClass().getResource("/rosette_32x32.png")), choices, Translation.get("gb.unspecified"));
+                            JOptionPane.PLAIN_MESSAGE, new ImageIcon(getClass().getResource("/images/rosette_32x32.png")), choices, Translation.get("gb.unspecified"));
 					if (choice == null) {
 						return;
 					}
@@ -244,7 +235,7 @@ public abstract class UserCertificatePanel extends JPanel {
 						AuthorityWorker worker = new AuthorityWorker(UserCertificatePanel.this.owner) {
 
 							@Override
-							protected Boolean doRequest() throws IOException {
+                            protected Boolean doRequest() {
 								return revoke(ucm, cert, reason);
 							}
 

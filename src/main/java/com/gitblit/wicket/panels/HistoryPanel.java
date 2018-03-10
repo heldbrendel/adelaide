@@ -15,16 +15,17 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.gitblit.Constants;
+import com.gitblit.Keys;
+import com.gitblit.models.PathModel;
+import com.gitblit.models.PathModel.PathChangeModel;
+import com.gitblit.models.RefModel;
+import com.gitblit.models.SubmoduleModel;
+import com.gitblit.utils.JGitUtils;
+import com.gitblit.utils.MarkdownUtils;
+import com.gitblit.utils.StringUtils;
+import com.gitblit.wicket.WicketUtils;
+import com.gitblit.wicket.pages.*;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Fragment;
@@ -39,23 +40,8 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilterGroup;
 
-import com.gitblit.Constants;
-import com.gitblit.Keys;
-import com.gitblit.models.PathModel;
-import com.gitblit.models.PathModel.PathChangeModel;
-import com.gitblit.models.RefModel;
-import com.gitblit.models.SubmoduleModel;
-import com.gitblit.utils.JGitUtils;
-import com.gitblit.utils.MarkdownUtils;
-import com.gitblit.utils.StringUtils;
-import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.pages.BlobDiffPage;
-import com.gitblit.wicket.pages.BlobPage;
-import com.gitblit.wicket.pages.CommitDiffPage;
-import com.gitblit.wicket.pages.CommitPage;
-import com.gitblit.wicket.pages.GitSearchPage;
-import com.gitblit.wicket.pages.HistoryPage;
-import com.gitblit.wicket.pages.TreePage;
+import java.text.MessageFormat;
+import java.util.*;
 
 public class HistoryPanel extends BasePanel {
 
@@ -121,8 +107,8 @@ public class HistoryPanel extends BasePanel {
 			}
 		}
 
-		final boolean isTree = matchingPath == null ? true : matchingPath.isTree();
-		final boolean isSubmodule = matchingPath == null ? false : matchingPath.isSubmodule();
+        final boolean isTree = matchingPath == null || matchingPath.isTree();
+        final boolean isSubmodule = matchingPath != null && matchingPath.isSubmodule();
 
 		// submodule
 		final String submodulePath;
@@ -175,7 +161,7 @@ public class HistoryPanel extends BasePanel {
 
 				// merge icon
 				if (entry.getParentCount() > 1) {
-					item.add(WicketUtils.newImage("commitIcon", "commit_merge_16x16.png"));
+                    item.add(WicketUtils.newImage("commitIcon", "images/commit_merge_16x16.png"));
 				} else {
 					item.add(WicketUtils.newBlankImage("commitIcon"));
 				}

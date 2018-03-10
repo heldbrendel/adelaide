@@ -15,23 +15,15 @@
  */
 package com.gitblit.client;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.io.Serializable;
+import com.gitblit.models.FeedEntryModel;
+import org.eclipse.jgit.lib.Constants;
 
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.table.TableCellRenderer;
-
-import org.eclipse.jgit.lib.Constants;
-
-import com.gitblit.models.FeedEntryModel;
+import java.awt.*;
+import java.io.Serializable;
 
 /**
  * Message renderer displays the short log message and then any refs in a style
@@ -68,8 +60,8 @@ public class MessageRenderer extends JPanel implements TableCellRenderer, Serial
 		super(new FlowLayout(FlowLayout.LEFT, Utils.MARGIN, 1));
 		this.gitblit = gitblit;
 
-		mergeIcon = new ImageIcon(getClass().getResource("/commit_merge_16x16.png"));
-		blankIcon = new ImageIcon(getClass().getResource("/blank.png"));
+        mergeIcon = new ImageIcon(getClass().getResource("/images/commit_merge_16x16.png"));
+        blankIcon = new ImageIcon(getClass().getResource("/images/blank.png"));
 
 		messageLabel = new JLabel();
 

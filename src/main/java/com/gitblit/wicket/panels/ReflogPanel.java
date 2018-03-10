@@ -15,23 +15,6 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.text.DateFormat;
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
-
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
-import org.apache.wicket.model.StringResourceModel;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.transport.ReceiveCommand.Type;
-
 import com.gitblit.Constants;
 import com.gitblit.Keys;
 import com.gitblit.models.RefLogEntry;
@@ -42,13 +25,19 @@ import com.gitblit.utils.RefLogUtils;
 import com.gitblit.utils.StringUtils;
 import com.gitblit.utils.TimeUtils;
 import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.pages.CommitPage;
-import com.gitblit.wicket.pages.ComparePage;
-import com.gitblit.wicket.pages.ReflogPage;
-import com.gitblit.wicket.pages.TagPage;
-import com.gitblit.wicket.pages.TicketsPage;
-import com.gitblit.wicket.pages.TreePage;
-import com.gitblit.wicket.pages.UserPage;
+import com.gitblit.wicket.pages.*;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.model.StringResourceModel;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.transport.ReceiveCommand.Type;
+
+import java.text.DateFormat;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class ReflogPanel extends BasePanel {
 
@@ -275,7 +264,7 @@ public class ReflogPanel extends BasePanel {
 
 						// merge icon
 						if (commit.getParentCount() > 1) {
-							commitItem.add(WicketUtils.newImage("commitIcon", "commit_merge_16x16.png"));
+                            commitItem.add(WicketUtils.newImage("commitIcon", "images/commit_merge_16x16.png"));
 						} else {
 							commitItem.add(WicketUtils.newBlankImage("commitIcon"));
 						}
