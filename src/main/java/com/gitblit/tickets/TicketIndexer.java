@@ -15,46 +15,6 @@
  */
 package com.gitblit.tickets;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field.Store;
-import org.apache.lucene.document.IntField;
-import org.apache.lucene.document.LongField;
-import org.apache.lucene.document.NumericDocValuesField;
-import org.apache.lucene.document.SortedDocValuesField;
-import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.IndexWriterConfig.OpenMode;
-import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.BooleanClause.Occur;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.SortField;
-import org.apache.lucene.search.SortField.Type;
-import org.apache.lucene.search.TopFieldDocs;
-import org.apache.lucene.search.TopScoreDocCollector;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.BytesRef;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.gitblit.Keys;
 import com.gitblit.manager.IRuntimeManager;
 import com.gitblit.models.RepositoryModel;
@@ -64,6 +24,28 @@ import com.gitblit.models.TicketModel.Patchset;
 import com.gitblit.models.TicketModel.Status;
 import com.gitblit.utils.LuceneIndexStore;
 import com.gitblit.utils.StringUtils;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.*;
+import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.BooleanClause.Occur;
+import org.apache.lucene.search.*;
+import org.apache.lucene.search.SortField.Type;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.BytesRef;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.text.ParseException;
+import java.util.*;
 
 /**
  * Indexes tickets in a Lucene database.
@@ -76,7 +58,7 @@ public class TicketIndexer {
 	/**
 	 * Fields in the Lucene index
 	 */
-	public static enum Lucene {
+	public enum Lucene {
 
 		rid(Type.STRING),
 		did(Type.STRING),
@@ -392,7 +374,7 @@ public class TicketIndexer {
 	 * Search for tickets matching the query.  The returned tickets are
 	 * shadows of the real ticket, but suitable for a results list.
 	 *
-	 * @param text
+	 * @param queryText
 	 * @param page
 	 * @param pageSize
 	 * @param sortBy
@@ -404,7 +386,7 @@ public class TicketIndexer {
 			return Collections.emptyList();
 		}
 
-		Set<QueryResult> results = new LinkedHashSet<QueryResult>();
+		Set<QueryResult> results = new LinkedHashSet<>();
 		StandardAnalyzer analyzer = new StandardAnalyzer();
 		try {
 			QueryParser qp = new QueryParser(Lucene.content.name(), analyzer);
@@ -431,7 +413,7 @@ public class TicketIndexer {
 				Document doc = searcher.doc(docId);
 				QueryResult result = docToQueryResult(doc);
 				result.docId = docId;
-				result.totalResults = docs.totalHits;
+				result.totalResults = Math.toIntExact(docs.totalHits);
 				results.add(result);
 			}
 		} catch (Exception e) {
@@ -481,7 +463,7 @@ public class TicketIndexer {
 
 	private IndexSearcher getSearcher() throws IOException {
 		if (searcher == null) {
-			searcher = new IndexSearcher(DirectoryReader.open(getWriter(), true));
+			searcher = new IndexSearcher(DirectoryReader.open(getWriter()));
 		}
 		return searcher;
 	}
@@ -563,17 +545,17 @@ public class TicketIndexer {
 		if (value == null) {
 			return;
 		}
-		doc.add(new LongField(lucene.name(), value.getTime(), Store.YES));
+		doc.add(new LongPoint(lucene.name(), value.getTime()));
 		doc.add(new NumericDocValuesField(lucene.name(), value.getTime()));
 	}
 
 	private void toDocField(Document doc, Lucene lucene, long value) {
-		doc.add(new LongField(lucene.name(), value, Store.YES));
+		doc.add(new LongPoint(lucene.name(), value));
 		doc.add(new NumericDocValuesField(lucene.name(), value));
 	}
 
 	private void toDocField(Document doc, Lucene lucene, int value) {
-		doc.add(new IntField(lucene.name(), value, Store.YES));
+		doc.add(new IntPoint(lucene.name(), value));
 		doc.add(new NumericDocValuesField(lucene.name(), value));
 	}
 
@@ -594,7 +576,7 @@ public class TicketIndexer {
 	 * @return a query result
 	 * @throws ParseException
 	 */
-	private QueryResult docToQueryResult(Document doc) throws ParseException {
+	private QueryResult docToQueryResult(Document doc) {
 		QueryResult result = new QueryResult();
 		result.project = unpackString(doc, Lucene.project);
 		result.repository = unpackString(doc, Lucene.repository);
