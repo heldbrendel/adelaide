@@ -15,24 +15,9 @@
  */
 package com.gitblit.transport.ssh;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.sshd.common.config.keys.KeyUtils;
-import org.apache.sshd.common.util.GenericUtils;
-import org.apache.sshd.server.config.keys.AuthorizedKeyEntry;
-
+import com.gitblit.Constants.AccessPermission;
 import com.gitblit.IStoredSettings;
 import com.gitblit.Keys;
-import com.gitblit.Constants.AccessPermission;
 import com.gitblit.ldap.LdapConnection;
 import com.gitblit.models.UserModel;
 import com.gitblit.utils.StringUtils;
@@ -42,6 +27,16 @@ import com.unboundid.ldap.sdk.BindResult;
 import com.unboundid.ldap.sdk.ResultCode;
 import com.unboundid.ldap.sdk.SearchResult;
 import com.unboundid.ldap.sdk.SearchResultEntry;
+import org.apache.sshd.common.config.keys.AuthorizedKeyEntry;
+import org.apache.sshd.common.config.keys.KeyUtils;
+import org.apache.sshd.common.config.keys.PublicKeyEntryResolver;
+import org.apache.sshd.common.util.GenericUtils;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * LDAP-only public key manager
@@ -212,7 +207,7 @@ public class LdapKeyManager extends IPublicKeyManager {
 					List<SshKey> keyList = new ArrayList<>(authorizedKeys.size());
 					for (GbAuthorizedKeyEntry keyEntry : authorizedKeys) {
 						try {
-							SshKey key = new SshKey(keyEntry.resolvePublicKey());
+							SshKey key = new SshKey(keyEntry.resolvePublicKey(PublicKeyEntryResolver.FAILING));
 							key.setComment(keyEntry.getComment());
 							setKeyPermissions(key, keyEntry);
 							keyList.add(key);

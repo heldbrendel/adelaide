@@ -59,19 +59,19 @@ jar {
 mainClassName = "com.gitblit.GitBlitServer"
 
 dependencies {
-    compile group: 'com.google.inject', name: 'guice', version: '4.0'
-    compile group: 'com.google.inject.extensions', name: 'guice-servlet', version: '4.0-gb2'
-    compile group: 'com.google.guava', name: 'guava', version: '18.0'
+    compile 'com.google.inject:guice:4.2.0'
+    compile 'com.google.inject.extensions:guice-servlet:4.2.0'
+    compile 'com.google.guava:guava:24.0-jre'
 
-    compile group: 'com.intellij', name: 'annotations', version: '12.0'
+    compile 'org.jetbrains:annotations:15.0'
 
-    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.12'
+    compile 'ch.qos.logback:logback-classic:1.2.3'
+    compile 'org.slf4j:slf4j-api:1.7.12'
 
-    compile group: 'com.sun.mail', name: 'javax.mail', version: '1.5.1'
-    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
+    compile 'com.sun.mail:javax.mail:1.6.1'
+    compile 'javax.servlet:javax.servlet-api:4.0.0'
 
-    compile group: 'org.eclipse.jetty.aggregate', name: 'jetty-all', version: '9.2.13.v20150730'
+    compile 'org.eclipse.jetty.aggregate:jetty-all:9.4.8.v20171121'
 
     compile group: 'org.apache.wicket', name: 'wicket', version: '1.4.22'
     compile group: 'org.apache.wicket', name: 'wicket-auth-roles', version: '1.4.22'
@@ -92,15 +92,15 @@ dependencies {
     compile group: 'org.fusesource.wikitext', name: 'mediawiki-core', version: '1.4'
     compile group: 'org.fusesource.wikitext', name: 'confluence-core', version: '1.4'
 
-    compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '4.1.1.201511131810-r'
-    compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit.http.server', version: '4.1.1.201511131810-r'
+    compile 'org.eclipse.jgit:org.eclipse.jgit:4.11.0.201803080745-r'
+    compile 'org.eclipse.jgit:org.eclipse.jgit.http.server:4.11.0.201803080745-r'
 
-    compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.52'
-    compile group: 'org.bouncycastle', name: 'bcmail-jdk15on', version: '1.52'
-    compile group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.52'
+    compile 'org.bouncycastle:bcprov-jdk15on:1.59'
+    compile 'org.bouncycastle:bcmail-jdk15on:1.59'
+    compile 'org.bouncycastle:bcpkix-jdk15on:1.59'
 
-    compile group: 'org.apache.sshd', name: 'sshd-core', version: '1.0.0'
-    compile group: 'org.apache.mina', name: 'mina-core', version: '2.0.9'
+    compile 'org.apache.sshd:sshd-core:1.7.0'
+    compile 'org.apache.mina:mina-core:2.0.16'
 
     compile group: 'rome', name: 'rome', version: '0.9'
     compile group: 'com.google.code.gson', name: 'gson', version: '2.3.1'

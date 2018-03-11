@@ -15,6 +15,26 @@
  */
 package com.gitblit.transport.ssh;
 
+import com.gitblit.Constants;
+import com.gitblit.IStoredSettings;
+import com.gitblit.Keys;
+import com.gitblit.manager.IGitblit;
+import com.gitblit.transport.ssh.commands.SshCommandFactory;
+import com.gitblit.utils.JnaUtils;
+import com.gitblit.utils.StringUtils;
+import com.gitblit.utils.WorkQueue;
+import com.google.common.io.Files;
+import org.apache.sshd.common.io.IoServiceFactoryFactory;
+import org.apache.sshd.common.io.mina.MinaServiceFactoryFactory;
+import org.apache.sshd.common.io.nio2.Nio2ServiceFactoryFactory;
+import org.apache.sshd.common.util.security.SecurityUtils;
+import org.apache.sshd.server.SshServer;
+import org.apache.sshd.server.auth.pubkey.CachingPublicKeyAuthenticator;
+import org.bouncycastle.openssl.PEMWriter;
+import org.eclipse.jgit.internal.JGitText;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,27 +45,6 @@ import java.security.KeyPairGenerator;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.sshd.common.io.IoServiceFactoryFactory;
-import org.apache.sshd.common.io.mina.MinaServiceFactoryFactory;
-import org.apache.sshd.common.io.nio2.Nio2ServiceFactoryFactory;
-import org.apache.sshd.common.util.SecurityUtils;
-import org.apache.sshd.server.SshServer;
-import org.apache.sshd.server.auth.CachingPublicKeyAuthenticator;
-import org.bouncycastle.openssl.PEMWriter;
-import org.eclipse.jgit.internal.JGitText;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.gitblit.Constants;
-import com.gitblit.IStoredSettings;
-import com.gitblit.Keys;
-import com.gitblit.manager.IGitblit;
-import com.gitblit.transport.ssh.commands.SshCommandFactory;
-import com.gitblit.utils.JnaUtils;
-import com.gitblit.utils.StringUtils;
-import com.gitblit.utils.WorkQueue;
-import com.google.common.io.Files;
 
 /**
  * Manager for the ssh transport. Roughly analogous to the
@@ -62,8 +61,7 @@ public class SshDaemon {
 	private static final String AUTH_GSSAPI = "gssapi-with-mic";
 
 
-
-	public static enum SshSessionBackend {
+	public enum SshSessionBackend {
 		MINA, NIO2
 	}
 
@@ -92,7 +90,6 @@ public class SshDaemon {
 		IStoredSettings settings = gitblit.getSettings();
 
 		// Ensure that Bouncy Castle is our JCE provider
-		SecurityUtils.setRegisterBouncyCastle(true);
 		if (SecurityUtils.isBouncyCastleRegistered()) {
 			log.debug("BouncyCastle is registered as a JCE provider");
 		}
@@ -158,9 +155,9 @@ public class SshDaemon {
 			log.info("SSH: adding GSSAPI authentication method.");
 		}
 
-		sshd.setSessionFactory(new SshServerSessionFactory());
+		sshd.setSessionFactory(new SshServerSessionFactory(sshd));
 		sshd.setFileSystemFactory(new DisabledFilesystemFactory());
-		sshd.setTcpipForwardingFilter(new NonForwardingFilter());
+		sshd.setForwardingFilter(new NonForwardingFilter());
 		sshd.setCommandFactory(new SshCommandFactory(gitblit, workQueue));
 		sshd.setShellFactory(new WelcomeShell(gitblit));
 

@@ -15,60 +15,57 @@
  */
 package com.gitblit.transport.ssh;
 
+import com.gitblit.models.UserModel;
+import org.apache.sshd.common.AttributeStore;
+
 import java.net.SocketAddress;
 
-import org.apache.sshd.common.session.Session.AttributeKey;
-
-import com.gitblit.models.UserModel;
-
 /**
- *
  * @author Eric Myrhe
- *
  */
 public class SshDaemonClient {
-	public static final AttributeKey<SshDaemonClient> KEY = new AttributeKey<SshDaemonClient>();
+    public static final AttributeStore.AttributeKey<SshDaemonClient> KEY = new AttributeStore.AttributeKey<>();
 
-	private final SocketAddress remoteAddress;
+    private final SocketAddress remoteAddress;
 
-	private volatile UserModel user;
-	private volatile SshKey key;
-	private volatile String repositoryName;
+    private volatile UserModel user;
+    private volatile SshKey key;
+    private volatile String repositoryName;
 
-	SshDaemonClient(SocketAddress peer) {
-		this.remoteAddress = peer;
-	}
+    SshDaemonClient(SocketAddress peer) {
+        this.remoteAddress = peer;
+    }
 
-	public SocketAddress getRemoteAddress() {
-		return remoteAddress;
-	}
+    public SocketAddress getRemoteAddress() {
+        return remoteAddress;
+    }
 
-	public UserModel getUser() {
-		return user;
-	}
+    public UserModel getUser() {
+        return user;
+    }
 
-	public void setUser(UserModel user) {
-		this.user = user;
-	}
+    public void setUser(UserModel user) {
+        this.user = user;
+    }
 
-	public String getUsername() {
-		return user == null ? null : user.username;
-	}
+    public String getUsername() {
+        return user == null ? null : user.username;
+    }
 
-	public void setRepositoryName(String repositoryName) {
-		this.repositoryName = repositoryName;
-	}
+    public void setRepositoryName(String repositoryName) {
+        this.repositoryName = repositoryName;
+    }
 
-	public String getRepositoryName() {
-		return repositoryName;
-	}
+    public String getRepositoryName() {
+        return repositoryName;
+    }
 
-	public SshKey getKey() {
-		return key;
-	}
+    public SshKey getKey() {
+        return key;
+    }
 
-	public void setKey(SshKey key) {
-		this.key = key;
-	}
+    public void setKey(SshKey key) {
+        this.key = key;
+    }
 
 }
