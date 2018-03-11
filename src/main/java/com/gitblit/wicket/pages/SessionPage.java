@@ -15,14 +15,6 @@
  */
 package com.gitblit.wicket.pages;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.protocol.http.WebRequest;
-import org.apache.wicket.protocol.http.WebResponse;
-
 import com.gitblit.Constants;
 import com.gitblit.Constants.AuthenticationType;
 import com.gitblit.Keys;
@@ -30,99 +22,106 @@ import com.gitblit.models.UserModel;
 import com.gitblit.utils.StringUtils;
 import com.gitblit.wicket.GitBlitWebApp;
 import com.gitblit.wicket.GitBlitWebSession;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public abstract class SessionPage extends WebPage {
 
-	public SessionPage() {
-		super();
-		login();
-	}
+    public SessionPage() {
+        super();
+        login();
+    }
 
-	public SessionPage(final PageParameters params) {
-		super(params);
-		login();
-	}
+    public SessionPage(final PageParameters params) {
+        super(params);
+        login();
+    }
 
-	protected String [] getEncodings() {
-		return app().settings().getStrings(Keys.web.blobEncodings).toArray(new String[0]);
-	}
+    protected String[] getEncodings() {
+        return app().settings().getStrings(Keys.web.blobEncodings).toArray(new String[0]);
+    }
 
-	protected GitBlitWebApp app() {
-		return GitBlitWebApp.get();
-	}
+    protected GitBlitWebApp app() {
+        return GitBlitWebApp.get();
+    }
 
-	private void login() {
-		GitBlitWebSession session = GitBlitWebSession.get();
-		HttpServletRequest request = ((WebRequest) getRequest()).getHttpServletRequest();
-		HttpServletResponse response = ((WebResponse) getResponse()).getHttpServletResponse();
+    private void login() {
+        GitBlitWebSession session = GitBlitWebSession.get();
+        HttpServletRequest request = ((ServletWebRequest) getRequest()).getContainerRequest();
+        HttpServletResponse response = ((ServletWebResponse) getResponse()).getContainerResponse();
 
-		// If using container/external servlet authentication, use request attribute
-		String authedUser = (String) request.getAttribute(Constants.ATTRIB_AUTHUSER);
+        // If using container/external servlet authentication, use request attribute
+        String authedUser = (String) request.getAttribute(Constants.ATTRIB_AUTHUSER);
 
-		// Default to trusting session authentication if not set in request by external processing
-		if (StringUtils.isEmpty(authedUser) && session.isLoggedIn()) {
-			authedUser = session.getUsername();
-		}
+        // Default to trusting session authentication if not set in request by external processing
+        if (StringUtils.isEmpty(authedUser) && session.isLoggedIn()) {
+            authedUser = session.getUsername();
+        }
 
-		if (!StringUtils.isEmpty(authedUser)) {
-			// Avoid session fixation for non-session authentication
-			// If the authenticated user is different from the session user, discard
-			// the old session entirely, without trusting any session values
-			if (!authedUser.equals(session.getUsername())) {
-				session.replaceSession();
-			}
+        if (!StringUtils.isEmpty(authedUser)) {
+            // Avoid session fixation for non-session authentication
+            // If the authenticated user is different from the session user, discard
+            // the old session entirely, without trusting any session values
+            if (!authedUser.equals(session.getUsername())) {
+                session.replaceSession();
+            }
 
-			if (!session.isSessionInvalidated()) {
-				// Refresh usermodel to pick up any changes to permissions or roles (issue-186)
-				UserModel user = app().users().getUserModel(authedUser);
+            if (!session.isSessionInvalidated()) {
+                // Refresh usermodel to pick up any changes to permissions or roles (issue-186)
+                UserModel user = app().users().getUserModel(authedUser);
 
-				if (user == null || user.disabled) {
-					// user was deleted/disabled during session
-					app().authentication().logout(request, response, user);
-					session.setUser(null);
-					session.invalidateNow();
-					return;
-				}
+                if (user == null || user.disabled) {
+                    // user was deleted/disabled during session
+                    app().authentication().logout(request, response, user);
+                    session.setUser(null);
+                    session.invalidateNow();
+                    return;
+                }
 
-				// validate cookie during session (issue-361)
-				if (app().settings().getBoolean(Keys.web.allowCookieAuthentication, true)) {
-					String requestCookie = app().authentication().getCookie(request);
-					if (!StringUtils.isEmpty(requestCookie) && !StringUtils.isEmpty(user.cookie)) {
-						if (!requestCookie.equals(user.cookie)) {
-							// cookie was changed during our session
-							app().authentication().logout(request, response, user);
-							session.setUser(null);
-							session.invalidateNow();
-							return;
-						}
-					}
-				}
-				session.setUser(user);
-				session.continueRequest();
-				return;
-			}
-		}
+                // validate cookie during session (issue-361)
+                if (app().settings().getBoolean(Keys.web.allowCookieAuthentication, true)) {
+                    String requestCookie = app().authentication().getCookie(request);
+                    if (!StringUtils.isEmpty(requestCookie) && !StringUtils.isEmpty(user.cookie)) {
+                        if (!requestCookie.equals(user.cookie)) {
+                            // cookie was changed during our session
+                            app().authentication().logout(request, response, user);
+                            session.setUser(null);
+                            session.invalidateNow();
+                            return;
+                        }
+                    }
+                }
+                session.setUser(user);
+                session.continueRequest();
+                return;
+            }
+        }
 
-		// try to authenticate by servlet request
-		UserModel user = app().authentication().authenticate(request);
+        // try to authenticate by servlet request
+        UserModel user = app().authentication().authenticate(request);
 
-		// Login the user
-		if (user != null) {
-			AuthenticationType authenticationType = (AuthenticationType) request.getAttribute(Constants.ATTRIB_AUTHTYPE);
+        // Login the user
+        if (user != null) {
+            AuthenticationType authenticationType = (AuthenticationType) request.getAttribute(Constants.ATTRIB_AUTHTYPE);
 
-			// issue 62: fix session fixation vulnerability
-			// but only if authentication was done in the container.
-			// It avoid double change of session, that some authentication method
-			// don't like
-			if (AuthenticationType.CONTAINER != authenticationType) {
-				session.replaceSession();
-			}
-			session.setUser(user);
+            // issue 62: fix session fixation vulnerability
+            // but only if authentication was done in the container.
+            // It avoid double change of session, that some authentication method
+            // don't like
+            if (AuthenticationType.CONTAINER != authenticationType) {
+                session.replaceSession();
+            }
+            session.setUser(user);
 
-			// Set Cookie
-			app().authentication().setCookie(request, response, user);
+            // Set Cookie
+            app().authentication().setCookie(request, response, user);
 
-			session.continueRequest();
-		}
-	}
+            session.continueRequest();
+        }
+    }
 }

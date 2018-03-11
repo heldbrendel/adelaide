@@ -15,26 +15,12 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.behavior.HeaderContributor;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Fragment;
-
 import com.gitblit.Keys;
 import com.gitblit.models.Activity;
 import com.gitblit.models.Menu.ParameterMenuItem;
-import com.gitblit.models.NavLink.DropDownPageMenuNavLink;
 import com.gitblit.models.Metric;
 import com.gitblit.models.NavLink;
+import com.gitblit.models.NavLink.DropDownPageMenuNavLink;
 import com.gitblit.models.RepositoryModel;
 import com.gitblit.utils.ActivityUtils;
 import com.gitblit.utils.StringUtils;
@@ -45,6 +31,14 @@ import com.gitblit.wicket.charting.Chart;
 import com.gitblit.wicket.charting.Charts;
 import com.gitblit.wicket.charting.Flotr2Charts;
 import com.gitblit.wicket.panels.ActivityPanel;
+import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Activity Page shows a list of recent commits across all visible Gitblit
@@ -141,8 +135,8 @@ public class ActivityPage extends RootPage {
 
 		PageParameters currentParameters = getPageParameters();
 		int daysBack = app().settings().getInteger(Keys.web.activityDuration, 7);
-		if (currentParameters != null && !currentParameters.containsKey("db")) {
-			currentParameters.put("db", daysBack);
+		if (currentParameters != null && !currentParameters.getNamedKeys().contains("db")) {
+			currentParameters.add("db", daysBack);
 		}
 
 		// preserve time filter options on repository choices

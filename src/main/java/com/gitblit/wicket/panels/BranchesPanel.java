@@ -15,27 +15,6 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
-import org.apache.wicket.model.StringResourceModel;
-import org.apache.wicket.protocol.http.RequestUtils;
-import org.apache.wicket.request.target.basic.RedirectRequestTarget;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
-
 import com.gitblit.Constants;
 import com.gitblit.models.RefModel;
 import com.gitblit.models.RepositoryModel;
@@ -48,12 +27,27 @@ import com.gitblit.utils.RefLogUtils;
 import com.gitblit.utils.StringUtils;
 import com.gitblit.wicket.GitBlitWebSession;
 import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.pages.BranchesPage;
-import com.gitblit.wicket.pages.CommitPage;
-import com.gitblit.wicket.pages.GitSearchPage;
-import com.gitblit.wicket.pages.LogPage;
-import com.gitblit.wicket.pages.MetricsPage;
-import com.gitblit.wicket.pages.TreePage;
+import com.gitblit.wicket.pages.*;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.protocol.http.RequestUtils;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.target.basic.RedirectRequestTarget;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
+
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class BranchesPanel extends BasePanel {
 

@@ -15,12 +15,11 @@
  */
 package com.gitblit.wicket.pages;
 
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-
 import com.gitblit.models.UserModel;
 import com.gitblit.wicket.GitBlitWebSession;
 import com.gitblit.wicket.WicketUtils;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class NoTicketsPage extends RepositoryPage {
 

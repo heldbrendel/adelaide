@@ -15,10 +15,12 @@
  */
 package com.gitblit.wicket.charting;
 
-import javax.servlet.ServletContext;
-
-import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.protocol.http.WebApplication;
+
+import javax.servlet.ServletContext;
 
 /**
  * Concrete class for Flotr2 charts
@@ -37,9 +39,9 @@ public class Flotr2Charts extends Charts {
 		ServletContext servletContext = WebApplication.get().getServletContext();
 		String contextPath = servletContext.getContextPath();
 
-		response.renderJavascriptReference(contextPath + "/bootstrap/js/jquery.js");
-		response.renderJavascriptReference(contextPath + "/flotr2/flotr2.min.js");
-		response.renderCSSReference(contextPath + "/flotr2/flotr2.custom.css");
+        response.render(JavaScriptHeaderItem.forUrl(contextPath + "/bootstrap/js/jquery.js"));
+        response.render(JavaScriptHeaderItem.forUrl(contextPath + "/flotr2/flotr2.min.js"));
+        response.render(CssHeaderItem.forUrl(contextPath + "/flotr2/flotr2.custom.css"));
 
 		// prepare draw chart function
 		StringBuilder sb = new StringBuilder();

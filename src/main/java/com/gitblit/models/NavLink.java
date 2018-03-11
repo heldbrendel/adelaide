@@ -15,14 +15,13 @@
  */
 package com.gitblit.models;
 
+import com.gitblit.models.Menu.MenuItem;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.WebPage;
-
-import com.gitblit.models.Menu.MenuItem;
 
 /**
  * Represents a navigation link for the navigation panel.

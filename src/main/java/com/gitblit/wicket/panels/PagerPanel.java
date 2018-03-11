@@ -15,18 +15,17 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.wicket.PageParameters;
+import com.gitblit.wicket.WicketUtils;
+import com.gitblit.wicket.pages.BasePage;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.pages.BasePage;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PagerPanel extends Panel {
 

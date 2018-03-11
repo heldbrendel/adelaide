@@ -15,148 +15,151 @@
  */
 package com.gitblit.wicket;
 
+import com.gitblit.models.UserModel;
+import org.apache.wicket.Page;
+import org.apache.wicket.Session;
+import org.apache.wicket.protocol.http.RequestUtils;
+import org.apache.wicket.protocol.http.WebSession;
+import org.apache.wicket.request.IRequestParameters;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.flow.RedirectToUrlException;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.wicket.Page;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.RedirectToUrlException;
-import org.apache.wicket.Request;
-import org.apache.wicket.Session;
-import org.apache.wicket.protocol.http.RequestUtils;
-import org.apache.wicket.protocol.http.WebRequestCycle;
-import org.apache.wicket.protocol.http.WebSession;
-import org.apache.wicket.protocol.http.request.WebClientInfo;
-
-import com.gitblit.models.UserModel;
-
 public final class GitBlitWebSession extends WebSession {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	protected TimeZone timezone;
+    protected TimeZone timezone;
 
-	private UserModel user;
+    private UserModel user;
 
-	private String errorMessage;
+    private String errorMessage;
 
-	private String requestUrl;
+    private String requestUrl;
 
-	private AtomicBoolean isForking;
+    private AtomicBoolean isForking;
 
-	public GitBlitWebSession(Request request) {
-		super(request);
-		isForking = new AtomicBoolean();
-	}
+    public GitBlitWebSession(Request request) {
+        super(request);
+        isForking = new AtomicBoolean();
+    }
 
-	@Override
-	public void invalidate() {
-		super.invalidate();
-		user = null;
-	}
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        user = null;
+    }
 
-	/**
-	 * Cache the requested protected resource pending successful authentication.
-	 *
-	 * @param pageClass
-	 */
-	public void cacheRequest(Class<? extends Page> pageClass) {
-		// build absolute url with correctly encoded parameters?!
-		Request req = WebRequestCycle.get().getRequest();
-		Map<String, ?> params = req.getRequestParameters().getParameters();
-		PageParameters pageParams = new PageParameters(params);
-		String relativeUrl = WebRequestCycle.get().urlFor(pageClass, pageParams).toString();
-		requestUrl = RequestUtils.toAbsolutePath(relativeUrl);
-		if (isTemporary())
-		{
-			// we must bind the temporary session into the session store
-			// so that we can re-use this session for reporting an error message
-			// on the redirected page and continuing the request after
-			// authentication.
-			bind();
-		}
-	}
+    /**
+     * Cache the requested protected resource pending successful authentication.
+     *
+     * @param pageClass
+     */
+    public void cacheRequest(Class<? extends Page> pageClass) {
+        // build absolute url with correctly encoded parameters?!
+        Request req = RequestCycle.get().getRequest();
 
-	/**
-	 * Continue any cached request.  This is used when a request for a protected
-	 * resource is aborted/redirected pending proper authentication.  Gitblit
-	 * no longer uses Wicket's built-in mechanism for this because of Wicket's
-	 * failure to properly handle parameters with forward-slashes.  This is a
-	 * constant source of headaches with Wicket.
-	 *
-	 * @return false if there is no cached request to process
-	 */
-	public boolean continueRequest() {
-		if (requestUrl != null) {
-			String url = requestUrl;
-			requestUrl = null;
-			throw new RedirectToUrlException(url);
-		}
-		return false;
-	}
+        PageParameters pageParams = new PageParameters();
+        IRequestParameters requestParameters = req.getRequestParameters();
+        for (String paramName : requestParameters.getParameterNames()) {
+            pageParams.add(paramName, requestParameters.getParameterValue(paramName));
+        }
+        String relativeUrl = RequestCycle.get().urlFor(pageClass, pageParams).toString();
 
-	public boolean isLoggedIn() {
-		return user != null;
-	}
+        String baseUrl = RequestCycle.get().getUrlRenderer().getBaseUrl().toString();
+        requestUrl = RequestUtils.toAbsolutePath(baseUrl, relativeUrl);
+        if (isTemporary()) {
+            // we must bind the temporary session into the session store
+            // so that we can re-use this session for reporting an error message
+            // on the redirected page and continuing the request after
+            // authentication.
+            bind();
+        }
+    }
 
-	public boolean canAdmin() {
-		if (user == null) {
-			return false;
-		}
-		return user.canAdmin();
-	}
+    /**
+     * Continue any cached request.  This is used when a request for a protected
+     * resource is aborted/redirected pending proper authentication.  Gitblit
+     * no longer uses Wicket's built-in mechanism for this because of Wicket's
+     * failure to properly handle parameters with forward-slashes.  This is a
+     * constant source of headaches with Wicket.
+     *
+     * @return false if there is no cached request to process
+     */
+    public boolean continueRequest() {
+        if (requestUrl != null) {
+            String url = requestUrl;
+            requestUrl = null;
+            throw new RedirectToUrlException(url);
+        }
+        return false;
+    }
 
-	public String getUsername() {
-		return user == null ? "anonymous" : user.username;
-	}
+    public boolean isLoggedIn() {
+        return user != null;
+    }
 
-	public UserModel getUser() {
-		return user;
-	}
+    public boolean canAdmin() {
+        if (user == null) {
+            return false;
+        }
+        return user.canAdmin();
+    }
 
-	public void setUser(UserModel user) {
-		this.user = user;
-		if (user != null) {
-			Locale preferredLocale = user.getPreferences().getLocale();
-			if (preferredLocale != null) {
-				// set the user's preferred locale
-				setLocale(preferredLocale);
-			}
-		}
-	}
+    public String getUsername() {
+        return user == null ? "anonymous" : user.username;
+    }
 
-	public TimeZone getTimezone() {
-		if (timezone == null) {
-			timezone = ((WebClientInfo) getClientInfo()).getProperties().getTimeZone();
-		}
-		// use server timezone if we can't determine the client timezone
-		if (timezone == null) {
-			timezone = TimeZone.getDefault();
-		}
-		return timezone;
-	}
+    public UserModel getUser() {
+        return user;
+    }
 
-	public void cacheErrorMessage(String message) {
-		this.errorMessage = message;
-	}
+    public void setUser(UserModel user) {
+        this.user = user;
+        if (user != null) {
+            Locale preferredLocale = user.getPreferences().getLocale();
+            if (preferredLocale != null) {
+                // set the user's preferred locale
+                setLocale(preferredLocale);
+            }
+        }
+    }
 
-	public String clearErrorMessage() {
-		String msg = errorMessage;
-		errorMessage = null;
-		return msg;
-	}
+    public TimeZone getTimezone() {
+        if (timezone == null) {
+            timezone = getClientInfo().getProperties().getTimeZone();
+        }
+        // use server timezone if we can't determine the client timezone
+        if (timezone == null) {
+            timezone = TimeZone.getDefault();
+        }
+        return timezone;
+    }
 
-	public boolean isForking() {
-		return isForking.get();
-	}
+    public void cacheErrorMessage(String message) {
+        this.errorMessage = message;
+    }
 
-	public void isForking(boolean val) {
-		isForking.set(val);
-	}
+    public String clearErrorMessage() {
+        String msg = errorMessage;
+        errorMessage = null;
+        return msg;
+    }
 
-	public static GitBlitWebSession get() {
-		return (GitBlitWebSession) Session.get();
-	}
+    public boolean isForking() {
+        return isForking.get();
+    }
+
+    public void isForking(boolean val) {
+        isForking.set(val);
+    }
+
+    public static GitBlitWebSession get() {
+        return (GitBlitWebSession) Session.get();
+    }
 }

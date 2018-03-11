@@ -15,64 +15,62 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.io.Serializable;
-import java.text.MessageFormat;
-
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.request.target.basic.RedirectRequestTarget;
-
 import com.gitblit.utils.StringUtils;
 import com.gitblit.wicket.SessionlessForm;
 import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.pages.BasePage;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.request.http.handler.RedirectRequestHandler;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+import java.io.Serializable;
+import java.text.MessageFormat;
 
 public class TicketSearchForm extends SessionlessForm<Void> implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private final String repositoryName;
+    private final String repositoryName;
 
-	private final IModel<String> searchBoxModel;
+    private final IModel<String> searchBoxModel;
 
-	public TicketSearchForm(String id, String repositoryName, String text,
-			Class<? extends BasePage> pageClass, PageParameters params) {
+    public TicketSearchForm(String id, String repositoryName, String text,
+                            Class<? extends BasePage> pageClass, PageParameters params) {
 
-		super(id, pageClass, params);
+        super(id, pageClass, params);
 
-		this.repositoryName = repositoryName;
-		this.searchBoxModel = new Model<String>(text == null ? "" : text);
+        this.repositoryName = repositoryName;
+        this.searchBoxModel = new Model<String>(text == null ? "" : text);
 
-		TextField<String> searchBox = new TextField<String>("ticketSearchBox", searchBoxModel);
-		add(searchBox);
-	}
+        TextField<String> searchBox = new TextField<String>("ticketSearchBox", searchBoxModel);
+        add(searchBox);
+    }
 
-	@Override
-	protected
-	void onInitialize() {
-		super.onInitialize();
-		WicketUtils.setHtmlTooltip(get("ticketSearchBox"),
-				MessageFormat.format(getString("gb.searchTicketsTooltip"), ""));
-		WicketUtils.setInputPlaceholder(get("ticketSearchBox"), getString("gb.searchTickets"));
-	}
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+        WicketUtils.setHtmlTooltip(get("ticketSearchBox"),
+                MessageFormat.format(getString("gb.searchTicketsTooltip"), ""));
+        WicketUtils.setInputPlaceholder(get("ticketSearchBox"), getString("gb.searchTickets"));
+    }
 
-	@Override
-	public void onSubmit() {
-		String searchString = searchBoxModel.getObject();
-		if (StringUtils.isEmpty(searchString)) {
-			// redirect to self to avoid wicket page update bug
-			String absoluteUrl = getAbsoluteUrl();
-			getRequestCycle().setRequestTarget(new RedirectRequestTarget(absoluteUrl));
-			return;
-		}
+    @Override
+    public void onSubmit() {
+        String searchString = searchBoxModel.getObject();
+        if (StringUtils.isEmpty(searchString)) {
+            // redirect to self to avoid wicket page update bug
+            String absoluteUrl = getAbsoluteUrl();
+            getRequestCycle().scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(absoluteUrl));
+            return;
+        }
 
-		// use an absolute url to workaround Wicket-Tomcat problems with
-		// mounted url parameters (issue-111)
-		PageParameters params = WicketUtils.newRepositoryParameter(repositoryName);
-		params.add("s", searchString);
-		String absoluteUrl = getAbsoluteUrl(pageClass, params);
-		getRequestCycle().setRequestTarget(new RedirectRequestTarget(absoluteUrl));
-	}
+        // use an absolute url to workaround Wicket-Tomcat problems with
+        // mounted url parameters (issue-111)
+        PageParameters params = WicketUtils.newRepositoryParameter(repositoryName);
+        params.add("s", searchString);
+        String absoluteUrl = getAbsoluteUrl(pageClass, params);
+        getRequestCycle().scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(absoluteUrl));
+    }
 }

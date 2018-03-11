@@ -15,26 +15,6 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.wicket.Component;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.ListMultipleChoice;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
-import org.apache.wicket.model.Model;
-import org.eclipse.jgit.lib.Constants;
-
 import com.gitblit.Constants.SearchType;
 import com.gitblit.Keys;
 import com.gitblit.models.RepositoryModel;
@@ -48,6 +28,25 @@ import com.gitblit.wicket.StringChoiceRenderer;
 import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.panels.LinkPanel;
 import com.gitblit.wicket.panels.PagerPanel;
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.ListMultipleChoice;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.eclipse.jgit.lib.Constants;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public class LuceneSearchPage extends RootPage {
 

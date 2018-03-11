@@ -15,58 +15,16 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.io.Serializable;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.wicket.Component;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.RestartResponseException;
-import org.apache.wicket.behavior.SimpleAttributeModifier;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.request.target.basic.RedirectRequestTarget;
-import org.eclipse.jgit.diff.DiffEntry.ChangeType;
-import org.eclipse.jgit.lib.PersonIdent;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.gitblit.Constants;
 import com.gitblit.GitBlitException;
 import com.gitblit.Keys;
 import com.gitblit.extensions.RepositoryNavLinkExtension;
-import com.gitblit.models.NavLink;
+import com.gitblit.models.*;
 import com.gitblit.models.NavLink.ExternalNavLink;
 import com.gitblit.models.NavLink.PageNavLink;
-import com.gitblit.models.ProjectModel;
-import com.gitblit.models.RefModel;
-import com.gitblit.models.RepositoryModel;
-import com.gitblit.models.SubmoduleModel;
-import com.gitblit.models.UserModel;
-import com.gitblit.models.UserRepositoryPreferences;
 import com.gitblit.servlet.PagesServlet;
 import com.gitblit.servlet.SyndicationServlet;
-import com.gitblit.utils.ArrayUtils;
-import com.gitblit.utils.BugtraqProcessor;
-import com.gitblit.utils.DeepCopier;
-import com.gitblit.utils.JGitUtils;
-import com.gitblit.utils.ModelUtils;
-import com.gitblit.utils.RefLogUtils;
-import com.gitblit.utils.StringUtils;
+import com.gitblit.utils.*;
 import com.gitblit.wicket.CacheControl;
 import com.gitblit.wicket.GitBlitWebSession;
 import com.gitblit.wicket.SessionlessForm;
@@ -75,6 +33,27 @@ import com.gitblit.wicket.panels.LinkPanel;
 import com.gitblit.wicket.panels.NavigationPanel;
 import com.gitblit.wicket.panels.RefsPanel;
 import com.google.common.base.Optional;
+import org.apache.wicket.Component;
+import org.apache.wicket.RestartResponseException;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.target.basic.RedirectRequestTarget;
+import org.eclipse.jgit.diff.DiffEntry.ChangeType;
+import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.text.MessageFormat;
+import java.util.*;
 
 public abstract class RepositoryPage extends RootPage {
 

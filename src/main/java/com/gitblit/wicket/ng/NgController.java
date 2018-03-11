@@ -15,16 +15,15 @@
  */
 package com.gitblit.wicket.ng;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.apache.wicket.markup.html.IHeaderContributor;
+import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.request.resource.ResourceReference;
+
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.wicket.ResourceReference;
-import org.apache.wicket.markup.html.IHeaderContributor;
-import org.apache.wicket.markup.html.IHeaderResponse;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * Simple AngularJS data controller which injects scoped objects as static,

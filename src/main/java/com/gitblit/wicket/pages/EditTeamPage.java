@@ -15,29 +15,6 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.behavior.SimpleAttributeModifier;
-import org.apache.wicket.extensions.markup.html.form.palette.Palette;
-import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.util.CollectionModel;
-import org.apache.wicket.model.util.ListModel;
-
 import com.gitblit.Constants.RegistrantType;
 import com.gitblit.Constants.Role;
 import com.gitblit.GitBlitException;
@@ -52,6 +29,17 @@ import com.gitblit.wicket.StringChoiceRenderer;
 import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.panels.BulletListPanel;
 import com.gitblit.wicket.panels.RegistrantPermissionsPanel;
+import org.apache.wicket.extensions.markup.html.form.palette.Palette;
+import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.CollectionModel;
+import org.apache.wicket.model.util.ListModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+import java.text.MessageFormat;
+import java.util.*;
 
 @RequiresAdminRole
 public class EditTeamPage extends RootSubPage {

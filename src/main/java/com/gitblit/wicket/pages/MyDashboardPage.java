@@ -15,26 +15,6 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.wicket.Component;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Fragment;
-import org.eclipse.jgit.lib.Constants;
-
 import com.gitblit.Keys;
 import com.gitblit.models.ProjectModel;
 import com.gitblit.models.RepositoryModel;
@@ -48,6 +28,18 @@ import com.gitblit.wicket.GitBlitWebSession;
 import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.panels.FilterableProjectList;
 import com.gitblit.wicket.panels.FilterableRepositoryList;
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.eclipse.jgit.lib.Constants;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.MessageFormat;
+import java.util.*;
 
 @CacheControl(LastModified.ACTIVITY)
 public class MyDashboardPage extends DashboardPage {

@@ -15,25 +15,6 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.RestartResponseException;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-
 import com.gitblit.models.RepositoryModel;
 import com.gitblit.models.TicketModel;
 import com.gitblit.models.TicketModel.Status;
@@ -44,6 +25,20 @@ import com.gitblit.wicket.GitBlitWebSession;
 import com.gitblit.wicket.Html5DateField;
 import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.panels.BasePanel.JavascriptEventConfirmation;
+import org.apache.wicket.RestartResponseException;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Page for creating a new milestone.

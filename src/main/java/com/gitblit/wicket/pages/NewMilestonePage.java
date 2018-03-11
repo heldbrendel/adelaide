@@ -15,9 +15,14 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.util.Date;
-
-import org.apache.wicket.PageParameters;
+import com.gitblit.models.RepositoryModel;
+import com.gitblit.models.UserModel;
+import com.gitblit.tickets.TicketMilestone;
+import com.gitblit.utils.StringUtils;
+import com.gitblit.utils.TimeUtils;
+import com.gitblit.wicket.GitBlitWebSession;
+import com.gitblit.wicket.Html5DateField;
+import com.gitblit.wicket.WicketUtils;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -27,15 +32,9 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import com.gitblit.models.RepositoryModel;
-import com.gitblit.models.UserModel;
-import com.gitblit.tickets.TicketMilestone;
-import com.gitblit.utils.StringUtils;
-import com.gitblit.utils.TimeUtils;
-import com.gitblit.wicket.GitBlitWebSession;
-import com.gitblit.wicket.Html5DateField;
-import com.gitblit.wicket.WicketUtils;
+import java.util.Date;
 
 /**
  * Page for creating a new milestone.

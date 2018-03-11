@@ -15,21 +15,6 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.text.MessageFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.behavior.HeaderContributor;
-import org.apache.wicket.markup.html.basic.Label;
-import org.eclipse.jgit.lib.Repository;
-
 import com.gitblit.models.Metric;
 import com.gitblit.utils.MetricUtils;
 import com.gitblit.utils.StringUtils;
@@ -39,6 +24,15 @@ import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.charting.Chart;
 import com.gitblit.wicket.charting.Charts;
 import com.gitblit.wicket.charting.Flotr2Charts;
+import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.eclipse.jgit.lib.Repository;
+
+import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @CacheControl(LastModified.REPOSITORY)
 public class MetricsPage extends RepositoryPage {

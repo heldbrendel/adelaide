@@ -15,19 +15,6 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.behavior.HeaderContributor;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
-import org.eclipse.jgit.lib.Repository;
-
 import com.gitblit.Keys;
 import com.gitblit.models.Metric;
 import com.gitblit.models.RepositoryModel;
@@ -40,11 +27,19 @@ import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.charting.Chart;
 import com.gitblit.wicket.charting.Charts;
 import com.gitblit.wicket.charting.Flotr2Charts;
-import com.gitblit.wicket.panels.BranchesPanel;
-import com.gitblit.wicket.panels.LinkPanel;
-import com.gitblit.wicket.panels.ReflogPanel;
-import com.gitblit.wicket.panels.RepositoryUrlPanel;
-import com.gitblit.wicket.panels.TagsPanel;
+import com.gitblit.wicket.panels.*;
+import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.eclipse.jgit.lib.Repository;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 @CacheControl(LastModified.REPOSITORY)
 public class OverviewPage extends RepositoryPage {

@@ -15,13 +15,6 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.basic.Label;
-
 import com.gitblit.Constants.FederationToken;
 import com.gitblit.Keys;
 import com.gitblit.models.FederationProposal;
@@ -30,6 +23,12 @@ import com.gitblit.utils.StringUtils;
 import com.gitblit.wicket.RequiresAdminRole;
 import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.panels.RepositoriesPanel;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiresAdminRole
 public class ReviewProposalPage extends RootSubPage {

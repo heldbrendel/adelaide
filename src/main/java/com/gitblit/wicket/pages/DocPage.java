@@ -15,28 +15,27 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.util.List;
-
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.panel.Fragment;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
-
 import com.gitblit.models.UserModel;
 import com.gitblit.servlet.RawServlet;
 import com.gitblit.utils.BugtraqProcessor;
 import com.gitblit.utils.JGitUtils;
 import com.gitblit.utils.StringUtils;
 import com.gitblit.wicket.CacheControl;
-import com.gitblit.wicket.GitBlitWebSession;
 import com.gitblit.wicket.CacheControl.LastModified;
+import com.gitblit.wicket.GitBlitWebSession;
 import com.gitblit.wicket.MarkupProcessor;
 import com.gitblit.wicket.MarkupProcessor.MarkupDocument;
 import com.gitblit.wicket.MarkupProcessor.MarkupSyntax;
 import com.gitblit.wicket.WicketUtils;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+
+import java.util.List;
 
 @CacheControl(LastModified.BOOT)
 public class DocPage extends RepositoryPage {

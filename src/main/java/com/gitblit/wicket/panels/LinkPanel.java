@@ -15,12 +15,9 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.io.OutputStream;
-import java.util.concurrent.Callable;
-
+import com.gitblit.utils.StringUtils;
+import com.gitblit.wicket.WicketUtils;
 import org.apache.wicket.Component;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -29,14 +26,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.request.target.resource.ResourceStreamRequestTarget;
-import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
-import org.apache.wicket.util.resource.IResourceStream;
-
-import com.gitblit.models.UserModel;
-import com.gitblit.utils.StringUtils;
-import com.gitblit.wicket.GitBlitWebSession;
-import com.gitblit.wicket.WicketUtils;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class LinkPanel extends Panel {
 

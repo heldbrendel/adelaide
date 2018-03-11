@@ -15,14 +15,6 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.util.List;
-
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
-
 import com.gitblit.Keys;
 import com.gitblit.utils.DiffUtils;
 import com.gitblit.utils.DiffUtils.DiffComparator;
@@ -35,6 +27,13 @@ import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.panels.CommitHeaderPanel;
 import com.gitblit.wicket.panels.LinkPanel;
 import com.gitblit.wicket.panels.PathBreadcrumbsPanel;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+
+import java.util.List;
 
 @CacheControl(LastModified.BOOT)
 public class BlobDiffPage extends RepositoryPage {

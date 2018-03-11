@@ -15,20 +15,6 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
-
 import com.gitblit.Keys;
 import com.gitblit.models.RepositoryModel;
 import com.gitblit.models.TicketModel;
@@ -47,6 +33,14 @@ import com.gitblit.wicket.panels.LinkPanel;
 import com.gitblit.wicket.panels.TicketListPanel;
 import com.gitblit.wicket.panels.TicketSearchForm;
 import com.gitblit.wicket.panels.UserTitlePanel;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+import java.util.*;
 
 /**
  * My Tickets page
@@ -80,7 +74,7 @@ public class MyTicketsPage extends RootPage {
         final String searchParam = (params == null) ? "" : params.getString("s", null);
         final String sortBy = (params == null) ? "" : Lucene.fromString(params.getString("sort", Lucene.created.name())).name();
         final String repositoryId = (params == null) ? "" : params.getString(Lucene.rid.name(), null);
-        final boolean desc = (params == null) ? true : !"asc".equals(params.getString("direction", "desc"));
+        final boolean desc = (params == null) || !"asc".equals(params.getString("direction", "desc"));
 
 
         // add the user title panel

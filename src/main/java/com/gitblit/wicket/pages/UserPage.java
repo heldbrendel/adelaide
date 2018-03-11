@@ -15,26 +15,6 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
-
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-
 import com.gitblit.Constants.Transport;
 import com.gitblit.GitBlitException;
 import com.gitblit.Keys;
@@ -49,12 +29,20 @@ import com.gitblit.wicket.GitBlitWebApp;
 import com.gitblit.wicket.GitBlitWebSession;
 import com.gitblit.wicket.GitblitRedirectException;
 import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.panels.BooleanOption;
-import com.gitblit.wicket.panels.ChoiceOption;
-import com.gitblit.wicket.panels.ProjectRepositoryPanel;
-import com.gitblit.wicket.panels.SshKeysPanel;
-import com.gitblit.wicket.panels.TextOption;
-import com.gitblit.wicket.panels.UserTitlePanel;
+import com.gitblit.wicket.panels.*;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+import java.util.*;
 
 public class UserPage extends RootPage {
 

@@ -16,13 +16,18 @@
 package com.gitblit.wicket.pages;
 
 
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.wicket.PageParameters;
+import com.gitblit.Constants;
+import com.gitblit.models.UserModel;
+import com.gitblit.servlet.RawServlet;
+import com.gitblit.utils.BugtraqProcessor;
+import com.gitblit.utils.JGitUtils;
+import com.gitblit.utils.StringUtils;
+import com.gitblit.wicket.CacheControl;
+import com.gitblit.wicket.CacheControl.LastModified;
+import com.gitblit.wicket.GitBlitWebSession;
+import com.gitblit.wicket.MarkupProcessor;
+import com.gitblit.wicket.MarkupProcessor.MarkupDocument;
+import com.gitblit.wicket.WicketUtils;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -30,6 +35,7 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheBuilder;
@@ -39,18 +45,11 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-import com.gitblit.Constants;
-import com.gitblit.models.UserModel;
-import com.gitblit.servlet.RawServlet;
-import com.gitblit.utils.BugtraqProcessor;
-import com.gitblit.utils.JGitUtils;
-import com.gitblit.utils.StringUtils;
-import com.gitblit.wicket.CacheControl;
-import com.gitblit.wicket.GitBlitWebSession;
-import com.gitblit.wicket.CacheControl.LastModified;
-import com.gitblit.wicket.MarkupProcessor;
-import com.gitblit.wicket.MarkupProcessor.MarkupDocument;
-import com.gitblit.wicket.WicketUtils;
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @CacheControl(LastModified.REPOSITORY)
 public class EditFilePage extends RepositoryPage {
