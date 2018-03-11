@@ -48,11 +48,13 @@ sourceSets {
     }
 }
 
+/*
 jar {
     manifest {
         attributes 'Main-Class': 'com.gitblit.GitBlitServer'
     }
 }
+*/
 
 mainClassName = "com.gitblit.GitBlitServer"
 
@@ -68,6 +70,7 @@ dependencies {
 
     compile group: 'com.sun.mail', name: 'javax.mail', version: '1.5.1'
     compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
+
     compile group: 'org.eclipse.jetty.aggregate', name: 'jetty-all', version: '9.2.13.v20150730'
 
     compile group: 'org.apache.wicket', name: 'wicket', version: '1.4.22'
@@ -140,30 +143,25 @@ tomcat {
 def distributionDir = 'src/main/distrib'
 
 task copyDistribution(type: Copy) {
-    println 'copyDistribution'
     from "$distributionDir/data"
     into 'data'
 }
 
 task copyDefaultsProperties(type: Copy) {
-    println 'copyDefaultsProperties'
     from "$distributionDir/data/defaults.properties"
-    into 'src/main/java/'
+    into 'src/main/resources/'
 }
 
 task copyClientAppsJson(type: Copy) {
-    println 'copyClientAppsJson'
     from "$distributionDir/data/clientapps.json"
-    into 'src/main/java/'
+    into 'src/main/resources/'
 }
 
 task generatePropertiesKeys() {
-    println 'generatePropertiesKeys'
     // TODO convert properties keys from $distributionDir/data/defaults.properties to class com.gitblit.Keys
 }
 
 task copyResourcesToClasses(type: Copy) {
-    println 'copyResourcesToClasses'
     from('src/main/resources') {
         exclude 'thumbs.db'
     }
@@ -171,25 +169,8 @@ task copyResourcesToClasses(type: Copy) {
 }
 
 task copyWebappToClasses(type: Copy) {
-    println 'copyResourcesToClasses'
     from('src/main/webapp') {
         exclude 'thumbs.db'
-    }
-    into 'build/classes/java/main'
-}
-
-task copyAdditionalToClasses(type: Copy) {
-    println 'copyAdditionalToClasses'
-    from('src/main/java') {
-        include '**/*.mkd', 'clientapps.json', 'defaults.properties', 'logo.png', 'pt.cmd', 'pt.py', 'pt.txt'
-    }
-    into 'build/classes/java/main'
-}
-
-task copyTemplateResources(type: Copy) {
-    println 'copyTemplateResources'
-    from('src/main/java') {
-        include '**/*.properties', '**/*.html', '**/*.css', '**/*.fm', '**/*.js'
     }
     into 'build/classes/java/main'
 }
@@ -207,9 +188,29 @@ runGitBlit.dependsOn compileJava
 
 runGitBlit.dependsOn copyResourcesToClasses
 runGitBlit.dependsOn copyWebappToClasses
-runGitBlit.dependsOn copyAdditionalToClasses
-runGitBlit.dependsOn copyTemplateResources
 
 compileJava.mustRunAfter generatePropertiesKeys
 
 run.dependsOn runGitBlit
+
+jar.enabled = true
+war {
+    webInf {
+        from("$distributionDir/data") {
+            include 'users.conf', 'projects.conf', 'defaults.properties', 'gitblit.properties',
+                    'git/project.mkd',
+                    'groovy/sendmail.groovy', 'groovy/sendmail-html.groovy',
+                    'groovy/jenkins.groovy', 'groovy/protect-refs.groovy',
+                    'groovy/blockpush.groovy', 'groovy/localclone.groovy',
+                    'groovy/fogbugz.groovy', 'groovy/thebuggenie.groovy',
+                    'groovy/fisheye.groovy', 'groovy/redmine-fetch.groovy',
+                    'groovy/subgit.groovy',
+                    'gitignore/*.gitignore'
+        }
+        into 'data'
+    }
+
+    classpath = classpath.filter { file ->
+        (!file.name.startsWith('jetty-all-'))
+    }
+}

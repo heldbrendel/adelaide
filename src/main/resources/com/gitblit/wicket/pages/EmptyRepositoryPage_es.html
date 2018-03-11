@@ -1,0 +1,63 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.3-strict.dtd"  
+      xml:lang="en"  
+      lang="es"> 
+
+<body>
+<wicket:extend>
+<div class="container">
+<div class="markdown">
+<div class="row">
+<div class="span10 offset1">	
+	<h3><center>Repositorio Vac&iacute;o</center></h3>
+	<div class="alert alert-info">
+		<span wicket:id="repository" style="font-weight: bold;">[repository]</span> es un repositorio vac&iacute;o y no puede ser visto en Gitblit.
+		<p></p>		
+		Por favor, empuja algunas consignas a <span wicket:id="pushurl"></span>
+		<hr/>
+		Despu&eacute;s de empujar tus consignas puedes <b>refrescar</b> &eacute;sta p&aacute;gina para ver tu repositorio.
+	</div>
+		
+	<h3><center>Create a new repository on the command-line</center></h3>
+
+	<pre wicket:id="createSyntax"></pre>
+
+	<h3><center>Push an existing repository from the command-line</center></h3>
+
+	<pre wicket:id="existingSyntax"></pre>
+
+	<div class="span8 offset1">
+		<h2><center>Aprender sobre Git</center></h2>
+		<p>Si no est&aacute;s seguro de como usar esta informaci&oacute;n, &eacute;chale un vistazo al <a href="http://book.git-scm.com/es">Libro de la cominidad Git</a> para una mejor compresi&oacute;n de como usar Git.</p>
+
+		<h4>Clientes Git de C&oacute;digo abierto.</h4>
+		<table>
+		<tbody>
+			<tr><td><a href="http://git-scm.com">Git</a></td><td>El Git oficial en l&iacute;nea de comandos</td></tr>
+			<tr><td><a href="http://tortoisegit.googlecode.com">TortoiseGit</a></td><td>Explorador de archivos integrado en Windows (necesita Git oficial en l&iacute;nea de comandos)</td></tr>
+			<tr><td><a href="http://eclipse.org/egit">Eclipse/EGit</a></td><td>Git para el IDE de Eclipse (basado en JGit, como Gitblit)</td></tr>
+			<tr><td><a href="https://code.google.com/p/gitextensions/">Git Extensions</a></td><td>Interfaz de usuario gr&aacute;fico Git en C# con integraci&oacute;n en IE y en Visual Studio</td></tr>
+			<tr><td><a href="http://rowanj.github.io/gitx/">GitX-dev</a></td><td>Cliente Git para Mac OS X</td></tr>
+		</tbody>			
+		</table>
+
+		<h4>Clientes Git comerciales</h4>
+		<table>
+		<tbody>
+			<tr><td><a href="http://www.syntevo.com/smartgithg">SmartGit/Hg</a></td><td>aplicaci&oacute;n Java (necesita Git oficial en l&iacute;nea de comandos)</td></tr>
+			<tr><td><a href="http://www.sourcetreeapp.com/">SourceTree</a></td><td>Un cliente Git gratuito para Mac, Mercurial, y SVN</td></tr>
+			<tr><td><a href="http://www.git-tower.com/">Tower</a></td><td>Cliente Git para Mac OS X</td></tr>
+		</tbody>
+		</table>
+	</div>
+</div>
+</div>
+</div>
+</div>
+</wicket:extend>	
+</body>
+</html>
+

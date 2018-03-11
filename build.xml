@@ -256,7 +256,7 @@
 		<prepareDataDirectory toDir="${webinf}/data" />
 
 		<!-- Build the WAR web.xml from the prototype web.xml -->
-		<mx:webxml sourcefile="${project.src.dir}/WEB-INF/web.xml" destfile="${webinf}/web.xml">
+        <mx:webxml sourcefile="src/main/webapp/WEB-INF/web.xml" destfile="${webinf}/web.xml">
 			<replace token="@gb.version@" value="${project.version}" />
 		</mx:webxml>
 
