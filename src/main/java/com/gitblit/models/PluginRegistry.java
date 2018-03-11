@@ -15,15 +15,14 @@
  */
 package com.gitblit.models;
 
+import org.parboiled.common.StringUtils;
+import ro.fortsoft.pf4j.Version;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.parboiled.common.StringUtils;
-
-import ro.fortsoft.pf4j.Version;
 
 /**
  * Represents a list of plugin registrations.
@@ -38,7 +37,7 @@ public class PluginRegistry implements Serializable {
 
 	public PluginRegistry(String name) {
 		this.name = name;
-		registrations = new CopyOnWriteArrayList<PluginRegistration>();
+        registrations = new CopyOnWriteArrayList<>();
 	}
 
 	public void setup() {
@@ -61,7 +60,7 @@ public class PluginRegistry implements Serializable {
 		return getClass().getSimpleName();
 	}
 
-	public static enum InstallState {
+    public enum InstallState {
 		NOT_INSTALLED, INSTALLED, UPDATE_AVAILABLE, UNKNOWN
 	}
 

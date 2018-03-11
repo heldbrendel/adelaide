@@ -15,16 +15,15 @@
  */
 package com.gitblit.manager;
 
-import java.io.IOException;
-import java.util.List;
-
+import com.gitblit.models.PluginRegistry.InstallState;
+import com.gitblit.models.PluginRegistry.PluginRegistration;
+import com.gitblit.models.PluginRegistry.PluginRelease;
 import ro.fortsoft.pf4j.PluginState;
 import ro.fortsoft.pf4j.PluginWrapper;
 import ro.fortsoft.pf4j.Version;
 
-import com.gitblit.models.PluginRegistry.InstallState;
-import com.gitblit.models.PluginRegistry.PluginRegistration;
-import com.gitblit.models.PluginRegistry.PluginRelease;
+import java.io.IOException;
+import java.util.List;
 
 public interface IPluginManager extends IManager {
 
@@ -69,7 +68,7 @@ public interface IPluginManager extends IManager {
 	/**
 	 * Returns the list of extensions the plugin provides.
 	 *
-	 * @param type
+	 * @param pluginId
 	 * @return a list of extensions the plugin provides
  	 * @since 1.5.0
 	 */
