@@ -46,10 +46,6 @@ sourceSets {
         java { srcDirs = ['src/test/java', 'src/test/bugtraq'] }
         resources { srcDirs = ['src/test/resources'] }
     }
-    site {
-        java { srcDirs = ['src/site'] }
-        resources { srcDirs = ['src/site/resources'] }
-    }
 }
 
 jar {
