@@ -42,270 +42,282 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
+import java.io.Serializable;
 import java.util.*;
 
 public class UserPage extends RootPage {
 
-	List<ProjectModel> projectModels = new ArrayList<ProjectModel>();
+    List<ProjectModel> projectModels = new ArrayList<ProjectModel>();
 
-	public UserPage() {
-		super();
-		throw new GitblitRedirectException(GitBlitWebApp.get().getHomePage());
-	}
+    public UserPage() {
+        super();
+        throw new GitblitRedirectException(GitBlitWebApp.get().getHomePage());
+    }
 
-	public UserPage(PageParameters params) {
-		super(params);
-		setup(params);
-	}
+    public UserPage(PageParameters params) {
+        super(params);
+        setup(params);
+    }
 
-	@Override
-	protected boolean reusePageParameters() {
-		return true;
-	}
+    @Override
+    protected boolean reusePageParameters() {
+        return true;
+    }
 
-	private void setup(PageParameters params) {
-		setupPage("", "");
-		// check to see if we should display a login message
-		boolean authenticateView = app().settings().getBoolean(Keys.web.authenticateViewPages, true);
-		if (authenticateView && !GitBlitWebSession.get().isLoggedIn()) {
-			authenticationError("Please login");
-			return;
-		}
+    private void setup(PageParameters params) {
+        setupPage("", "");
+        // check to see if we should display a login message
+        boolean authenticateView = app().settings().getBoolean(Keys.web.authenticateViewPages, true);
+        if (authenticateView && !GitBlitWebSession.get().isLoggedIn()) {
+            authenticationError("Please login");
+            return;
+        }
 
-		String userName = WicketUtils.getUsername(params);
-		if (StringUtils.isEmpty(userName)) {
-			throw new GitblitRedirectException(GitBlitWebApp.get().getHomePage());
-		}
+        String userName = WicketUtils.getUsername(params);
+        if (StringUtils.isEmpty(userName)) {
+            throw new GitblitRedirectException(GitBlitWebApp.get().getHomePage());
+        }
 
-		UserModel user = app().users().getUserModel(userName);
-		if (user == null) {
-			// construct a temporary user model
-			user = new UserModel(userName);
-		}
+        UserModel user = app().users().getUserModel(userName);
+        if (user == null) {
+            // construct a temporary user model
+            user = new UserModel(userName);
+        }
 
 
-		add(new UserTitlePanel("userTitlePanel", user, user.username));
+        add(new UserTitlePanel("userTitlePanel", user, user.username));
 
-		UserModel sessionUser = GitBlitWebSession.get().getUser();
-		boolean isMyProfile = sessionUser != null && sessionUser.equals(user);
+        UserModel sessionUser = GitBlitWebSession.get().getUser();
+        boolean isMyProfile = sessionUser != null && sessionUser.equals(user);
 
-		if (isMyProfile) {
-			addPreferences(user);
+        if (isMyProfile) {
+            addPreferences(user);
 
-			if (app().services().isServingSSH()) {
-				// show the SSH key management tab
-				addSshKeys(user);
-			} else {
-				// SSH daemon is disabled, hide keys tab
-				add(new Label("sshKeysLink").setVisible(false));
-				add(new Label("sshKeysTab").setVisible(false));
-			}
-		} else {
-			// visiting user
-			add(new Label("preferencesLink").setVisible(false));
-			add(new Label("preferencesTab").setVisible(false));
+            if (app().services().isServingSSH()) {
+                // show the SSH key management tab
+                addSshKeys(user);
+            } else {
+                // SSH daemon is disabled, hide keys tab
+                add(new Label("sshKeysLink").setVisible(false));
+                add(new Label("sshKeysTab").setVisible(false));
+            }
+        } else {
+            // visiting user
+            add(new Label("preferencesLink").setVisible(false));
+            add(new Label("preferencesTab").setVisible(false));
 
-			add(new Label("sshKeysLink").setVisible(false));
-			add(new Label("sshKeysTab").setVisible(false));
-		}
+            add(new Label("sshKeysLink").setVisible(false));
+            add(new Label("sshKeysTab").setVisible(false));
+        }
 
-		List<RepositoryModel> repositories = getRepositories(params);
+        List<RepositoryModel> repositories = getRepositories(params);
 
-		Collections.sort(repositories, new Comparator<RepositoryModel>() {
-			@Override
-			public int compare(RepositoryModel o1, RepositoryModel o2) {
-				// reverse-chronological sort
-				return o2.lastChange.compareTo(o1.lastChange);
-			}
-		});
+        Collections.sort(repositories, new Comparator<RepositoryModel>() {
+            @Override
+            public int compare(RepositoryModel o1, RepositoryModel o2) {
+                // reverse-chronological sort
+                return o2.lastChange.compareTo(o1.lastChange);
+            }
+        });
 
-		final ListDataProvider<RepositoryModel> dp = new ListDataProvider<RepositoryModel>(repositories);
-		DataView<RepositoryModel> dataView = new DataView<RepositoryModel>("repositoryList", dp) {
-			private static final long serialVersionUID = 1L;
+        final ListDataProvider<RepositoryModel> dp = new ListDataProvider<RepositoryModel>(repositories);
+        DataView<RepositoryModel> dataView = new DataView<RepositoryModel>("repositoryList", dp) {
+            private static final long serialVersionUID = 1L;
 
-			@Override
-			public void populateItem(final Item<RepositoryModel> item) {
-				final RepositoryModel entry = item.getModelObject();
+            @Override
+            public void populateItem(final Item<RepositoryModel> item) {
+                final RepositoryModel entry = item.getModelObject();
 
-				ProjectRepositoryPanel row = new ProjectRepositoryPanel("repository",
-						getLocalizer(), this, showAdmin, entry, getAccessRestrictions());
-				item.add(row);
-			}
-		};
-		add(dataView);
-	}
+                ProjectRepositoryPanel row = new ProjectRepositoryPanel("repository",
+                        getLocalizer(), this, showAdmin, entry, getAccessRestrictions());
+                item.add(row);
+            }
+        };
+        add(dataView);
+    }
 
-	@Override
-	protected void addDropDownMenus(List<NavLink> navLinks) {
-		PageParameters params = getPageParameters();
+    @Override
+    protected void addDropDownMenus(List<NavLink> navLinks) {
+        PageParameters params = getPageParameters();
 
-		DropDownPageMenuNavLink menu = new DropDownPageMenuNavLink("gb.filters",
-				UserPage.class);
-		// preserve time filter option on repository choices
-		menu.menuItems.addAll(getRepositoryFilterItems(params));
+        DropDownPageMenuNavLink menu = new DropDownPageMenuNavLink("gb.filters",
+                UserPage.class);
+        // preserve time filter option on repository choices
+        menu.menuItems.addAll(getRepositoryFilterItems(params));
 
-		// preserve repository filter option on time choices
-		menu.menuItems.addAll(getTimeFilterItems(params));
+        // preserve repository filter option on time choices
+        menu.menuItems.addAll(getTimeFilterItems(params));
 
-		if (menu.menuItems.size() > 0) {
-			// Reset Filter
-			menu.menuItems.add(new ParameterMenuItem(getString("gb.reset")));
-		}
+        if (menu.menuItems.size() > 0) {
+            // Reset Filter
+            menu.menuItems.add(new ParameterMenuItem(getString("gb.reset")));
+        }
 
-		navLinks.add(menu);
-	}
-	
-	public static List<Language> getLanguages(){
-		return  Arrays.asList(
-				new Language("Česky","cs"),
-				new Language("Deutsch","de"),
-				new Language("English","en"),
-				new Language("Español", "es"),
-				new Language("Français", "fr"),
-				new Language("Italiano", "it"),
-				new Language("日本語", "ja"),
-				new Language("한국말", "ko"),
-				new Language("Nederlands", "nl"),
-				new Language("Norsk", "no"),
-				new Language("Język Polski", "pl"),
-				new Language("Português", "pt_BR"),
-				new Language("簡體中文", "zh_CN"),
-				new Language("正體中文", "zh_TW"));
-	}
-	
-	private void addPreferences(UserModel user) {
-		// add preferences
-		Form<Void> prefs = new Form<Void>("prefsForm");
+        navLinks.add(menu);
+    }
 
-		List<Language> languages = getLanguages();
+    private void addPreferences(UserModel user) {
+        // add preferences
+        Form<Void> prefs = new Form<Void>("prefsForm");
 
-		Locale locale = user.getPreferences().getLocale();
-		if (locale == null) {
-			// user has not specified language preference
-			// try server default preference
-			String lc = app().settings().getString(Keys.web.forceDefaultLocale, null);
-			if (StringUtils.isEmpty(lc)) {
-				// server default language is not configured
-				// try browser preference
-				Locale sessionLocale = GitBlitWebSession.get().getLocale();
-				if (sessionLocale != null) {
-					locale = sessionLocale;
-				}
-			} else {
+        List<Language> languages = Arrays.asList(
+                new Language("Deutsch", "de"),
+                new Language("English", "en"),
+                new Language("Español", "es"),
+                new Language("Français", "fr"),
+                new Language("Italiano", "it"),
+                new Language("日本語", "ja"),
+                new Language("한국말", "ko"),
+                new Language("Nederlands", "nl"),
+                new Language("Norsk", "no"),
+                new Language("Język Polski", "pl"),
+                new Language("Português", "pt_BR"),
+                new Language("簡體中文", "zh_CN"),
+                new Language("正體中文", "zh_TW"));
 
-			}
-		}
+        Locale locale = user.getPreferences().getLocale();
+        if (locale == null) {
+            // user has not specified language preference
+            // try server default preference
+            String lc = app().settings().getString(Keys.web.forceDefaultLocale, null);
+            if (StringUtils.isEmpty(lc)) {
+                // server default language is not configured
+                // try browser preference
+                Locale sessionLocale = GitBlitWebSession.get().getLocale();
+                if (sessionLocale != null) {
+                    locale = sessionLocale;
+                }
+            } else {
 
-		Language preferredLanguage = null;
-		if (locale != null) {
-			String localeCode = locale.getLanguage();
-			if (!StringUtils.isEmpty(locale.getCountry())) {
-				localeCode += "_" + locale.getCountry();
-			}
+            }
+        }
 
-			for (Language language : languages) {
-				if (language.code.equals(localeCode)) {
-					// language_COUNTRY match
-					preferredLanguage = language;
-				} else if (preferredLanguage != null && language.code.startsWith(locale.getLanguage())) {
-					// language match
-					preferredLanguage = language;
-				}
-			}
-		}
+        Language preferredLanguage = null;
+        if (locale != null) {
+            String localeCode = locale.getLanguage();
+            if (!StringUtils.isEmpty(locale.getCountry())) {
+                localeCode += "_" + locale.getCountry();
+            }
 
-		final IModel<String> displayName = Model.of(user.getDisplayName());
-		final IModel<String> emailAddress = Model.of(user.emailAddress == null ? "" : user.emailAddress);
-		final IModel<Language> language = Model.of(preferredLanguage);
-		final IModel<Boolean> emailMeOnMyTicketChanges = Model.of(user.getPreferences().isEmailMeOnMyTicketChanges());
-		final IModel<Transport> transport = Model.of(user.getPreferences().getTransport());
+            for (Language language : languages) {
+                if (language.code.equals(localeCode)) {
+                    // language_COUNTRY match
+                    preferredLanguage = language;
+                } else if (preferredLanguage != null && language.code.startsWith(locale.getLanguage())) {
+                    // language match
+                    preferredLanguage = language;
+                }
+            }
+        }
 
-		prefs.add(new TextOption("displayName",
-				getString("gb.displayName"),
-				getString("gb.displayNameDescription"),
-				displayName).setVisible(app().authentication().supportsDisplayNameChanges(user)));
+        final IModel<String> displayName = Model.of(user.getDisplayName());
+        final IModel<String> emailAddress = Model.of(user.emailAddress == null ? "" : user.emailAddress);
+        final IModel<Language> language = Model.of(preferredLanguage);
+        final IModel<Boolean> emailMeOnMyTicketChanges = Model.of(user.getPreferences().isEmailMeOnMyTicketChanges());
+        final IModel<Transport> transport = Model.of(user.getPreferences().getTransport());
 
-		prefs.add(new TextOption("emailAddress",
-				getString("gb.emailAddress"),
-				getString("gb.emailAddressDescription"),
-				emailAddress).setVisible(app().authentication().supportsEmailAddressChanges(user)));
+        prefs.add(new TextOption("displayName",
+                getString("gb.displayName"),
+                getString("gb.displayNameDescription"),
+                displayName).setVisible(app().authentication().supportsDisplayNameChanges(user)));
 
-		prefs.add(new ChoiceOption<Language>("language",
-				getString("gb.languagePreference"),
-				getString("gb.languagePreferenceDescription"),
-				language,
-				languages));
+        prefs.add(new TextOption("emailAddress",
+                getString("gb.emailAddress"),
+                getString("gb.emailAddressDescription"),
+                emailAddress).setVisible(app().authentication().supportsEmailAddressChanges(user)));
 
-		prefs.add(new BooleanOption("emailMeOnMyTicketChanges",
-				getString("gb.emailMeOnMyTicketChanges"),
-				getString("gb.emailMeOnMyTicketChangesDescription"),
-				emailMeOnMyTicketChanges).setVisible(app().notifier().isSendingMail()));
+        prefs.add(new ChoiceOption<Language>("language",
+                getString("gb.languagePreference"),
+                getString("gb.languagePreferenceDescription"),
+                language,
+                languages));
 
-		List<Transport> availableTransports = new ArrayList<>();
-		if (app().services().isServingSSH()) {
-			availableTransports.add(Transport.SSH);
-		}
-		if (app().services().isServingHTTP()) {
-			availableTransports.add(Transport.HTTP);
-		}
-		if (app().services().isServingHTTPS()) {
-			availableTransports.add(Transport.HTTPS);
-		}
-		if (app().services().isServingGIT()) {
-			availableTransports.add(Transport.GIT);
-		}
+        prefs.add(new BooleanOption("emailMeOnMyTicketChanges",
+                getString("gb.emailMeOnMyTicketChanges"),
+                getString("gb.emailMeOnMyTicketChangesDescription"),
+                emailMeOnMyTicketChanges).setVisible(app().notifier().isSendingMail()));
 
-		prefs.add(new ChoiceOption<Transport>("transport",
-				getString("gb.transportPreference"),
-				getString("gb.transportPreferenceDescription"),
-				transport,
-				availableTransports));
+        List<Transport> availableTransports = new ArrayList<>();
+        if (app().services().isServingSSH()) {
+            availableTransports.add(Transport.SSH);
+        }
+        if (app().services().isServingHTTP()) {
+            availableTransports.add(Transport.HTTP);
+        }
+        if (app().services().isServingHTTPS()) {
+            availableTransports.add(Transport.HTTPS);
+        }
+        if (app().services().isServingGIT()) {
+            availableTransports.add(Transport.GIT);
+        }
 
-		prefs.add(new AjaxButton("save") {
+        prefs.add(new ChoiceOption<Transport>("transport",
+                getString("gb.transportPreference"),
+                getString("gb.transportPreferenceDescription"),
+                transport,
+                availableTransports));
 
-			private static final long serialVersionUID = 1L;
+        prefs.add(new AjaxButton("save") {
 
-			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+            private static final long serialVersionUID = 1L;
 
-				UserModel user = GitBlitWebSession.get().getUser();
+            @Override
+            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                UserModel user = GitBlitWebSession.get().getUser();
 
-				user.displayName = displayName.getObject();
-				user.emailAddress = emailAddress.getObject();
+                user.displayName = displayName.getObject();
+                user.emailAddress = emailAddress.getObject();
 
-				Language lang = language.getObject();
-				if (lang != null) {
-					user.getPreferences().setLocale(lang.code);
-				}
+                Language lang = language.getObject();
+                if (lang != null) {
+                    user.getPreferences().setLocale(lang.code);
+                }
 
-				user.getPreferences().setEmailMeOnMyTicketChanges(emailMeOnMyTicketChanges.getObject());
-				user.getPreferences().setTransport(transport.getObject());
+                user.getPreferences().setEmailMeOnMyTicketChanges(emailMeOnMyTicketChanges.getObject());
+                user.getPreferences().setTransport(transport.getObject());
 
-				try {
-					app().gitblit().reviseUser(user.username, user);
+                try {
+                    app().gitblit().reviseUser(user.username, user);
 
-					setRedirect(true);
-					setResponsePage(UserPage.class, WicketUtils.newUsernameParameter(user.username));
-				} catch (GitBlitException e) {
-					// logger.error("Failed to update user " + user.username, e);
-					// error(getString("gb.failedToUpdateUser"), false);
-				}
-			}
-		});
+                    setResponsePage(UserPage.class, WicketUtils.newUsernameParameter(user.username));
+                } catch (GitBlitException e) {
+                    // logger.error("Failed to update user " + user.username, e);
+                    // error(getString("gb.failedToUpdateUser"), false);
+                }
+            }
+        });
 
-		// add the preferences tab
-		add(new Fragment("preferencesLink", "preferencesLinkFragment", this).setRenderBodyOnly(true));
-		Fragment fragment = new Fragment("preferencesTab", "preferencesTabFragment", this);
-		fragment.add(prefs);
-		add(fragment.setRenderBodyOnly(true));
-	}
+        // add the preferences tab
+        add(new Fragment("preferencesLink", "preferencesLinkFragment", this).setRenderBodyOnly(true));
+        Fragment fragment = new Fragment("preferencesTab", "preferencesTabFragment", UserPage.this);
+        fragment.add(prefs);
+        add(fragment.setRenderBodyOnly(true));
+    }
 
-	private void addSshKeys(final UserModel user) {
-		Fragment keysTab = new Fragment("sshKeysTab", "sshKeysTabFragment", this);
-		keysTab.add(new SshKeysPanel("sshKeysPanel", user));
+    private void addSshKeys(final UserModel user) {
+        Fragment keysTab = new Fragment("sshKeysTab", "sshKeysTabFragment", UserPage.this);
+        keysTab.add(new SshKeysPanel("sshKeysPanel", user));
 
-		// add the SSH keys tab
-		add(new Fragment("sshKeysLink", "sshKeysLinkFragment", this).setRenderBodyOnly(true));
-		add(keysTab.setRenderBodyOnly(true));
-	}
+        // add the SSH keys tab
+        add(new Fragment("sshKeysLink", "sshKeysLinkFragment", UserPage.this).setRenderBodyOnly(true));
+        add(keysTab.setRenderBodyOnly(true));
+    }
+
+    private class Language implements Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        final String name;
+        final String code;
+
+        public Language(String name, String code) {
+            this.name = name;
+            this.code = code;
+        }
+
+        @Override
+        public String toString() {
+            return name + " (" + code + ")";
+        }
+    }
 }

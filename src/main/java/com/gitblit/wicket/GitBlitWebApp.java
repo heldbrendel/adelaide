@@ -190,6 +190,12 @@ public class GitBlitWebApp extends WebApplication implements GitblitWicketApp {
 
         // filestore URL
         mount("/filestore", FilestorePage.class);
+        /*
+        Bootstrap.install(this);
+        FontAwesome.install(this);
+        Octicons.install(this);
+        StaticResources.install(this);
+        */
 
         // allow started Wicket plugins to initialize
         for (PluginWrapper pluginWrapper : pluginManager.getPlugins()) {
@@ -221,7 +227,10 @@ public class GitBlitWebApp extends WebApplication implements GitblitWicketApp {
         if (!settings.getBoolean(Keys.web.mountParameters, true)) {
             parameters = new String[]{};
         }
-        mount(new GitblitParamUrlCodingStrategy(settings, xssFilter, location, clazz, parameters));
+        // TODO: check if needed with wichet-7
+        // mount(new GitblitParamUrlCodingStrategy(settings, xssFilter,
+        // location, clazz, parameters));
+        mountPage(location, clazz);
 
         // map the mount point to the cache control definition
         if (clazz.isAnnotationPresent(CacheControl.class)) {

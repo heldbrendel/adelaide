@@ -21,6 +21,7 @@ import com.gitblit.models.RepositoryModel;
 import com.gitblit.models.UserModel;
 import com.gitblit.servlet.SyndicationServlet;
 import com.gitblit.utils.ArrayUtils;
+import com.gitblit.utils.GitBlitRequestUtils;
 import com.gitblit.utils.StringUtils;
 import com.gitblit.wicket.GitBlitWebSession;
 import com.gitblit.wicket.WicketUtils;
@@ -43,8 +44,8 @@ public class ProjectRepositoryPanel extends BasePanel {
 	private static final long serialVersionUID = 1L;
 
 	public ProjectRepositoryPanel(String wicketId, Localizer localizer, Component parent,
-			final boolean isAdmin, final RepositoryModel entry,
-			final Map<AccessRestrictionType, String> accessRestrictions) {
+                                  final boolean isAdmin, final RepositoryModel entry,
+                                  final Map<AccessRestrictionType, String> accessRestrictions) {
 		super(wicketId);
 
 		final boolean showSwatch = app().settings().getBoolean(Keys.web.repositoryListSwatches, true);
@@ -58,13 +59,13 @@ public class ProjectRepositoryPanel extends BasePanel {
 
 		Fragment iconFragment;
 		if (entry.isMirror) {
-			iconFragment = new Fragment("repoIcon", "mirrorIconFragment", this);
+            iconFragment = new Fragment("repoIcon", "mirrorIconFragment", ProjectRepositoryPanel.this);
 		} else if (entry.isFork()) {
-			iconFragment = new Fragment("repoIcon", "forkIconFragment", this);
+            iconFragment = new Fragment("repoIcon", "forkIconFragment", ProjectRepositoryPanel.this);
 		} else if (entry.isBare) {
-			iconFragment = new Fragment("repoIcon", "repoIconFragment", this);
+            iconFragment = new Fragment("repoIcon", "repoIconFragment", ProjectRepositoryPanel.this);
 		} else {
-			iconFragment = new Fragment("repoIcon", "cloneIconFragment", this);
+            iconFragment = new Fragment("repoIcon", "cloneIconFragment", ProjectRepositoryPanel.this);
 		}
 		if (showSwatch) {
 			WicketUtils.setCssStyle(iconFragment, "color:" + StringUtils.getColor(entry.toString()));
@@ -74,26 +75,26 @@ public class ProjectRepositoryPanel extends BasePanel {
 		if (StringUtils.isEmpty(entry.originRepository)) {
 			add(new Label("originRepository").setVisible(false));
 		} else {
-			Fragment forkFrag = new Fragment("originRepository", "originFragment", this);
+            Fragment forkFrag = new Fragment("originRepository", "originFragment", ProjectRepositoryPanel.this);
 			forkFrag.add(new LinkPanel("originRepository", null, StringUtils.stripDotGit(entry.originRepository),
 					SummaryPage.class, WicketUtils.newRepositoryParameter(entry.originRepository)));
 			add(forkFrag);
 		}
 
 		if (entry.isSparkleshared()) {
-            add(WicketUtils.newImage("sparkleshareIcon", "images/star_16x16.png", localizer.getString("gb.isSparkleshared", parent)));
+            add(WicketUtils.newImage("sparkleshareIcon", "star_16x16.png", localizer.getString("gb.isSparkleshared", parent)));
 		} else {
 			add(WicketUtils.newClearPixel("sparkleshareIcon").setVisible(false));
 		}
 
 		if (!entry.isMirror && entry.isFrozen) {
-            add(WicketUtils.newImage("frozenIcon", "images/cold_16x16.png", localizer.getString("gb.isFrozen", parent)));
+            add(WicketUtils.newImage("frozenIcon", "cold_16x16.png", localizer.getString("gb.isFrozen", parent)));
 		} else {
 			add(WicketUtils.newClearPixel("frozenIcon").setVisible(false));
 		}
 
 		if (entry.isFederated) {
-            add(WicketUtils.newImage("federatedIcon", "images/federated_16x16.png", localizer.getString("gb.isFederated", parent)));
+            add(WicketUtils.newImage("federatedIcon", "federated_16x16.png", localizer.getString("gb.isFederated", parent)));
 		} else {
 			add(WicketUtils.newClearPixel("federatedIcon").setVisible(false));
 		}
@@ -124,11 +125,11 @@ public class ProjectRepositoryPanel extends BasePanel {
 		}
 		Fragment repositoryLinks;
 		if (user.canAdmin(entry)) {
-			repositoryLinks = new Fragment("repositoryLinks", "repositoryOwnerLinks", this);
+            repositoryLinks = new Fragment("repositoryLinks", "repositoryOwnerLinks", ProjectRepositoryPanel.this);
 			repositoryLinks.add(new BookmarkablePageLink<Void>("editRepository", EditRepositoryPage.class,
 					WicketUtils.newRepositoryParameter(entry.name)));
 		} else {
-			repositoryLinks = new Fragment("repositoryLinks", "repositoryUserLinks", this);
+            repositoryLinks = new Fragment("repositoryLinks", "repositoryUserLinks", ProjectRepositoryPanel.this);
 		}
 
 		repositoryLinks.add(new BookmarkablePageLink<Void>("tree", TreePage.class, WicketUtils
@@ -157,7 +158,7 @@ public class ProjectRepositoryPanel extends BasePanel {
 			add(new Label("repositorySize", localizer.getString("gb.empty", parent)).setEscapeModelStrings(false));
 		}
 
-		add(new ExternalLink("syndication", SyndicationServlet.asLink(getRequest()
+        add(new ExternalLink("syndication", SyndicationServlet.asLink(GitBlitRequestUtils
 				.getRelativePathPrefixToContextRoot(), entry.name, null, 0)));
 	}
 }

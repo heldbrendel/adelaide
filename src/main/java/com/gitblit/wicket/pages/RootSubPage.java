@@ -21,7 +21,6 @@ import com.gitblit.models.RepositoryModel;
 import com.gitblit.models.UserModel;
 import com.gitblit.utils.ModelUtils;
 import com.gitblit.utils.StringUtils;
-import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
@@ -56,7 +55,8 @@ public abstract class RootSubPage extends RootPage {
 			// Wicket seems to get confused as to when it really should
 			// generate a page map for complex pages.  Conditionally ensure we
 			// have a page map for complex AJAX pages like the EditNNN pages.
-			Session.get().pageMapForName(null, true);
+            //TODO: check if no longer needed
+//			Session.get().pageMapForName(null, true);
 			setVersioned(true);
 		}
 	}

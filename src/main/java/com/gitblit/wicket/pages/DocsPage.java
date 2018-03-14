@@ -29,6 +29,7 @@ import com.gitblit.wicket.MarkupProcessor.MarkupDocument;
 import com.gitblit.wicket.MarkupProcessor.MarkupSyntax;
 import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.panels.LinkPanel;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -67,11 +68,11 @@ public class DocsPage extends RepositoryPage {
 		Fragment fragment = null;
 		if (roots.isEmpty()) {
 			// no identified root documents
-			fragment = new Fragment("docs", "noIndexFragment", this);
+            fragment = new Fragment("docs", "noIndexFragment", DocsPage.this);
 			setResponsePage(NoDocsPage.class, params);
 		} else {
 			// root documents, use tabbed ui of index/root and document list
-			fragment = new Fragment("docs", "tabsFragment", this);
+            fragment = new Fragment("docs", "tabsFragment", DocsPage.this);
 			ListDataProvider<MarkupDocument> docDp = new ListDataProvider<MarkupDocument>(roots);
 
 			// tab titles
@@ -91,7 +92,7 @@ public class DocsPage extends RepositoryPage {
 					item.add(link);
 					if (counter == 0) {
 						counter++;
-						item.add(new SimpleAttributeModifier("class", "active"));
+                        item.add(new AttributeModifier("class", "active"));
 					}
 				}
 			};
@@ -124,13 +125,13 @@ public class DocsPage extends RepositoryPage {
 					Component content = new Label("content", doc.html)
 						.setEscapeModelStrings(false);
 					if (!MarkupSyntax.PLAIN.equals(doc.syntax)) {
-						content.add(new SimpleAttributeModifier("class", "markdown"));
+                        content.add(new AttributeModifier("class", "markdown"));
 					}
 					item.add(content);
-					item.add(new SimpleAttributeModifier("id", file));
+                    item.add(new AttributeModifier("id", file));
 					if (counter == 0) {
 						counter++;
-						item.add(new SimpleAttributeModifier("class", "tab-pane active"));
+                        item.add(new AttributeModifier("class", "tab-pane active"));
 					}
 				}
 			};
@@ -139,7 +140,7 @@ public class DocsPage extends RepositoryPage {
 
 		// document list
 		final ByteFormat byteFormat = new ByteFormat();
-		Fragment docs = new Fragment("documents", "documentsFragment", this);
+        Fragment docs = new Fragment("documents", "documentsFragment", DocsPage.this);
 		ListDataProvider<PathModel> pathsDp = new ListDataProvider<PathModel>(paths);
 		DataView<PathModel> pathsView = new DataView<PathModel>("document", pathsDp) {
 			private static final long serialVersionUID = 1L;
@@ -148,7 +149,7 @@ public class DocsPage extends RepositoryPage {
 			@Override
 			public void populateItem(final Item<PathModel> item) {
 				PathModel entry = item.getModelObject();
-                item.add(WicketUtils.newImage("docIcon", "images/file_world_16x16.png"));
+                item.add(WicketUtils.newImage("docIcon", "file_world_16x16.png"));
 				item.add(new Label("docSize", byteFormat.format(entry.size)));
 				item.add(new LinkPanel("docName", "list", StringUtils.stripFileExtension(entry.name),
 						DocPage.class, WicketUtils.newPathParameter(repositoryName, commitId, entry.path)));

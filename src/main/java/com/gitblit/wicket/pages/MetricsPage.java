@@ -24,7 +24,6 @@ import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.charting.Chart;
 import com.gitblit.wicket.charting.Charts;
 import com.gitblit.wicket.charting.Flotr2Charts;
-import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.eclipse.jgit.lib.Repository;
@@ -66,7 +65,7 @@ public class MetricsPage extends RepositoryPage {
 		createBarChart(charts, "dayOfWeekChart", getDayOfWeekMetrics(r, objectId));
 		createPieChart(charts, "authorsChart", getAuthorMetrics(r, objectId));
 
-		add(new HeaderContributor(charts));
+        add(charts);
 
 	}
 

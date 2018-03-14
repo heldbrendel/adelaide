@@ -32,6 +32,7 @@ import com.gitblit.wicket.panels.BooleanChoiceOption;
 import com.gitblit.wicket.panels.BooleanOption;
 import com.gitblit.wicket.panels.RepositoryNamePanel;
 import com.google.common.base.Optional;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -136,13 +137,12 @@ public class NewRepositoryPage extends RootSubPage {
 					error(e.getMessage());
 					return;
 				}
-				setRedirect(true);
 				setResponsePage(SummaryPage.class, WicketUtils.newRepositoryParameter(repositoryModel.name));
 			}
 		};
 
 		// do not let the browser pre-populate these fields
-		form.add(new SimpleAttributeModifier("autocomplete", "off"));
+        form.add(new AttributeModifier("autocomplete", "off"));
 
 		namePanel = new RepositoryNamePanel("namePanel", repositoryModel);
 		form.add(namePanel);
@@ -222,7 +222,7 @@ public class NewRepositoryPage extends RootSubPage {
 	 * @return true if an initial commit was created
 	 */
 	protected boolean initialCommit(RepositoryModel repository, boolean addReadme, String gitignore,
-			boolean addGitFlow) {
+                                    boolean addGitFlow) {
 		boolean initialCommit = addReadme || !StringUtils.isEmpty(gitignore) || addGitFlow;
 		if (!initialCommit) {
 			return false;

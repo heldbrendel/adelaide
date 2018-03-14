@@ -18,13 +18,12 @@ package com.gitblit.wicket.pages;
 import com.gitblit.models.RepositoryModel;
 import com.gitblit.models.RepositoryUrl;
 import com.gitblit.models.UserModel;
+import com.gitblit.utils.GitBlitRequestUtils;
 import com.gitblit.wicket.GitBlitWebSession;
 import com.gitblit.wicket.GitblitRedirectException;
 import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.panels.RepositoryUrlPanel;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,43 +31,45 @@ import java.util.List;
 
 public class EmptyRepositoryPage extends RepositoryPage {
 
-    public EmptyRepositoryPage(PageParameters params) {
-        super(params);
+    private static final long serialVersionUID = 1L;
 
-        setVersioned(false);
+	public EmptyRepositoryPage(PageParameters params) {
+		super(params);
 
-        String repositoryName = WicketUtils.getRepositoryName(params);
-        RepositoryModel repository = app().repositories().getRepositoryModel(repositoryName);
-        if (repository == null) {
-            error(getString("gb.canNotLoadRepository") + " " + repositoryName, true);
-        }
+		setVersioned(false);
 
-        if (repository.hasCommits) {
-            // redirect to the summary page if this repository is not empty
-            throw new GitblitRedirectException(SummaryPage.class, params);
-        }
+		String repositoryName = WicketUtils.getRepositoryName(params);
+		RepositoryModel repository = app().repositories().getRepositoryModel(repositoryName);
+		if (repository == null) {
+			error(getString("gb.canNotLoadRepository") + " " + repositoryName, true);
+		}
 
-        UserModel user = GitBlitWebSession.get().getUser();
-        if (user == null) {
-            user = UserModel.ANONYMOUS;
-        }
+		if (repository.hasCommits) {
+			// redirect to the summary page if this repository is not empty
+			throw new GitblitRedirectException(SummaryPage.class, params);
+		}
 
-        HttpServletRequest req = ((ServletWebRequest) RequestCycle.get().getRequest()).getContainerRequest();
-        List<RepositoryUrl> repositoryUrls = app().services().getRepositoryUrls(req, user, repository);
-        RepositoryUrl primaryUrl = repositoryUrls.size() == 0 ? null : repositoryUrls.get(0);
-        String url = primaryUrl != null ? primaryUrl.url : "";
+		UserModel user = GitBlitWebSession.get().getUser();
+		if (user == null) {
+			user = UserModel.ANONYMOUS;
+		}
 
-        String createSyntax = readResource("create_git.md").replace("${primaryUrl}", url);
-        String existingSyntax = readResource("existing_git.md").replace("${primaryUrl}", url);
+        HttpServletRequest req = GitBlitRequestUtils.getServletRequest();
+		List<RepositoryUrl> repositoryUrls = app().services().getRepositoryUrls(req, user, repository);
+		RepositoryUrl primaryUrl = repositoryUrls.size() == 0 ? null : repositoryUrls.get(0);
+		String url = primaryUrl != null ? primaryUrl.url : "";
 
-        add(new Label("repository", repositoryName));
-        add(new RepositoryUrlPanel("pushurl", false, user, repository));
-        add(new Label("createSyntax", createSyntax));
-        add(new Label("existingSyntax", existingSyntax));
-    }
+		String createSyntax = readResource("create_git.md").replace("${primaryUrl}", url);
+		String existingSyntax = readResource("existing_git.md").replace("${primaryUrl}", url);
 
-    @Override
-    protected String getPageName() {
-        return getString("gb.summary");
-    }
+		add(new Label("repository", repositoryName));
+		add(new RepositoryUrlPanel("pushurl", false, user, repository));
+		add(new Label("createSyntax", createSyntax));
+		add(new Label("existingSyntax", existingSyntax));
+	}
+
+	@Override
+	protected String getPageName() {
+		return getString("gb.summary");
+	}
 }

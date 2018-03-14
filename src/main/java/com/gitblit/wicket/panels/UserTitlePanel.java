@@ -15,9 +15,8 @@
  */
 package com.gitblit.wicket.panels;
 
-import org.apache.wicket.markup.html.basic.Label;
-
 import com.gitblit.models.UserModel;
+import org.apache.wicket.markup.html.basic.Label;
 
 public class UserTitlePanel extends BasePanel {
 

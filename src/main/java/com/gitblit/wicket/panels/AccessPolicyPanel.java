@@ -66,31 +66,31 @@ public class AccessPolicyPanel extends BasePanel {
 
 		AccessPolicy anonymousPolicy = new AccessPolicy(getString("gb.anonymousPolicy"),
 				getString("gb.anonymousPolicyDescription"),
-                "images/blank.png",
+                "blank.png",
 				AuthorizationControl.AUTHENTICATED,
 				AccessRestrictionType.NONE);
 
 		AccessPolicy authenticatedPushPolicy = new AccessPolicy(getString("gb.authenticatedPushPolicy"),
 				getString("gb.authenticatedPushPolicyDescription"),
-                "images/lock_go_16x16.png",
+                "lock_go_16x16.png",
 				AuthorizationControl.AUTHENTICATED,
 				AccessRestrictionType.PUSH);
 
 		AccessPolicy namedPushPolicy = new AccessPolicy(getString("gb.namedPushPolicy"),
 				getString("gb.namedPushPolicyDescription"),
-                "images/lock_go_16x16.png",
+                "lock_go_16x16.png",
 				AuthorizationControl.NAMED,
 				AccessRestrictionType.PUSH);
 
 		AccessPolicy clonePolicy = new AccessPolicy(getString("gb.clonePolicy"),
 				getString("gb.clonePolicyDescription"),
-                "images/lock_pull_16x16.png",
+                "lock_pull_16x16.png",
 				AuthorizationControl.NAMED,
 				AccessRestrictionType.CLONE);
 
 		AccessPolicy viewPolicy = new AccessPolicy(getString("gb.viewPolicy"),
 				getString("gb.viewPolicyDescription"),
-                "images/shield_16x16.png",
+                "shield_16x16.png",
 				AuthorizationControl.NAMED,
 				AccessRestrictionType.VIEW);
 
@@ -144,7 +144,7 @@ public class AccessPolicyPanel extends BasePanel {
 		add(policiesGroup);
 
 		if (app().settings().getBoolean(Keys.web.allowForking, true)) {
-			Fragment fragment = new Fragment("allowForks", "allowForksFragment", this);
+            Fragment fragment = new Fragment("allowForks", "allowForksFragment", AccessPolicyPanel.this);
 			fragment.add(new BooleanOption("allowForks",
 				getString("gb.allowForks"),
 				getString("gb.allowForksDescription"),

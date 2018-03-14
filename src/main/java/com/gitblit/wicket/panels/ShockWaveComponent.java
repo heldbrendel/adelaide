@@ -16,16 +16,12 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.wicket.Response;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.util.value.IValueMap;
+
+import java.util.*;
 
 /**
  * https://cwiki.apache.org/WICKET/object-container-adding-flash-to-a-wicket-application.html
@@ -43,12 +39,12 @@ public class ShockWaveComponent extends ObjectContainer {
 	private static final String CODEBASE = "http://fpdownload.adobe.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0";
 
 	// valid attributes
-	private static final List<String> attributeNames = Arrays.asList(new String[] { "classid",
-			"width", "height", "codebase", "align", "base", "data", "flashvars" });
+    private static final List<String> attributeNames = Arrays.asList("classid",
+            "width", "height", "codebase", "align", "base", "data", "flashvars");
 	// valid parameters
-	private static final List<String> parameterNames = Arrays.asList(new String[] { "devicefont",
-			"movie", "play", "loop", "quality", "bgcolor", "scale", "salign", "menu", "wmode",
-			"allowscriptaccess", "seamlesstabbing", "flashvars" });
+    private static final List<String> parameterNames = Arrays.asList("devicefont",
+            "movie", "play", "loop", "quality", "bgcolor", "scale", "salign", "menu", "wmode",
+            "allowscriptaccess", "seamlesstabbing", "flashvars");
 
 	// combined options (to iterate over them)
 	private static final List<String> optionNames = new ArrayList<String>(attributeNames.size()

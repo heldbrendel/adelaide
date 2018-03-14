@@ -151,8 +151,8 @@ public class FilestorePage extends RootPage {
 				}
 			}
 		}
-		
-		DataView<FilestoreModel> filesView = new DataView<FilestoreModel>("fileRow", 
+
+        DataView<FilestoreModel> filesView = new DataView<FilestoreModel>("fileRow",
 				new SortableFilestoreProvider(filteredResults) , itemsPerPage) {
 			private static final long serialVersionUID = 1L;
 			private int counter;
@@ -237,8 +237,8 @@ public class FilestorePage extends RootPage {
 	protected enum SortBy {
         ok, pending, inprogress, error, deleted
     }
-	
-	private static class SortableFilestoreProvider extends SortableDataProvider<FilestoreModel> {
+
+    private static class SortableFilestoreProvider extends SortableDataProvider<FilestoreModel, String> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -249,7 +249,7 @@ public class FilestorePage extends RootPage {
 		}
 
 		@Override
-		public int size() {
+        public long size() {
 			if (list == null) {
 				return 0;
 			}
@@ -262,15 +262,16 @@ public class FilestorePage extends RootPage {
 		}
 
 		@Override
-		public Iterator<FilestoreModel> iterator(int first, int count) {
+        public Iterator<? extends FilestoreModel> iterator(long first, long count) {
 			Collections.sort(list, new Comparator<FilestoreModel>() {
 				@Override
 				public int compare(FilestoreModel o1, FilestoreModel o2) {
 					return o2.getChangedOn().compareTo(o1.getChangedOn());
 				}
 			});
-			return list.subList(first, first + count).iterator();
-		}
+            return list.subList(Math.toIntExact(first), Math.toIntExact(first + count)).iterator();
+        }
+
 	}
 	
 }

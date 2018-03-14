@@ -48,7 +48,7 @@ public class LogPanel extends BasePanel {
 	private boolean hasMore;
 
 	public LogPanel(String wicketId, final String repositoryName, final String objectId,
-			Repository r, int limit, int pageOffset, boolean showRemoteRefs) {
+                    Repository r, int limit, int pageOffset, boolean showRemoteRefs) {
 		super(wicketId);
 		boolean pageResults = limit <= 0;
 		int itemsPerPage = app().settings().getInteger(Keys.web.itemsPerPage, 50);
@@ -119,7 +119,7 @@ public class LogPanel extends BasePanel {
 
 				// merge icon
 				if (isMerge) {
-                    item.add(WicketUtils.newImage("commitIcon", "images/commit_merge_16x16.png"));
+                    item.add(WicketUtils.newImage("commitIcon", "commit_merge_16x16.png"));
 				} else {
 					item.add(WicketUtils.newBlankImage("commitIcon"));
 				}

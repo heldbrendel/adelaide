@@ -28,7 +28,6 @@ import com.gitblit.wicket.charting.Chart;
 import com.gitblit.wicket.charting.Charts;
 import com.gitblit.wicket.charting.Flotr2Charts;
 import com.gitblit.wicket.panels.*;
-import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.repeater.Item;
@@ -142,7 +141,7 @@ public class OverviewPage extends RepositoryPage {
 			chart.setHeight(150);
 
 			charts.addChart(chart);
-			add(new HeaderContributor(charts));
+            add(charts);
 		}
 	}
 }

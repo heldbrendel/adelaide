@@ -15,19 +15,18 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import com.gitblit.models.FederationModel;
+import com.gitblit.wicket.WicketUtils;
+import com.gitblit.wicket.pages.FederationRegistrationPage;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 
-import com.gitblit.models.FederationModel;
-import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.pages.FederationRegistrationPage;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class FederationRegistrationsPanel extends BasePanel {
 

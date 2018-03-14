@@ -43,216 +43,218 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *
  * The ticket list panel lists tickets in a table.
  *
  * @author James Moger
+ *
  */
 public class TicketListPanel extends BasePanel {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public TicketListPanel(String wicketId, List<QueryResult> list, final boolean showSwatch, final boolean showRepository) {
-        super(wicketId);
+	public TicketListPanel(String wicketId, List<QueryResult> list, final boolean showSwatch, final boolean showRepository) {
+		super(wicketId);
 
-        final ListDataProvider<QueryResult> dp = new ListDataProvider<QueryResult>(list);
-        DataView<QueryResult> dataView = new DataView<QueryResult>("row", dp) {
-            private static final long serialVersionUID = 1L;
+		final ListDataProvider<QueryResult> dp = new ListDataProvider<QueryResult>(list);
+		DataView<QueryResult> dataView = new DataView<QueryResult>("row", dp) {
+			private static final long serialVersionUID = 1L;
 
-            @Override
-            protected void populateItem(Item<QueryResult> item) {
-                final QueryResult ticket = item.getModelObject();
+			@Override
+			protected void populateItem(Item<QueryResult> item) {
+				final QueryResult ticket = item.getModelObject();
 
-                if (showSwatch) {
-                    // set repository color
-                    String color = StringUtils.getColor(StringUtils.stripDotGit(ticket.repository));
-                    WicketUtils.setCssStyle(item, MessageFormat.format("border-left: 2px solid {0};", color));
-                }
+				if (showSwatch) {
+					// set repository color
+					String color = StringUtils.getColor(StringUtils.stripDotGit(ticket.repository));
+					WicketUtils.setCssStyle(item, MessageFormat.format("border-left: 2px solid {0};", color));
+				}
 
-                PageParameters tp = WicketUtils.newObjectParameter(ticket.repository, "" + ticket.number);
+				PageParameters tp = WicketUtils.newObjectParameter(ticket.repository, "" + ticket.number);
 
-                if (showRepository) {
-                    String name = StringUtils.stripDotGit(ticket.repository);
-                    PageParameters rp = WicketUtils.newOpenTicketsParameter(ticket.repository);
-                    LinkPanel link = new LinkPanel("ticketsLink", null, name, TicketsPage.class, rp);
-                    WicketUtils.setCssBackground(link, name);
-                    item.add(link);
-                } else {
-                    item.add(new Label("ticketsLink").setVisible(false));
-                }
+				if (showRepository) {
+					String name = StringUtils.stripDotGit(ticket.repository);
+					PageParameters rp =  WicketUtils.newOpenTicketsParameter(ticket.repository);
+					LinkPanel link = new LinkPanel("ticketsLink", null, name, TicketsPage.class, rp);
+					WicketUtils.setCssBackground(link, name);
+					item.add(link);
+				} else {
+					item.add(new Label("ticketsLink").setVisible(false));
+				}
 
-                Label icon = TicketsUI.getStateIcon("state", ticket.type, ticket.status, ticket.severity);
-                WicketUtils.addCssClass(icon, TicketsUI.getSeverityClass(ticket.severity));
-                item.add(icon);
+				Label icon = TicketsUI.getStateIcon("state", ticket.type, ticket.status, ticket.severity);
+				WicketUtils.addCssClass(icon, TicketsUI.getSeverityClass(ticket.severity));
+				item.add(icon);
 
-                item.add(new Label("id", "" + ticket.number));
-                UserModel creator = app().users().getUserModel(ticket.createdBy);
-                if (creator != null) {
-                    item.add(new LinkPanel("createdBy", null, creator.getDisplayName(),
-                            UserPage.class, WicketUtils.newUsernameParameter(ticket.createdBy)));
-                } else {
-                    item.add(new Label("createdBy", ticket.createdBy));
-                }
-                item.add(WicketUtils.createDateLabel("createDate", ticket.createdAt, GitBlitWebSession
-                        .get().getTimezone(), getTimeUtils(), false));
+				item.add(new Label("id", "" + ticket.number));
+				UserModel creator = app().users().getUserModel(ticket.createdBy);
+				if (creator != null) {
+					item.add(new LinkPanel("createdBy", null, creator.getDisplayName(),
+							UserPage.class, WicketUtils.newUsernameParameter(ticket.createdBy)));
+				} else {
+					item.add(new Label("createdBy", ticket.createdBy));
+				}
+				item.add(WicketUtils.createDateLabel("createDate", ticket.createdAt, GitBlitWebSession
+						.get().getTimezone(), getTimeUtils(), false));
 
-                if (ticket.updatedAt == null) {
-                    item.add(new Label("updated").setVisible(false));
-                } else {
-                    Fragment updated = new Fragment("updated", "updatedFragment", this);
-                    UserModel updater = app().users().getUserModel(ticket.updatedBy);
-                    if (updater != null) {
-                        updated.add(new LinkPanel("updatedBy", null, updater.getDisplayName(),
-                                UserPage.class, WicketUtils.newUsernameParameter(ticket.updatedBy)));
-                    } else {
-                        updated.add(new Label("updatedBy", ticket.updatedBy));
-                    }
-                    updated.add(WicketUtils.createDateLabel("updateDate", ticket.updatedAt, GitBlitWebSession
-                            .get().getTimezone(), getTimeUtils(), false));
-                    item.add(updated);
-                }
+				if (ticket.updatedAt == null) {
+					item.add(new Label("updated").setVisible(false));
+				} else {
+                    Fragment updated = new Fragment("updated", "updatedFragment", TicketListPanel.this);
+					UserModel updater = app().users().getUserModel(ticket.updatedBy);
+					if (updater != null) {
+						updated.add(new LinkPanel("updatedBy", null, updater.getDisplayName(),
+								UserPage.class, WicketUtils.newUsernameParameter(ticket.updatedBy)));
+					} else {
+						updated.add(new Label("updatedBy", ticket.updatedBy));
+					}
+					updated.add(WicketUtils.createDateLabel("updateDate", ticket.updatedAt, GitBlitWebSession
+							.get().getTimezone(), getTimeUtils(), false));
+					item.add(updated);
+				}
 
-                item.add(new LinkPanel("title", "list subject", StringUtils.trimString(
-                        ticket.title, Constants.LEN_SHORTLOG), TicketsPage.class, tp));
+				item.add(new LinkPanel("title", "list subject", StringUtils.trimString(
+						ticket.title, Constants.LEN_SHORTLOG), TicketsPage.class, tp));
 
-                ListDataProvider<String> labelsProvider = new ListDataProvider<String>(ticket.getLabels());
-                DataView<String> labelsView = new DataView<String>("labels", labelsProvider) {
-                    private static final long serialVersionUID = 1L;
+				ListDataProvider<String> labelsProvider = new ListDataProvider<String>(ticket.getLabels());
+				DataView<String> labelsView = new DataView<String>("labels", labelsProvider) {
+					private static final long serialVersionUID = 1L;
 
-                    @Override
-                    public void populateItem(final Item<String> labelItem) {
-                        RepositoryModel repository = app().repositories().getRepositoryModel(ticket.repository);
-                        Label label;
-                        TicketLabel tLabel;
-                        if (repository == null) {
-                            label = new Label("label", labelItem.getModelObject());
-                            tLabel = new TicketLabel(labelItem.getModelObject());
-                        } else {
-                            Repository db = app().repositories().getRepository(repository.name);
-                            BugtraqProcessor btp = new BugtraqProcessor(app().settings());
-                            String content = btp.processText(db, repository.name, labelItem.getModelObject());
-                            String safeContent = app().xssFilter().relaxed(content);
-                            db.close();
+					@Override
+					public void populateItem(final Item<String> labelItem) {
+						RepositoryModel repository = app().repositories().getRepositoryModel(ticket.repository);
+						Label label;
+						TicketLabel tLabel;
+						if (repository == null) {
+							label = new Label("label", labelItem.getModelObject());
+							tLabel = new TicketLabel(labelItem.getModelObject());
+						} else {
+							Repository db = app().repositories().getRepository(repository.name);
+							BugtraqProcessor btp  = new BugtraqProcessor(app().settings());
+							String content = btp.processText(db, repository.name, labelItem.getModelObject());
+							String safeContent = app().xssFilter().relaxed(content);
+							db.close();
 
-                            label = new Label("label", safeContent);
-                            label.setEscapeModelStrings(false);
+							label = new Label("label", safeContent);
+							label.setEscapeModelStrings(false);
 
-                            tLabel = app().tickets().getLabel(repository, labelItem.getModelObject());
-                        }
+							tLabel = app().tickets().getLabel(repository, labelItem.getModelObject());
+						}
 
-                        String background = MessageFormat.format("background-color:{0};", tLabel.color);
+						String background = MessageFormat.format("background-color:{0};", tLabel.color);
                         label.add(new AttributeModifier("style", background));
-                        labelItem.add(label);
-                    }
-                };
-                item.add(labelsView);
+						labelItem.add(label);
+					}
+				};
+				item.add(labelsView);
 
-                if (StringUtils.isEmpty(ticket.responsible)) {
-                    item.add(new Label("responsible").setVisible(false));
-                } else {
-                    UserModel responsible = app().users().getUserModel(ticket.responsible);
-                    if (responsible == null) {
-                        responsible = new UserModel(ticket.responsible);
-                    }
-                    AvatarImage avatar = new AvatarImage("responsible", responsible.getDisplayName(),
-                            responsible.emailAddress, null, 16, true);
-                    avatar.setTooltip(getString("gb.responsible") + ": " + responsible.getDisplayName());
-                    item.add(avatar);
-                }
+				if (StringUtils.isEmpty(ticket.responsible)) {
+					item.add(new Label("responsible").setVisible(false));
+				} else {
+					UserModel responsible = app().users().getUserModel(ticket.responsible);
+					if (responsible == null) {
+						responsible = new UserModel(ticket.responsible);
+					}
+					AvatarImage avatar = new AvatarImage("responsible", responsible.getDisplayName(),
+							responsible.emailAddress, null, 16, true);
+					avatar.setTooltip(getString("gb.responsible") + ": " + responsible.getDisplayName());
+					item.add(avatar);
+				}
 
-                // votes indicator
-                Label v = new Label("votes", "" + ticket.votesCount);
-                WicketUtils.setHtmlTooltip(v, getString("gb.votes"));
-                item.add(v.setVisible(ticket.votesCount > 0));
+				// votes indicator
+				Label v = new Label("votes", "" + ticket.votesCount);
+				WicketUtils.setHtmlTooltip(v, getString("gb.votes"));
+				item.add(v.setVisible(ticket.votesCount > 0));
 
-                // watching indicator
-                item.add(new Label("watching").setVisible(ticket.isWatching(GitBlitWebSession.get().getUsername())));
+				// watching indicator
+				item.add(new Label("watching").setVisible(ticket.isWatching(GitBlitWebSession.get().getUsername())));
 
-                // priority indicator
-                Label priorityIcon = TicketsUI.getPriorityIcon("priority", ticket.priority);
-                WicketUtils.addCssClass(priorityIcon, TicketsUI.getPriorityClass(ticket.priority));
-                item.add(priorityIcon.setVisible(true));
+				// priority indicator
+				Label priorityIcon = TicketsUI.getPriorityIcon("priority", ticket.priority);
+				WicketUtils.addCssClass(priorityIcon, TicketsUI.getPriorityClass(ticket.priority));
+				item.add(priorityIcon.setVisible(true));
 
-                // status indicator
-                String css = TicketsUI.getLozengeClass(ticket.status, true);
-                Label l = new Label("status", ticket.status.toString());
-                WicketUtils.setCssClass(l, css);
-                item.add(l);
+				// status indicator
+				String css = TicketsUI.getLozengeClass(ticket.status, true);
+				Label l = new Label("status", ticket.status.toString());
+				WicketUtils.setCssClass(l, css);
+				item.add(l);
 
-                // add the ticket indicators/icons
-                List<Indicator> indicators = new ArrayList<Indicator>();
+				// add the ticket indicators/icons
+				List<Indicator> indicators = new ArrayList<Indicator>();
 
-                // comments
-                if (ticket.commentsCount > 0) {
-                    int count = ticket.commentsCount;
-                    String pattern = getString("gb.nComments");
-                    if (count == 1) {
-                        pattern = getString("gb.oneComment");
-                    }
-                    indicators.add(new Indicator("fa fa-comment", count, pattern));
-                }
+				// comments
+				if (ticket.commentsCount > 0) {
+					int count = ticket.commentsCount;
+					String pattern = getString("gb.nComments");
+					if (count == 1) {
+						pattern = getString("gb.oneComment");
+					}
+					indicators.add(new Indicator("fa fa-comment", count, pattern));
+				}
 
-                // participants
-                if (!ArrayUtils.isEmpty(ticket.participants)) {
-                    int count = ticket.participants.size();
-                    if (count > 1) {
-                        String pattern = getString("gb.nParticipants");
-                        indicators.add(new Indicator("fa fa-user", count, pattern));
-                    }
-                }
+				// participants
+				if (!ArrayUtils.isEmpty(ticket.participants)) {
+					int count = ticket.participants.size();
+					if (count > 1) {
+						String pattern = getString("gb.nParticipants");
+						indicators.add(new Indicator("fa fa-user", count, pattern));
+					}
+				}
 
-                // attachments
-                if (!ArrayUtils.isEmpty(ticket.attachments)) {
-                    int count = ticket.attachments.size();
-                    String pattern = getString("gb.nAttachments");
-                    if (count == 1) {
-                        pattern = getString("gb.oneAttachment");
-                    }
-                    indicators.add(new Indicator("fa fa-file", count, pattern));
-                }
+				// attachments
+				if (!ArrayUtils.isEmpty(ticket.attachments)) {
+					int count = ticket.attachments.size();
+					String pattern = getString("gb.nAttachments");
+					if (count == 1) {
+						pattern = getString("gb.oneAttachment");
+					}
+					indicators.add(new Indicator("fa fa-file", count, pattern));
+				}
 
-                // patchset revisions
-                if (ticket.patchset != null) {
-                    int count = ticket.patchset.commits;
-                    String pattern = getString("gb.nCommits");
-                    if (count == 1) {
-                        pattern = getString("gb.oneCommit");
-                    }
-                    indicators.add(new Indicator("fa fa-code", count, pattern));
-                }
+				// patchset revisions
+				if (ticket.patchset != null) {
+					int count = ticket.patchset.commits;
+					String pattern = getString("gb.nCommits");
+					if (count == 1) {
+						pattern = getString("gb.oneCommit");
+					}
+					indicators.add(new Indicator("fa fa-code", count, pattern));
+				}
 
-                // milestone
-                if (!StringUtils.isEmpty(ticket.milestone)) {
-                    indicators.add(new Indicator("fa fa-bullseye", ticket.milestone));
-                }
+				// milestone
+				if (!StringUtils.isEmpty(ticket.milestone)) {
+					indicators.add(new Indicator("fa fa-bullseye", ticket.milestone));
+				}
 
-                ListDataProvider<Indicator> indicatorsDp = new ListDataProvider<Indicator>(indicators);
-                DataView<Indicator> indicatorsView = new DataView<Indicator>("indicators", indicatorsDp) {
-                    private static final long serialVersionUID = 1L;
+				ListDataProvider<Indicator> indicatorsDp = new ListDataProvider<Indicator>(indicators);
+				DataView<Indicator> indicatorsView = new DataView<Indicator>("indicators", indicatorsDp) {
+					private static final long serialVersionUID = 1L;
 
-                    @Override
-                    public void populateItem(final Item<Indicator> item) {
-                        Indicator indicator = item.getModelObject();
-                        String tooltip = indicator.getTooltip();
+					@Override
+					public void populateItem(final Item<Indicator> item) {
+						Indicator indicator = item.getModelObject();
+						String tooltip = indicator.getTooltip();
 
-                        Label icon = new Label("icon");
-                        WicketUtils.setCssClass(icon, indicator.css);
-                        item.add(icon);
+						Label icon = new Label("icon");
+						WicketUtils.setCssClass(icon, indicator.css);
+						item.add(icon);
 
-                        if (indicator.count > 0) {
-                            Label count = new Label("count", "" + indicator.count);
-                            item.add(count.setVisible(!StringUtils.isEmpty(tooltip)));
-                        } else {
-                            item.add(new Label("count").setVisible(false));
-                        }
+						if (indicator.count > 0) {
+							Label count = new Label("count", "" + indicator.count);
+							item.add(count.setVisible(!StringUtils.isEmpty(tooltip)));
+						} else {
+							item.add(new Label("count").setVisible(false));
+						}
 
-                        WicketUtils.setHtmlTooltip(item, tooltip);
-                    }
-                };
-                item.add(indicatorsView);
-            }
-        };
+						WicketUtils.setHtmlTooltip(item, tooltip);
+					}
+				};
+				item.add(indicatorsView);
+			}
+		};
 
-        add(dataView);
-    }
+		add(dataView);
+	}
 }
 

@@ -15,14 +15,12 @@
  */
 package com.gitblit.wicket;
 
+import com.gitblit.Constants;
 import com.gitblit.IStoredSettings;
 import com.gitblit.Keys;
 import com.gitblit.models.PathModel;
 import com.gitblit.servlet.RawServlet;
-import com.gitblit.utils.JGitUtils;
-import com.gitblit.utils.MarkdownUtils;
-import com.gitblit.utils.StringUtils;
-import com.gitblit.utils.XssFilter;
+import com.gitblit.utils.*;
 import com.gitblit.wicket.pages.DocPage;
 import com.google.common.base.Joiner;
 import org.apache.wicket.Page;
@@ -260,7 +258,7 @@ public class MarkupProcessor {
                 if (imagePath.indexOf("://") == -1) {
                     // relative image
                     String path = doc.getRelativePath(imagePath);
-                    String contextUrl = RequestCycle.get().getRequest().getRelativePathPrefixToContextRoot();
+                    String contextUrl = GitBlitRequestUtils.getRelativePathPrefixToContextRoot();
                     url = RawServlet.asLink(contextUrl, repositoryName, commitId, path);
                 } else {
                     // absolute image
@@ -317,7 +315,7 @@ public class MarkupProcessor {
                 if (node.url.indexOf("://") == -1) {
                     // repository-relative image link
                     String path = doc.getRelativePath(node.url);
-                    String contextUrl = RequestCycle.get().getRequest().getRelativePathPrefixToContextRoot();
+                    String contextUrl = GitBlitRequestUtils.getRelativePathPrefixToContextRoot();
                     String url = RawServlet.asLink(contextUrl, repositoryName, commitId, path);
                     return new Rendering(url, text);
                 }
@@ -331,7 +329,7 @@ public class MarkupProcessor {
                 if (url.indexOf("://") == -1) {
                     // repository-relative image link
                     String path = doc.getRelativePath(url);
-                    String contextUrl = RequestCycle.get().getRequest().getRelativePathPrefixToContextRoot();
+                    String contextUrl = GitBlitRequestUtils.getRelativePathPrefixToContextRoot();
                     String wurl = RawServlet.asLink(contextUrl, repositoryName, commitId, path);
                     rendering = new Rendering(wurl, alt);
                 } else {
@@ -360,7 +358,7 @@ public class MarkupProcessor {
         String fsc = settings.getString(Keys.web.forwardSlashCharacter, "/");
         String encodedPath = document.replace(' ', '-');
         try {
-            encodedPath = URLEncoder.encode(encodedPath, "UTF-8");
+            encodedPath = URLEncoder.encode(encodedPath, Constants.ENCODING);
         } catch (UnsupportedEncodingException e) {
             logger.error(null, e);
         }

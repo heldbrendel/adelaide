@@ -32,7 +32,7 @@ public class PagerPanel extends Panel {
 	private static final long serialVersionUID = 1L;
 
 	public PagerPanel(String wicketId, final int currentPage, final int totalPages,
-			final Class<? extends BasePage> pageClass, final PageParameters baseParams) {
+                      final Class<? extends BasePage> pageClass, final PageParameters baseParams) {
 		super(wicketId);
 		List<PageObject> pages = new ArrayList<PageObject>();
 		int[] deltas;
@@ -68,7 +68,7 @@ public class PagerPanel extends Panel {
 			public void populateItem(final Item<PageObject> item) {
 				PageObject pageItem = item.getModelObject();
 				PageParameters pageParams = new PageParameters(baseParams);
-				pageParams.put("pg", pageItem.page);
+                pageParams.add("pg", pageItem.page);
 				LinkPanel link = new LinkPanel("pageLink", null, pageItem.text, pageClass, pageParams);
 				link.setRenderBodyOnly(true);
 				item.add(link);

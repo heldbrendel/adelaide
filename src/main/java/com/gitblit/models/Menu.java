@@ -106,7 +106,7 @@ public class Menu {
                 isSelected = false;
             } else {
                 parameters = new PageParameters(params);
-                if (parameters.getNamedKeys().contains(parameter)) {
+                if (parameters.get(parameter).isEmpty()) {
                     isSelected = params.get(parameter).toString().equals(value);
                     // set the new selection value
                     setParameter(parameter, value);

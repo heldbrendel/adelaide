@@ -23,6 +23,7 @@ import com.gitblit.Keys;
 import com.gitblit.models.FederationModel;
 import com.gitblit.models.Metric;
 import com.gitblit.utils.DiffUtils.DiffComparator;
+import com.gitblit.utils.GitBlitRequestUtils;
 import com.gitblit.utils.HttpUtils;
 import com.gitblit.utils.StringUtils;
 import com.gitblit.utils.TimeUtils;
@@ -35,7 +36,6 @@ import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ContextRelativeResource;
@@ -247,7 +247,7 @@ public class WicketUtils {
     }
 
     public static String getGitblitURL(Request request) {
-        HttpServletRequest req = ((ServletWebRequest) request).getContainerRequest();
+        HttpServletRequest req = GitBlitRequestUtils.getServletRequest();
         return HttpUtils.getGitblitURL(req);
     }
 
@@ -265,7 +265,7 @@ public class WicketUtils {
                 buffer.append("type=\"").append(contentType).append("\" ");
                 buffer.append("title=\"").append(feedTitle).append("\" ");
                 buffer.append("href=\"").append(url).append("\" />");
-                response.render(new StringHeaderItem(buffer));
+                response.render(StringHeaderItem.forString(buffer.toString()));
             }
         };
     }
@@ -274,11 +274,8 @@ public class WicketUtils {
         return new PageParameters().add("t", token);
     }
 
-    public static PageParameters newRegistrationParameter(String url,
-                                                          String name) {
-        return new PageParameters()
-                .add("u", url)
-                .add("n", name);
+    public static PageParameters newRegistrationParameter(String url, String name) {
+        return new PageParameters().add("u", url).add("n", name);
     }
 
     public static PageParameters newUsernameParameter(String username) {
@@ -294,176 +291,128 @@ public class WicketUtils {
     }
 
     public static PageParameters newRepositoryParameter(String repositoryName) {
-        PageParameters pageParameters = new PageParameters();
-        if (!StringUtils.isEmpty(repositoryName)) {
-            pageParameters.add("r", repositoryName);
-        }
-        return pageParameters;
+        return new PageParameters().add("r", repositoryName);
     }
 
     public static PageParameters newObjectParameter(String objectId) {
         return new PageParameters().add("h", objectId);
     }
 
-    public static PageParameters newObjectParameter(String repositoryName,
-                                                    String objectId) {
+    public static PageParameters newObjectParameter(String repositoryName, String objectId) {
         if (StringUtils.isEmpty(objectId)) {
             return newRepositoryParameter(repositoryName);
         }
-        return new PageParameters()
-                .add("r", repositoryName)
-                .add("h", objectId);
+        return new PageParameters().add("r", repositoryName).add("h", objectId);
     }
 
-    public static PageParameters newDiffParameter(String repositoryName,
-                                                  String objectId, DiffComparator diffComparator) {
+    public static PageParameters newDiffParameter(String repositoryName, String objectId,
+                                                  DiffComparator diffComparator) {
         if (StringUtils.isEmpty(objectId)) {
             return newRepositoryParameter(repositoryName);
         }
-        return new PageParameters()
-                .add("r", repositoryName)
-                .add("h", objectId)
-                .add("w", "" + diffComparator.ordinal());
+        return new PageParameters().add("r", repositoryName).add("h", objectId).add("w", "" + diffComparator.ordinal());
     }
 
-    public static PageParameters newDiffParameter(String repositoryName,
-                                                  String objectId, DiffComparator diffComparator, String blobPath) {
+    public static PageParameters newDiffParameter(String repositoryName, String objectId, DiffComparator diffComparator,
+                                                  String blobPath) {
         if (StringUtils.isEmpty(objectId)) {
             return newRepositoryParameter(repositoryName);
         }
-        return new PageParameters()
-                .add("r", repositoryName)
-                .add("h", objectId)
-                .add("w", "" + diffComparator.ordinal())
-                .add("f", blobPath);
+        return newDiffParameter(repositoryName, objectId, diffComparator).add("f", blobPath);
     }
 
-    public static PageParameters newRangeParameter(String repositoryName,
-                                                   String startRange, String endRange) {
-        return new PageParameters()
-                .add("r", repositoryName)
-                .add("h", startRange + ".." + endRange);
+    public static PageParameters newRangeParameter(String repositoryName, String startRange, String endRange) {
+        return new PageParameters().add("r", repositoryName).add("h", startRange + ".." + endRange);
     }
 
-    public static PageParameters newPathParameter(String repositoryName,
-                                                  String objectId, String path) {
-
+    public static PageParameters newPathParameter(String repositoryName, String objectId, String path) {
         if (StringUtils.isEmpty(path)) {
             return newObjectParameter(repositoryName, objectId);
         }
         if (StringUtils.isEmpty(objectId)) {
-            return new PageParameters()
-                    .add("r", repositoryName)
-                    .add("f", path);
+            return new PageParameters().add("r", repositoryName).add("f", path);
         }
-
-        return new PageParameters()
-                .add("r", repositoryName)
-                .add("h", objectId)
-                .add("f", path);
+        return new PageParameters().add("r", repositoryName).add("h", objectId).add("f", path);
     }
 
-    public static PageParameters newLogPageParameter(String repositoryName,
-                                                     String objectId, int pageNumber) {
+    public static PageParameters newLogPageParameter(String repositoryName, String objectId, int pageNumber) {
         if (pageNumber <= 1) {
             return newObjectParameter(repositoryName, objectId);
         }
         if (StringUtils.isEmpty(objectId)) {
-            return new PageParameters()
-                    .add("r", repositoryName)
-                    .add("pg", String.valueOf(pageNumber));
+            return new PageParameters().add("r", repositoryName).add("pg", String.valueOf(pageNumber));
         }
-
-        return new PageParameters()
-                .add("r", repositoryName)
-                .add("h", objectId)
-                .add("pg", String.valueOf(pageNumber));
+        return new PageParameters().add("r", repositoryName).add("h", objectId).add("pg", String.valueOf(pageNumber));
     }
 
-    public static PageParameters newHistoryPageParameter(String repositoryName,
-                                                         String objectId, String path, int pageNumber) {
+    public static PageParameters newHistoryPageParameter(String repositoryName, String objectId, String path, int pageNumber) {
         if (pageNumber <= 1) {
             return newObjectParameter(repositoryName, objectId);
         }
-        if (StringUtils.isEmpty(objectId)) {
-            return new PageParameters()
-                    .add("r", repositoryName)
-                    .add("f", path)
-                    .add("pg", String.valueOf(pageNumber));
+
+        PageParameters pp = new PageParameters();
+        pp.add("r", repositoryName);
+        pp.add("f", path);
+        pp.add("pg", String.valueOf(pageNumber));
+        if (!StringUtils.isEmpty(objectId)) {
+            pp.add("h", objectId);
         }
-        return new PageParameters()
-                .add("r", repositoryName)
-                .add("h", objectId)
-                .add("f", path)
-                .add("pg", String.valueOf(pageNumber));
+        return pp;
     }
 
     public static PageParameters newFilestorePageParameter(int pageNumber, String filter) {
-        PageParameters pageParameters = new PageParameters();
+        PageParameters pp = new PageParameters();
         if (pageNumber > 1) {
-            pageParameters.add("pg", String.valueOf(pageNumber));
+            pp.add("pg", String.valueOf(pageNumber));
         }
         if (filter != null) {
-            pageParameters.add("s", String.valueOf(filter));
+            pp.add("s", String.valueOf(filter));
         }
-        return pageParameters;
+
+        return pp;
     }
 
-    public static PageParameters newBlobDiffParameter(String repositoryName,
-                                                      String baseCommitId, String commitId, String path) {
-        if (StringUtils.isEmpty(commitId)) {
-            return new PageParameters()
-                    .add("r", repositoryName)
-                    .add("f", path)
-                    .add("hb", baseCommitId);
+    public static PageParameters newBlobDiffParameter(String repositoryName, String baseCommitId, String commitId,
+                                                      String path) {
+        PageParameters pp = new PageParameters();
+        pp.add("r", repositoryName);
+        pp.add("f", path);
+        pp.add("hb", baseCommitId);
+        if (!StringUtils.isEmpty(commitId)) {
+            pp.add("h", commitId);
         }
-        return new PageParameters()
-                .add("r", repositoryName)
-                .add("h", commitId)
-                .add("f", path)
-                .add("hb", baseCommitId);
+        return pp;
     }
 
-    public static PageParameters newSearchParameter(String repositoryName,
-                                                    String commitId, String search, Constants.SearchType type) {
-        if (StringUtils.isEmpty(commitId)) {
-            return new PageParameters()
-                    .add("r", repositoryName)
-                    .add("s", search)
-                    .add("st", type.name());
+    public static PageParameters newSearchParameter(String repositoryName, String commitId, String search,
+                                                    Constants.SearchType type) {
+        PageParameters pp = new PageParameters();
+        pp.add("r", repositoryName);
+        pp.add("s", search);
+        pp.add("st", type.name());
+        if (!StringUtils.isEmpty(commitId)) {
+            pp.add("h", commitId);
         }
-        return new PageParameters()
-                .add("r", repositoryName)
-                .add("h", commitId)
-                .add("s", search)
-                .add("st", type.name());
+        return pp;
     }
 
-    public static PageParameters newSearchParameter(String repositoryName,
-                                                    String commitId, String search, Constants.SearchType type,
-                                                    int pageNumber) {
-        if (StringUtils.isEmpty(commitId)) {
-            return new PageParameters()
-                    .add("r", repositoryName)
-                    .add("s", search)
-                    .add("st", type.name())
-                    .add("pg", String.valueOf(pageNumber));
+    public static PageParameters newSearchParameter(String repositoryName, String commitId, String search,
+                                                    Constants.SearchType type, int pageNumber) {
+        PageParameters pp = new PageParameters();
+        pp.add("r", repositoryName);
+        pp.add("s", search);
+        pp.add("st", type.name());
+        pp.add("pg", String.valueOf(pageNumber));
+        if (!StringUtils.isEmpty(commitId)) {
+            pp.add("h", commitId);
         }
-        return new PageParameters()
-                .add("r", repositoryName)
-                .add("h", commitId)
-                .add("s", search)
-                .add("st", type.name())
-                .add("pg", String.valueOf(pageNumber));
+        return pp;
     }
 
-    public static PageParameters newBlameTypeParameter(String repositoryName,
-                                                       String commitId, String path, String blameType) {
-        return new PageParameters()
-                .add("r", repositoryName)
-                .add("h", commitId)
-                .add("f", path)
-                .add("blametype", blameType);
+    public static PageParameters newBlameTypeParameter(String repositoryName, String commitId, String path,
+                                                       String blameType) {
+        return new PageParameters().add("r", repositoryName).add("h", commitId).add("f", path).add("blametype",
+                blameType);
     }
 
     public static PageParameters newTicketsParameters(String repositoryName, String... states) {
@@ -481,78 +430,79 @@ public class WicketUtils {
     }
 
     public static String getProjectName(PageParameters params) {
-        return params.get("p").to(String.class);
+        return params.get("p").toString("");
     }
 
     public static String getRepositoryName(PageParameters params) {
-        return params.get("r").toString();
+        return params.get("r").toString("");
     }
 
     public static String getObject(PageParameters params) {
-        return params.get("h").toString();
+        return params.get("h").toString(null);
     }
 
     public static String getPath(PageParameters params) {
-        return params.get("f").toString();
+        return params.get("f").toString(null);
     }
 
     public static String getBaseObjectId(PageParameters params) {
-        return params.get("hb").toString();
+        return params.get("hb").toString(null);
     }
 
     public static String getSearchString(PageParameters params) {
-        return params.get("s").toString();
+        return params.get("s").toString(null);
     }
 
     public static String getSearchType(PageParameters params) {
-        return params.get("st").toString();
+        return params.get("st").toString(null);
     }
 
     public static DiffComparator getDiffComparator(PageParameters params) {
-        int ordinal = params.get("w").toInt();
+        int ordinal = params.get("w").toInt(0);
         return DiffComparator.values()[ordinal];
     }
 
     public static int getPage(PageParameters params) {
         // index from 1
-        return params.get("pg").toInt();
+        return params.get("pg").toInt(1);
     }
 
     public static String getRegEx(PageParameters params) {
-        return params.get("x").to(String.class);
+        return params.get("x").toString("");
     }
 
     public static String getSet(PageParameters params) {
-        return params.get("set").toString();
+        return params.get("set").toString("");
     }
 
     public static String getTeam(PageParameters params) {
-        return params.get("team").toString();
+        return params.get("team").toString("");
     }
 
     public static int getDaysBack(PageParameters params) {
-        return params.get("db").toInt();
+        return params.get("db").toInt(0);
     }
 
     public static String getUsername(PageParameters params) {
-        return params.get("user").toString();
+        return params.get("user").toString("");
     }
 
     public static String getTeamname(PageParameters params) {
-        return params.get("team").toString();
+        return params.get("team").toString("");
     }
 
     public static String getToken(PageParameters params) {
-        return params.get("t").toString();
+        return params.get("t").toString("");
     }
 
     public static String getUrlParameter(PageParameters params) {
-        return params.get("u").toString();
+        return params.get("u").toString("");
     }
 
     public static String getNameParameter(PageParameters params) {
-        return params.get("n").toString();
+        return params.get("n").toString("");
     }
+
 
     public static Label createDateLabel(String wicketId, Date date, TimeZone timeZone, TimeUtils timeUtils) {
         return createDateLabel(wicketId, date, timeZone, timeUtils, true);

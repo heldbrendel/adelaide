@@ -15,6 +15,7 @@
  */
 package com.gitblit.wicket.panels;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.ComponentTag;
@@ -30,12 +31,12 @@ public abstract class SimpleAjaxLink<T> extends AjaxLink<T> {
 	}
 
 	@Override
-	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag) {
+    public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag) {
 		replaceComponentTagBody(markupStream, openTag, getModelObject().toString());
 	}
 
 	public void setNoFollow() {
 		Component c = get("link");
-		c.add(new SimpleAttributeModifier("rel", "nofollow"));
+        c.add(new AttributeModifier("rel", "nofollow"));
 	}
 }

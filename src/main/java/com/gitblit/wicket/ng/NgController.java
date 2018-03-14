@@ -17,12 +17,17 @@ package com.gitblit.wicket.ng;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.apache.wicket.markup.html.IHeaderContributor;
-import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.Component;
+import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.resource.JQueryResourceReference;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,48 +36,56 @@ import java.util.Map;
  * client-side databinding (magic) with server-generated pages.
  *
  * @author James Moger
- *
  */
-public class NgController implements IHeaderContributor {
+public class NgController extends Behavior {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	final String name;
+    final String name;
 
-	final Map<String, Object> variables;
+    final Map<String, Object> variables;
 
-	public NgController(String name) {
-		this.name = name;
-		this.variables = new HashMap<String, Object>();
-	}
+    public NgController(String name) {
+        this.name = name;
+        this.variables = new HashMap<String, Object>();
+    }
 
-	public void addVariable(String name, Object o) {
-		variables.put(name,  o);
-	}
+    public void addVariable(String name, Object o) {
+        variables.put(name, o);
+    }
 
-	@Override
-	public void renderHead(IHeaderResponse response) {
-		// add Google AngularJS reference
-		response.renderJavascriptReference(new ResourceReference(NgController.class, "angular.js"));
+    @Override
+    public void renderHead(Component component, IHeaderResponse response) {
+        // add Google AngularJS reference
+        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(NgController.class, "angular.js") {
+            private static final long serialVersionUID = 1L;
 
-		Gson gson = new GsonBuilder().create();
+            @Override
+            public List<HeaderItem> getDependencies() {
+                List<HeaderItem> deps = super.getDependencies();
+                deps.add(JavaScriptHeaderItem.forReference(JQueryResourceReference.get()));
+                return deps;
+            }
+        }));
 
-		StringBuilder sb = new StringBuilder();
-		line(sb, MessageFormat.format("<!-- AngularJS {0} data controller -->", name));
-		line(sb, MessageFormat.format("function {0}($scope) '{'", name));
-		for (Map.Entry<String, Object> entry : variables.entrySet()) {
-			String var = entry.getKey();
-			Object o = entry.getValue();
-			String json = gson.toJson(o);
-			line(sb, MessageFormat.format("\t$scope.{0} = {1};", var, json));
-		}
-		line(sb, "}");
+        Gson gson = new GsonBuilder().create();
 
-		response.renderJavascript(sb.toString(), null);
-	}
+        StringBuilder sb = new StringBuilder();
+        line(sb, MessageFormat.format("<!-- AngularJS {0} data controller -->", name));
+        line(sb, MessageFormat.format("function {0}($scope) '{'", name));
+        for (Map.Entry<String, Object> entry : variables.entrySet()) {
+            String var = entry.getKey();
+            Object o = entry.getValue();
+            String json = gson.toJson(o);
+            line(sb, MessageFormat.format("\t$scope.{0} = {1};", var, json));
+        }
+        line(sb, "}");
 
-	private void line(StringBuilder sb, String line) {
-		sb.append(line);
-		sb.append('\n');
-	}
+        response.render(JavaScriptHeaderItem.forScript(sb.toString(), "angularController-" + name));
+    }
+
+    private void line(StringBuilder sb, String line) {
+        sb.append(line);
+        sb.append('\n');
+    }
 }

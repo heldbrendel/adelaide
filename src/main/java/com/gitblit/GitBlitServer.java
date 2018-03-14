@@ -33,7 +33,7 @@ import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.server.session.SessionHandler;
+import org.eclipse.jetty.server.session.HashSessionManager;
 import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -327,12 +327,12 @@ public class GitBlitServer {
         rootContext.setTempDirectory(tempDir);
 
         // Set cookies HttpOnly so they are not accessible to JavaScript engines
-        SessionHandler sessionHandler = new SessionHandler();
+        HashSessionManager sessionHandler = new HashSessionManager();
         sessionHandler.setHttpOnly(true);
         // Use secure cookies if only serving https
         sessionHandler.setSecureRequestOnly((params.port <= 0 && params.securePort > 0) ||
                 (params.port > 0 && params.securePort > 0 && settings.getBoolean(Keys.server.redirectToHttpsPort, true)));
-        rootContext.setSessionHandler(sessionHandler);
+        rootContext.getSessionHandler().setSessionManager(sessionHandler);
 
         // Ensure there is a defined User Service
         String realmUsers = params.userService;

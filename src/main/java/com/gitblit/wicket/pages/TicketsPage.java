@@ -34,6 +34,7 @@ import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.panels.LinkPanel;
 import com.gitblit.wicket.panels.TicketListPanel;
 import com.gitblit.wicket.panels.TicketSearchForm;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -42,6 +43,7 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.StringValue;
 
 import java.text.MessageFormat;
 import java.util.*;
@@ -75,13 +77,13 @@ public class TicketsPage extends RepositoryPage {
 		UserModel user = GitBlitWebSession.get().getUser();
 		boolean isAuthenticated = user != null && user.isAuthenticated;
 
-		final String [] statiiParam = params.getStringArray(Lucene.status.name());
-		final String assignedToParam = params.getString(Lucene.responsible.name(), null);
-		final String milestoneParam = params.getString(Lucene.milestone.name(), null);
-		final String queryParam = params.getString("q", null);
-		final String searchParam = params.getString("s", null);
-		final String sortBy = Lucene.fromString(params.getString("sort", Lucene.created.name())).name();
-		final boolean desc = !"asc".equals(params.getString("direction", "desc"));
+        final String[] statiiParam = (String[]) params.getValues(Lucene.status.name()).stream().map(StringValue::toString).toArray();
+        final String assignedToParam = params.get(Lucene.responsible.name()).toString(null);
+        final String milestoneParam = params.get(Lucene.milestone.name()).toString(null);
+        final String queryParam = params.get("q").toString(null);
+        final String searchParam = params.get("s").toString(null);
+        final String sortBy = Lucene.fromString(params.get("sort").toString(Lucene.created.name())).name();
+        final boolean desc = !"asc".equals(params.get("direction").toString("desc"));
 
 		// add search form
 		add(new TicketSearchForm("ticketSearchForm", repositoryName, searchParam, getClass(), params));
@@ -152,10 +154,10 @@ public class TicketsPage extends RepositoryPage {
 
 		Fragment milestonePanel;
 		if (currentMilestone == null) {
-			milestonePanel = new Fragment("milestonePanel", "noMilestoneFragment", this);
+            milestonePanel = new Fragment("milestonePanel", "noMilestoneFragment", TicketsPage.this);
 			add(milestonePanel);
 		} else {
-			milestonePanel = new Fragment("milestonePanel", "milestoneProgressFragment", this);
+            milestonePanel = new Fragment("milestonePanel", "milestoneProgressFragment", TicketsPage.this);
 			milestonePanel.add(new Label("currentMilestone", currentMilestone.name));
 			if (currentMilestone.due == null) {
 				milestonePanel.add(new Label("currentDueDate", getString("gb.notSpecified")));
@@ -181,7 +183,7 @@ public class TicketsPage extends RepositoryPage {
 			add(milestonePanel);
 		}
 
-		Fragment milestoneDropdown = new Fragment("milestoneDropdown", "milestoneDropdownFragment", this);
+        Fragment milestoneDropdown = new Fragment("milestoneDropdown", "milestoneDropdownFragment", TicketsPage.this);
 		PageParameters resetMilestone = queryParameters(queryParam, null, statiiParam, assignedToParam, sortBy, desc, 1);
 		milestoneDropdown.add(new BookmarkablePageLink<Void>("resetMilestone", TicketsPage.class, resetMilestone));
 
@@ -341,7 +343,7 @@ public class TicketsPage extends RepositoryPage {
 		if (dynamicQueries.size() == 0) {
 			add(new Label("dynamicQueries").setVisible(false));
 		} else {
-			Fragment fragment = new Fragment("dynamicQueries", "dynamicQueriesFragment", this);
+            Fragment fragment = new Fragment("dynamicQueries", "dynamicQueriesFragment", TicketsPage.this);
 			ListDataProvider<TicketQuery> dynamicQueriesDp = new ListDataProvider<TicketQuery>(new ArrayList<TicketQuery>(dynamicQueries));
 			DataView<TicketQuery> dynamicQueriesList = new DataView<TicketQuery>("dynamicQuery", dynamicQueriesDp) {
 				private static final long serialVersionUID = 1L;
@@ -355,7 +357,7 @@ public class TicketsPage extends RepositoryPage {
 						tq.color = StringUtils.getColor(tq.name);
 					}
 					String background = MessageFormat.format("background-color:{0};", tq.color);
-					swatch.add(new SimpleAttributeModifier("style", background));
+                    swatch.add(new AttributeModifier("style", background));
 					item.add(swatch);
 					if (activeQuery.contains(tq.query)) {
 						// selected
@@ -365,7 +367,7 @@ public class TicketsPage extends RepositoryPage {
 						Label checked = new Label("checked");
 						WicketUtils.setCssClass(checked, "iconic-o-x");
 						item.add(checked);
-						item.add(new SimpleAttributeModifier("style", background));
+                        item.add(new AttributeModifier("style", background));
 					} else {
 						// unselected
 						String q = QueryBuilder.q(queryParam).toSubquery().and(tq.query).build();
@@ -534,7 +536,7 @@ public class TicketsPage extends RepositoryPage {
 
 			@Override
 			public void populateItem(final Item<TicketMilestone> item) {
-				Fragment entryPanel = new Fragment("entryPanel", "milestoneListFragment", this);
+                Fragment entryPanel = new Fragment("entryPanel", "milestoneListFragment", TicketsPage.this);
 				item.add(entryPanel);
 
 				final TicketMilestone tm = item.getModelObject();
@@ -582,7 +584,7 @@ public class TicketsPage extends RepositoryPage {
 					// re-load milestone with query results
 					TicketMilestone m = app().tickets().getMilestone(getRepositoryModel(), tm.name);
 
-					Fragment milestonePanel = new Fragment("milestonePanel", "openMilestoneFragment", this);
+                    Fragment milestonePanel = new Fragment("milestonePanel", "openMilestoneFragment", TicketsPage.this);
 					Label label = new Label("progress");
 					WicketUtils.setCssStyle(label, "width:" + m.getProgress() + "%;");
 					milestonePanel.add(label);

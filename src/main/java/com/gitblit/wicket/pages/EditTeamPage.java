@@ -29,6 +29,7 @@ import com.gitblit.wicket.StringChoiceRenderer;
 import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.panels.BulletListPanel;
 import com.gitblit.wicket.panels.RegistrantPermissionsPanel;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.extensions.markup.html.form.palette.Palette;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -196,7 +197,6 @@ public class EditTeamPage extends RootSubPage {
 					error(e.getMessage());
 					return;
 				}
-				setRedirect(false);
 				if (isCreate) {
 					// create another team
 					info(MessageFormat.format(getString("gb.teamCreated"),
@@ -208,7 +208,7 @@ public class EditTeamPage extends RootSubPage {
 		};
 
 		// do not let the browser pre-populate these fields
-		form.add(new SimpleAttributeModifier("autocomplete", "off"));
+        form.add(new AttributeModifier("autocomplete", "off"));
 
 		// not all user providers support manipulating team memberships
 		boolean editMemberships = app().authentication().supportsTeamMembershipChanges(teamModel);

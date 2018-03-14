@@ -18,6 +18,7 @@ package com.gitblit.wicket.pages;
 import com.gitblit.GitBlitException;
 import com.gitblit.Keys;
 import com.gitblit.models.UserModel;
+import com.gitblit.utils.GitBlitRequestUtils;
 import com.gitblit.utils.StringUtils;
 import com.gitblit.wicket.GitBlitWebSession;
 import com.gitblit.wicket.NonTrimmedPasswordTextField;
@@ -26,115 +27,111 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
-import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
 
 import java.text.MessageFormat;
 
 public class ChangePasswordPage extends RootSubPage {
 
-    IModel<String> password = new Model<String>("");
-    IModel<String> confirmPassword = new Model<String>("");
+    private static final long serialVersionUID = 1L;
 
-    public ChangePasswordPage() {
-        super();
+	IModel<String> password = new Model<String>("");
+	IModel<String> confirmPassword = new Model<String>("");
 
-        if (!GitBlitWebSession.get().isLoggedIn()) {
-            // Change password requires a login
-            throw new RestartResponseException(getApplication().getHomePage());
-        }
+	public ChangePasswordPage() {
+		super();
 
-        if (!app().settings().getBoolean(Keys.web.authenticateAdminPages, true)
-                && !app().settings().getBoolean(Keys.web.authenticateViewPages, false)) {
-            // no authentication enabled
-            throw new RestartResponseException(getApplication().getHomePage());
-        }
+		if (!GitBlitWebSession.get().isLoggedIn()) {
+			// Change password requires a login
+			throw new RestartResponseException(getApplication().getHomePage());
+		}
 
-        UserModel user = GitBlitWebSession.get().getUser();
-        if (!app().authentication().supportsCredentialChanges(user)) {
-            error(MessageFormat.format(getString("gb.userServiceDoesNotPermitPasswordChanges"),
-                    app().settings().getString(Keys.realm.userService, "${baseFolder}/users.conf")), true);
-        }
+		if (!app().settings().getBoolean(Keys.web.authenticateAdminPages, true)
+				&& !app().settings().getBoolean(Keys.web.authenticateViewPages, false)) {
+			// no authentication enabled
+			throw new RestartResponseException(getApplication().getHomePage());
+		}
 
-        setupPage(getString("gb.changePassword"), user.username);
+		UserModel user = GitBlitWebSession.get().getUser();
+		if (!app().authentication().supportsCredentialChanges(user)) {
+			error(MessageFormat.format(getString("gb.userServiceDoesNotPermitPasswordChanges"),
+					app().settings().getString(Keys.realm.userService, "${baseFolder}/users.conf")), true);
+		}
 
-        StatelessForm<Void> form = new StatelessForm<Void>("passwordForm") {
+		setupPage(getString("gb.changePassword"), user.username);
 
-            private static final long serialVersionUID = 1L;
+		StatelessForm<Void> form = new StatelessForm<Void>("passwordForm") {
 
-            @Override
-            public void onSubmit() {
-                String password = ChangePasswordPage.this.password.getObject();
-                String confirmPassword = ChangePasswordPage.this.confirmPassword.getObject();
-                // ensure passwords match
-                if (!password.equals(confirmPassword)) {
-                    error(getString("gb.passwordsDoNotMatch"));
-                    return;
-                }
+			private static final long serialVersionUID = 1L;
 
-                // ensure password satisfies minimum length requirement
-                int minLength = app().settings().getInteger(Keys.realm.minPasswordLength, 5);
-                if (minLength < 4) {
-                    minLength = 4;
-                }
-                if (password.length() < minLength) {
-                    error(MessageFormat.format(getString("gb.passwordTooShort"), minLength));
-                    return;
-                }
+			@Override
+			public void onSubmit() {
+				String password = ChangePasswordPage.this.password.getObject();
+				String confirmPassword = ChangePasswordPage.this.confirmPassword.getObject();
+				// ensure passwords match
+				if (!password.equals(confirmPassword)) {
+					error(getString("gb.passwordsDoNotMatch"));
+					return;
+				}
 
-                UserModel user = GitBlitWebSession.get().getUser();
+				// ensure password satisfies minimum length requirement
+				int minLength = app().settings().getInteger(Keys.realm.minPasswordLength, 5);
+				if (minLength < 4) {
+					minLength = 4;
+				}
+				if (password.length() < minLength) {
+					error(MessageFormat.format(getString("gb.passwordTooShort"), minLength));
+					return;
+				}
 
-                // convert to MD5 digest, if appropriate
-                String type = app().settings().getString(Keys.realm.passwordStorage, "md5");
-                if (type.equalsIgnoreCase("md5")) {
-                    // store MD5 digest of password
-                    password = StringUtils.MD5_TYPE + StringUtils.getMD5(password);
-                } else if (type.equalsIgnoreCase("combined-md5")) {
-                    // store MD5 digest of username+password
-                    password = StringUtils.COMBINED_MD5_TYPE
-                            + StringUtils.getMD5(user.username.toLowerCase() + password);
-                }
+				UserModel user = GitBlitWebSession.get().getUser();
 
-                user.password = password;
-                try {
-                    app().gitblit().reviseUser(user.username, user);
-                    if (app().settings().getBoolean(Keys.web.allowCookieAuthentication, false)) {
-                        ServletWebRequest request = (ServletWebRequest) getRequestCycle().getRequest();
-                        ServletWebResponse response = (ServletWebResponse) getRequestCycle().getResponse();
-                        app().authentication().setCookie(request.getContainerRequest(),
-                                response.getContainerResponse(), user);
-                    }
-                } catch (GitBlitException e) {
-                    error(e.getMessage());
-                    return;
-                }
-                setRedirect(false);
-                info(getString("gb.passwordChanged"));
-                setResponsePage(RepositoriesPage.class);
-            }
-        };
-        NonTrimmedPasswordTextField passwordField = new NonTrimmedPasswordTextField("password", password);
-        passwordField.setResetPassword(false);
-        form.add(passwordField);
-        NonTrimmedPasswordTextField confirmPasswordField = new NonTrimmedPasswordTextField("confirmPassword",
-                confirmPassword);
-        confirmPasswordField.setResetPassword(false);
-        form.add(confirmPasswordField);
+				// convert to MD5 digest, if appropriate
+				String type = app().settings().getString(Keys.realm.passwordStorage, "md5");
+				if (type.equalsIgnoreCase("md5")) {
+					// store MD5 digest of password
+					password = StringUtils.MD5_TYPE + StringUtils.getMD5(password);
+				} else if (type.equalsIgnoreCase("combined-md5")) {
+					// store MD5 digest of username+password
+					password = StringUtils.COMBINED_MD5_TYPE
+							+ StringUtils.getMD5(user.username.toLowerCase() + password);
+				}
 
-        form.add(new Button("save"));
-        Button cancel = new Button("cancel") {
-            private static final long serialVersionUID = 1L;
+				user.password = password;
+				try {
+					app().gitblit().reviseUser(user.username, user);
+					if (app().settings().getBoolean(Keys.web.allowCookieAuthentication, false)) {
+                        app().authentication().setCookie(GitBlitRequestUtils.getServletRequest(),
+                                GitBlitRequestUtils.getServletResponse(), user);
+					}
+				} catch (GitBlitException e) {
+					error(e.getMessage());
+					return;
+				}
+				info(getString("gb.passwordChanged"));
+				setResponsePage(RepositoriesPage.class);
+			}
+		};
+		NonTrimmedPasswordTextField passwordField = new NonTrimmedPasswordTextField("password", password);
+		passwordField.setResetPassword(false);
+		form.add(passwordField);
+		NonTrimmedPasswordTextField confirmPasswordField = new NonTrimmedPasswordTextField("confirmPassword",
+				confirmPassword);
+		confirmPasswordField.setResetPassword(false);
+		form.add(confirmPasswordField);
 
-            @Override
-            public void onSubmit() {
-                setRedirect(false);
-                error(getString("gb.passwordChangeAborted"));
-                setResponsePage(RepositoriesPage.class);
-            }
-        };
-        cancel.setDefaultFormProcessing(false);
-        form.add(cancel);
+		form.add(new Button("save"));
+		Button cancel = new Button("cancel") {
+			private static final long serialVersionUID = 1L;
 
-        add(form);
-    }
+			@Override
+			public void onSubmit() {
+				error(getString("gb.passwordChangeAborted"));
+				setResponsePage(RepositoriesPage.class);
+			}
+		};
+		cancel.setDefaultFormProcessing(false);
+		form.add(cancel);
+
+		add(form);
+	}
 }

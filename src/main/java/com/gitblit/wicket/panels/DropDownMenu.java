@@ -15,20 +15,15 @@
  */
 package com.gitblit.wicket.panels;
 
+import com.gitblit.models.Menu.*;
+import com.gitblit.models.NavLink.DropDownMenuNavLink;
+import com.gitblit.models.NavLink.DropDownPageMenuNavLink;
+import com.gitblit.wicket.WicketUtils;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
-
-import com.gitblit.models.Menu.ExternalLinkMenuItem;
-import com.gitblit.models.Menu.MenuDivider;
-import com.gitblit.models.Menu.MenuItem;
-import com.gitblit.models.Menu.PageLinkMenuItem;
-import com.gitblit.models.Menu.ParameterMenuItem;
-import com.gitblit.models.NavLink.DropDownMenuNavLink;
-import com.gitblit.models.NavLink.DropDownPageMenuNavLink;
-import com.gitblit.wicket.WicketUtils;
 
 public class DropDownMenu extends Panel {
 

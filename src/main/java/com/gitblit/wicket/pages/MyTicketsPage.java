@@ -39,6 +39,7 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.StringValue;
 
 import java.util.*;
 
@@ -50,6 +51,8 @@ import java.util.*;
  */
 public class MyTicketsPage extends RootPage {
 
+    private static final long serialVersionUID = 1L;
+
     public MyTicketsPage() {
         this(null);
     }
@@ -60,21 +63,20 @@ public class MyTicketsPage extends RootPage {
 
         UserModel currentUser = GitBlitWebSession.get().getUser();
         if (currentUser == null || UserModel.ANONYMOUS.equals(currentUser)) {
-            setRedirect(true);
             setResponsePage(getApplication().getHomePage());
             return;
         }
 
         final String username = currentUser.getName();
 
-        final String[] statiiParam = (params == null) ? TicketsUI.openStatii : params.getStringArray(Lucene.status.name());
-        final String assignedToParam = (params == null) ? "" : params.getString(Lucene.responsible.name(), null);
-        final String milestoneParam = (params == null) ? "" : params.getString(Lucene.milestone.name(), null);
-        final String queryParam = (params == null) ? null : params.getString("q", null);
-        final String searchParam = (params == null) ? "" : params.getString("s", null);
-        final String sortBy = (params == null) ? "" : Lucene.fromString(params.getString("sort", Lucene.created.name())).name();
-        final String repositoryId = (params == null) ? "" : params.getString(Lucene.rid.name(), null);
-        final boolean desc = (params == null) || !"asc".equals(params.getString("direction", "desc"));
+        final String[] statiiParam = (params == null) ? TicketsUI.openStatii : (String[]) params.getValues(Lucene.status.name()).stream().map(StringValue::toString).toArray();
+        final String assignedToParam = (params == null) ? "" : params.get(Lucene.responsible.name()).toString();
+        final String milestoneParam = (params == null) ? "" : params.get(Lucene.milestone.name()).toString();
+        final String queryParam = (params == null) ? null : params.get("q").toString();
+        final String searchParam = (params == null) ? "" : params.get("s").toString();
+        final String sortBy = (params == null) ? "" : Lucene.fromString(params.get("sort").toString(Lucene.created.name())).name();
+        final String repositoryId = (params == null) ? "" : params.get(Lucene.rid.name()).toString();
+        final boolean desc = (params == null) || !"asc".equals(params.get("direction").toString("desc"));
 
 
         // add the user title panel
@@ -336,7 +338,7 @@ public class MyTicketsPage extends RootPage {
         int page = (params != null) ? Math.max(1, WicketUtils.getPage(params)) : 1;
         int pageSize = app().settings().getInteger(Keys.tickets.perPage, 25);
 
-        final List<QueryResult> allResults = 
+        final List<QueryResult> allResults =
             StringUtils.isEmpty(searchParam) ? query(qb, page, pageSize, sortBy, desc) : search(searchParam, page, pageSize);
 
         List<QueryResult> viewableResults = new ArrayList<>(allResults.size());
@@ -481,7 +483,7 @@ public class MyTicketsPage extends RootPage {
         return app().tickets().searchFor(null, searchParam, page, pageSize);
     }
 
-    private List<RepositoryModel> correspondingRepositories(Collection<QueryResult> tickets) { 
+    private List<RepositoryModel> correspondingRepositories(Collection<QueryResult> tickets) {
         final HashMap<String, RepositoryModel> result = new HashMap<>();
         for (QueryResult ticket : tickets) {
             RepositoryModel repository = app().repositories().getRepositoryModel(ticket.repository);

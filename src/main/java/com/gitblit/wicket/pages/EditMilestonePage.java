@@ -16,7 +16,6 @@
 package com.gitblit.wicket.pages;
 
 import com.gitblit.models.RepositoryModel;
-import com.gitblit.models.TicketModel;
 import com.gitblit.models.TicketModel.Status;
 import com.gitblit.models.UserModel;
 import com.gitblit.tickets.TicketMilestone;
@@ -108,7 +107,7 @@ public class EditMilestonePage extends RepositoryPage {
 		addBottomScript("scripts/wicketHtml5Patch.js");
 		
 		List<Status> statusChoices = Arrays.asList(Status.Open, Status.Closed);
-		form.add(new DropDownChoice<TicketModel.Status>("status", statusModel, statusChoices));
+        form.add(new DropDownChoice<Status>("status", statusModel, statusChoices));
 
 		form.add(new AjaxButton("save") {
 
@@ -175,7 +174,7 @@ public class EditMilestonePage extends RepositoryPage {
 			}
 		};
 
-		delete.add(new JavascriptEventConfirmation("onclick", MessageFormat.format(
+        delete.add(new JavascriptEventConfirmation("click", MessageFormat.format(
 			getString("gb.deleteMilestone"), oldName)));
 
 		form.add(delete);

@@ -33,7 +33,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
@@ -49,8 +48,6 @@ import java.util.List;
 import java.util.Set;
 
 public class LuceneSearchPage extends RootPage {
-
-	private final static String LUCENE_QUERY_SYNTAX_LINK = "https://lucene.apache.org/core/5_5_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package_description";
 
 	public LuceneSearchPage() {
 		super();
@@ -90,19 +87,19 @@ public class LuceneSearchPage extends RootPage {
 
 			page = WicketUtils.getPage(params);
 
-			if (params.containsKey("repositories")) {
-				String value = params.getString("repositories", "");
+            if (!params.get("repositories").isEmpty()) {
+                String value = params.get("repositories").toString("");
 				List<String> list = StringUtils.getStringsFromValue(value);
 				repositories.addAll(list);
 			}
 
-			allRepos = params.getAsBoolean("allrepos", false);
+            allRepos = params.get("allrepos").toBoolean(false);
 			if (allRepos) {
 				repositories.addAll(availableRepositories);
 			}
 
-			if (params.containsKey("query")) {
-				query = params.getString("query", "");
+            if (!params.get("query").isEmpty()) {
+                query = params.get("query").toString("");
 			} else {
 				String value = WicketUtils.getSearchString(params);
 				String type = WicketUtils.getSearchType(params);
@@ -155,9 +152,9 @@ public class LuceneSearchPage extends RootPage {
 					return;
 				}
 				PageParameters params = new PageParameters();
-				params.put("repositories", StringUtils.flattenStrings(repositoriesModel.getObject()));
-				params.put("query", queryModel.getObject());
-				params.put("allrepos", allreposModel.getObject());
+                params.add("repositories", StringUtils.flattenStrings(repositoriesModel.getObject()));
+                params.add("query", queryModel.getObject());
+                params.add("allrepos", allreposModel.getObject());
 				LuceneSearchPage page = new LuceneSearchPage(params);
 				setResponsePage(page);
 			}
@@ -169,7 +166,6 @@ public class LuceneSearchPage extends RootPage {
 		form.add(selections.setEnabled(luceneEnabled));
 		form.add(new TextField<String>("query", queryModel).setEnabled(luceneEnabled));
 		form.add(new CheckBox("allrepos", allreposModel));
-		form.add(new ExternalLink("querySyntax", LUCENE_QUERY_SYNTAX_LINK));
 		add(form.setEnabled(luceneEnabled));
 
 		// execute search
@@ -252,8 +248,8 @@ public class LuceneSearchPage extends RootPage {
 		add(resultsView.setVisible(results.size() > 0));
 
 		PageParameters pagerParams = new PageParameters();
-		pagerParams.put("repositories", StringUtils.flattenStrings(repositoriesModel.getObject()));
-		pagerParams.put("query", queryModel.getObject());
+        pagerParams.add("repositories", StringUtils.flattenStrings(repositoriesModel.getObject()));
+        pagerParams.add("query", queryModel.getObject());
 
 		boolean showPager = false;
 		int totalPages = 0;

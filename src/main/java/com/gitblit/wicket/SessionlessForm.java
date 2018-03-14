@@ -15,14 +15,13 @@
  */
 package com.gitblit.wicket;
 
+import com.gitblit.Constants;
+import com.gitblit.utils.GitBlitRequestUtils;
 import com.gitblit.wicket.pages.BasePage;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.form.StatelessForm;
-import org.apache.wicket.protocol.http.RequestUtils;
-import org.apache.wicket.protocol.http.request.WebRequestCodingStrategy;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.encoding.UrlDecoder;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -30,7 +29,6 @@ import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.charset.Charset;
 import java.text.MessageFormat;
 
 /**
@@ -102,7 +100,7 @@ public class SessionlessForm<T> extends StatelessForm<T> {
         // render the hidden bookmarkable page field
         AppendingStringBuffer buffer = new AppendingStringBuffer(HIDDEN_DIV_START);
         buffer.append("<input type=\"hidden\" name=\"")
-                .append(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME)
+                .append("wicket:bookmarkablePage")
                 .append("\" value=\":")
                 .append(pageClass.getName())
                 .append("\" />");
@@ -139,7 +137,7 @@ public class SessionlessForm<T> extends StatelessForm<T> {
      * @return reencoded value
      */
     private String recode(String s) {
-        String un = UrlDecoder.QUERY_INSTANCE.decode(s, Charset.defaultCharset());
+        String un = UrlDecoder.QUERY_INSTANCE.decode(s, Constants.ENCODING);
         return Strings.escapeMarkup(un).toString();
     }
 
@@ -148,8 +146,6 @@ public class SessionlessForm<T> extends StatelessForm<T> {
     }
 
     protected String getAbsoluteUrl(Class<? extends BasePage> pageClass, PageParameters pageParameters) {
-        String relativeUrl = urlFor(pageClass, pageParameters).toString();
-        String baseUrl = RequestCycle.get().getUrlRenderer().getBaseUrl().toString();
-        return RequestUtils.toAbsolutePath(baseUrl, relativeUrl);
+        return GitBlitRequestUtils.toAbsoluteUrl(pageClass, pageParameters);
     }
 }

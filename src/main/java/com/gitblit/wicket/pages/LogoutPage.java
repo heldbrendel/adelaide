@@ -15,33 +15,34 @@
  */
 package com.gitblit.wicket.pages;
 
+
 import com.gitblit.models.UserModel;
+import com.gitblit.utils.GitBlitRequestUtils;
 import com.gitblit.wicket.GitBlitWebSession;
-import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
-import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
+import org.apache.wicket.RestartResponseException;
 
 public class LogoutPage extends BasePage {
 
-    public LogoutPage() {
-        super();
-        GitBlitWebSession session = GitBlitWebSession.get();
-        UserModel user = session.getUser();
-        app().authentication().logout(((ServletWebRequest) getRequest()).getContainerRequest(),
-                ((ServletWebResponse) getResponse()).getContainerResponse(), user);
-        session.invalidate();
+	public LogoutPage() {
+		super();
+		GitBlitWebSession session = GitBlitWebSession.get();
+		UserModel user = session.getUser();
+        app().authentication().logout(GitBlitRequestUtils.getServletRequest(), GitBlitRequestUtils.getServletResponse(), user);
+		session.invalidate();
 
-        /*
-         * Now check whether the authentication was realized via the Authorization in the header.
-         * If so, it is likely to be cached by the browser, and cannot be undone. Effectively, this means
-         * that you cannot log out...
-         */
-        if (((ServletWebRequest) getRequest()).getContainerRequest().getHeader("Authorization") != null) {
-            // authentication will be done via this route anyway, show a page to close the browser:
-            // this will be done by Wicket.
-            setupPage(null, getString("gb.logout"));
+		/*
+		 * Now check whether the authentication was realized via the Authorization in the header.
+		 * If so, it is likely to be cached by the browser, and cannot be undone. Effectively, this means
+		 * that you cannot log out...
+		 */
+        if (GitBlitRequestUtils.getServletRequest().getHeader("Authorization") != null) {
+			// authentication will be done via this route anyway, show a page to close the browser:
+			// this will be done by Wicket.
+			setupPage(null, getString("gb.logout"));
 
-        } else {
-            setResponsePage(getApplication().getHomePage());
-        } // not via WWW-Auth
-    } // LogoutPage
+		} else {
+//			setResponsePage(getApplication().getHomePage());
+            throw new RestartResponseException(getApplication().getHomePage());
+		} // not via WWW-Auth
+	} // LogoutPage
 }

@@ -21,60 +21,66 @@ import com.gitblit.tickets.TicketSerializer;
 import com.gitblit.utils.StringUtils;
 import com.gitblit.wicket.WicketUtils;
 import org.apache.wicket.request.IRequestCycle;
-import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.request.http.handler.RedirectRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ExportTicketPage extends SessionPage {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass().getSimpleName());
+    private static final long serialVersionUID = 1L;
 
-    String contentType;
+	private final Logger logger = LoggerFactory.getLogger(getClass().getSimpleName());
 
-    public ExportTicketPage(final PageParameters params) {
-        super(params);
+	String contentType;
 
-        if (!params.getNamedKeys().contains("r")) {
-            error(getString("gb.repositoryNotSpecified"));
-            redirectToInterceptPage(new RepositoriesPage());
-        }
+	public ExportTicketPage(final PageParameters params) {
+		super(params);
 
-        String baseUrl = RequestCycle.get().getUrlRenderer().getBaseUrl().toString();
-        getRequestCycle().scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(baseUrl) {
+        if (params.get("r").isEmpty()) {
+			error(getString("gb.repositoryNotSpecified"));
+			redirectToInterceptPage(new RepositoriesPage());
+		}
+
+        getRequestCycle().scheduleRequestHandlerAfterCurrent(new IRequestHandler() {
+			
+			@Override
+            public void respond(IRequestCycle requestCycle) {
+				WebResponse response = (WebResponse) requestCycle.getResponse();
+
+				final String repositoryName = WicketUtils.getRepositoryName(params);
+				RepositoryModel repository = app().repositories().getRepositoryModel(repositoryName);
+				String objectId = WicketUtils.getObject(params).toLowerCase();
+				if (objectId.endsWith(".json")) {
+					objectId = objectId.substring(0, objectId.length() - ".json".length());
+				}
+				long id = Long.parseLong(objectId);
+				TicketModel ticket = app().tickets().getTicket(repository, id);
+
+				String content = TicketSerializer.serialize(ticket);
+				contentType = "application/json; charset=UTF-8";
+				response.setContentType(contentType);
+				try {
+					response.getOutputStream().write(content.getBytes("UTF-8"));
+				} catch (Exception e) {
+					logger.error("Failed to write text response", e);
+				}
+			}
 
             @Override
-            public void respond(IRequestCycle requestCycle) {
-                WebResponse response = (WebResponse) requestCycle.getResponse();
+            public void detach(IRequestCycle requestCycle) {
+                // TODO Auto-generated method stub
 
-                final String repositoryName = WicketUtils.getRepositoryName(params);
-                RepositoryModel repository = app().repositories().getRepositoryModel(repositoryName);
-                String objectId = WicketUtils.getObject(params).toLowerCase();
-                if (objectId.endsWith(".json")) {
-                    objectId = objectId.substring(0, objectId.length() - ".json".length());
-                }
-                long id = Long.parseLong(objectId);
-                TicketModel ticket = app().tickets().getTicket(repository, id);
-
-                String content = TicketSerializer.serialize(ticket);
-                contentType = "application/json; charset=UTF-8";
-                response.setContentType(contentType);
-                try {
-                    response.getOutputStream().write(content.getBytes("UTF-8"));
-                } catch (Exception e) {
-                    logger.error("Failed to write text response", e);
-                }
             }
-        });
-    }
+		});
+	}
 
-    @Override
-    protected void setHeaders(WebResponse response) {
-        super.setHeaders(response);
-        if (!StringUtils.isEmpty(contentType)) {
-            response.setContentType(contentType);
-        }
-    }
+	@Override
+	protected void setHeaders(WebResponse response) {
+		super.setHeaders(response);
+		if (!StringUtils.isEmpty(contentType)) {
+			response.setContentType(contentType);
+		}
+	}
 }

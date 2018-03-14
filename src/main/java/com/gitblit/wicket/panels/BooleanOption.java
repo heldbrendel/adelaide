@@ -48,7 +48,7 @@ public class BooleanOption extends BasePanel {
 	}
 
 	public BooleanOption setIsHtmlDescription(boolean val) {
-		((Label) get("description")).setEscapeModelStrings(!val);
+        get("description").setEscapeModelStrings(!val);
 		return this;
 	}
 }

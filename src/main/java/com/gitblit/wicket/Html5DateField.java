@@ -67,7 +67,7 @@ public class Html5DateField extends TextField<Date> implements ITextFormatProvid
             private static final long serialVersionUID = 1L;
 
             /**
-             * @see org.apache.wicket.util.convert.converter.DateConverter#getDateFormat(java.util.Locale)
+             * @see import org.apache.wicket.util.convert.converter.DateConverter#getDateFormat(java.util.Locale)
              */
             @Override
             public DateFormat getDateFormat(Locale locale) {
@@ -88,6 +88,7 @@ public class Html5DateField extends TextField<Date> implements ITextFormatProvid
      */
     @Override
     public <C> IConverter<C> getConverter(Class<C> type) {
+
         if (converter == null) {
             return super.getConverter(type);
         } else {
@@ -120,4 +121,10 @@ public class Html5DateField extends TextField<Date> implements ITextFormatProvid
         }
         return DEFAULT_PATTERN;
     }
+
+    @Override
+    protected String[] getInputTypes() {
+        return new String[]{"date"};
+    }
+
 }

@@ -27,113 +27,108 @@ import java.util.List;
  * Represents a navigation link for the navigation panel.
  *
  * @author James Moger
- *
  */
 public abstract class NavLink implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public final String translationKey;
-	public final boolean hiddenPhone;
+    public final String translationKey;
+    public final boolean hiddenPhone;
 
-	public NavLink(String translationKey, boolean hiddenPhone) {
-		this.translationKey = translationKey;
-		this.hiddenPhone = hiddenPhone;
-	}
+    public NavLink(String translationKey, boolean hiddenPhone) {
+        this.translationKey = translationKey;
+        this.hiddenPhone = hiddenPhone;
+    }
 
 
-	/**
-	 * Represents a Wicket page link.
-	 *
-	 * @author James Moger
-	 *
-	 */
-	public static class PageNavLink extends NavLink implements Serializable {
-		private static final long serialVersionUID = 1L;
+    /**
+     * Represents a Wicket page link.
+     *
+     * @author James Moger
+     */
+    public static class PageNavLink extends NavLink implements Serializable {
+        private static final long serialVersionUID = 1L;
 
-		public final Class<? extends WebPage> pageClass;
-		public final PageParameters params;
+        public final Class<? extends WebPage> pageClass;
+        public final PageParameters params;
 
-		public PageNavLink(String translationKey, Class<? extends WebPage> pageClass) {
-			this(translationKey, pageClass, null);
-		}
+        public PageNavLink(String translationKey, Class<? extends WebPage> pageClass) {
+            this(translationKey, pageClass, null);
+        }
 
-		public PageNavLink(String translationKey, Class<? extends WebPage> pageClass,
-				PageParameters params) {
-			this(translationKey, pageClass, params, false);
-		}
+        public PageNavLink(String translationKey, Class<? extends WebPage> pageClass,
+                           PageParameters params) {
+            this(translationKey, pageClass, params, false);
+        }
 
-		public PageNavLink(String translationKey, Class<? extends WebPage> pageClass,
-				PageParameters params, boolean hiddenPhone) {
-			super(translationKey, hiddenPhone);
-			this.pageClass = pageClass;
-			this.params = params;
-		}
-	}
+        public PageNavLink(String translationKey, Class<? extends WebPage> pageClass,
+                           PageParameters params, boolean hiddenPhone) {
+            super(translationKey, hiddenPhone);
+            this.pageClass = pageClass;
+            this.params = params;
+        }
+    }
 
-	/**
-	 * Represents an explicitly href link.
-	 *
-	 * @author James Moger
-	 *
-	 */
-	public static class ExternalNavLink extends NavLink implements Serializable {
+    /**
+     * Represents an explicitly href link.
+     *
+     * @author James Moger
+     */
+    public static class ExternalNavLink extends NavLink implements Serializable {
 
-		private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 1L;
 
-		public final String url;
+        public final String url;
 
-		public ExternalNavLink(String keyOrText, String url) {
-			super(keyOrText, false);
-			this.url = url;
-		}
+        public ExternalNavLink(String keyOrText, String url) {
+            super(keyOrText, false);
+            this.url = url;
+        }
 
-		public ExternalNavLink(String keyOrText, String url, boolean hiddenPhone) {
-			super(keyOrText,  hiddenPhone);
-			this.url = url;
-		}
-	}
+        public ExternalNavLink(String keyOrText, String url, boolean hiddenPhone) {
+            super(keyOrText, hiddenPhone);
+            this.url = url;
+        }
+    }
 
-	/**
-	 * Represents a DropDownMenu for the current page.
-	 *
-	 * @author James Moger
-	 *
-	 */
-	public static class DropDownPageMenuNavLink extends PageNavLink implements Serializable {
+    /**
+     * Represents a DropDownMenu for the current page.
+     *
+     * @author James Moger
+     */
+    public static class DropDownPageMenuNavLink extends PageNavLink implements Serializable {
 
-		private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 1L;
 
-		public final List<MenuItem> menuItems;
+        public final List<MenuItem> menuItems;
 
-		public DropDownPageMenuNavLink(String keyOrText, Class<? extends WebPage> pageClass) {
-			this(keyOrText, pageClass, false);
-		}
+        public DropDownPageMenuNavLink(String keyOrText, Class<? extends WebPage> pageClass) {
+            this(keyOrText, pageClass, false);
+        }
 
-		public DropDownPageMenuNavLink(String keyOrText, Class<? extends WebPage> pageClass, boolean hiddenPhone) {
-			super(keyOrText, pageClass, null, hiddenPhone);
-			menuItems = new ArrayList<MenuItem>();
-		}
-	}
+        public DropDownPageMenuNavLink(String keyOrText, Class<? extends WebPage> pageClass, boolean hiddenPhone) {
+            super(keyOrText, pageClass, null, hiddenPhone);
+            menuItems = new ArrayList<MenuItem>();
+        }
+    }
 
-	/**
-	 * Represents a DropDownMenu.
-	 *
-	 * @author James Moger
-	 *
-	 */
-	public static class DropDownMenuNavLink extends NavLink implements Serializable {
+    /**
+     * Represents a DropDownMenu.
+     *
+     * @author James Moger
+     */
+    public static class DropDownMenuNavLink extends NavLink implements Serializable {
 
-		private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 1L;
 
-		public final List<MenuItem> menuItems;
+        public final List<MenuItem> menuItems;
 
-		public DropDownMenuNavLink(String keyOrText) {
-			this(keyOrText, false);
-		}
+        public DropDownMenuNavLink(String keyOrText) {
+            this(keyOrText, false);
+        }
 
-		public DropDownMenuNavLink(String keyOrText, boolean hiddenPhone) {
-			super(keyOrText, hiddenPhone);
-			menuItems = new ArrayList<MenuItem>();
-		}
-	}
+        public DropDownMenuNavLink(String keyOrText, boolean hiddenPhone) {
+            super(keyOrText, hiddenPhone);
+            menuItems = new ArrayList<MenuItem>();
+        }
+    }
 }

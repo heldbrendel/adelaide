@@ -31,7 +31,6 @@ import com.gitblit.wicket.charting.Chart;
 import com.gitblit.wicket.charting.Charts;
 import com.gitblit.wicket.charting.Flotr2Charts;
 import com.gitblit.wicket.panels.ActivityPanel;
-import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -112,8 +111,8 @@ public class ActivityPage extends RootPage {
 			// create the activity charts
 			if (app().settings().getBoolean(Keys.web.generateActivityGraph, true)) {
 				Charts charts = createCharts(recentActivity);
-				add(new HeaderContributor(charts));
-				add(new Fragment("chartsPanel", "chartsFragment", this));
+                add(charts);
+                add(new Fragment("chartsPanel", "chartsFragment", ActivityPage.this));
 			} else {
 				add(new Label("chartsPanel").setVisible(false));
 			}
@@ -135,8 +134,8 @@ public class ActivityPage extends RootPage {
 
 		PageParameters currentParameters = getPageParameters();
 		int daysBack = app().settings().getInteger(Keys.web.activityDuration, 7);
-		if (currentParameters != null && !currentParameters.getNamedKeys().contains("db")) {
-			currentParameters.add("db", daysBack);
+        if (currentParameters != null && currentParameters.get("db").isEmpty()) {
+            currentParameters.add("db", daysBack);
 		}
 
 		// preserve time filter options on repository choices
