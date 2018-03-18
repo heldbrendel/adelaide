@@ -15,9 +15,10 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.text.MessageFormat;
-import java.util.List;
-
+import com.gitblit.models.UserModel;
+import com.gitblit.utils.StringUtils;
+import com.gitblit.wicket.WicketUtils;
+import com.gitblit.wicket.pages.EditUserPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
@@ -26,10 +27,8 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 
-import com.gitblit.models.UserModel;
-import com.gitblit.utils.StringUtils;
-import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.pages.EditUserPage;
+import java.text.MessageFormat;
+import java.util.List;
 
 public class UsersPanel extends BasePanel {
 
@@ -38,7 +37,7 @@ public class UsersPanel extends BasePanel {
 	public UsersPanel(String wicketId, final boolean showAdmin) {
 		super(wicketId);
 
-		Fragment adminLinks = new Fragment("adminPanel", "adminLinks", this);
+        Fragment adminLinks = new Fragment("adminPanel", "adminLinks", UsersPanel.this);
 		adminLinks.add(new BookmarkablePageLink<Void>("newUser", EditUserPage.class));
 		add(adminLinks.setVisible(showAdmin));
 
@@ -85,7 +84,7 @@ public class UsersPanel extends BasePanel {
 				item.add(new Label("teams", entry.teams.size() > 0 ? ("" + entry.teams.size()) : ""));
 				item.add(new Label("repositories",
 						entry.permissions.size() > 0 ? ("" + entry.permissions.size()) : ""));
-				Fragment userLinks = new Fragment("userLinks", "userAdminLinks", this);
+                Fragment userLinks = new Fragment("userLinks", "userAdminLinks", UsersPanel.this);
 				userLinks.add(new BookmarkablePageLink<Void>("editUser", EditUserPage.class,
 						WicketUtils.newUsernameParameter(entry.username)));
 				Link<Void> deleteLink = new Link<Void>("deleteUser") {
@@ -103,7 +102,7 @@ public class UsersPanel extends BasePanel {
 						}
 					}
 				};
-				deleteLink.add(new JavascriptEventConfirmation("onclick", MessageFormat.format(
+                deleteLink.add(new JavascriptEventConfirmation("click", MessageFormat.format(
 						getString("gb.deleteUser"), entry.username)));
 				userLinks.add(deleteLink);
 				item.add(userLinks);

@@ -15,9 +15,9 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.text.MessageFormat;
-import java.util.List;
-
+import com.gitblit.models.TeamModel;
+import com.gitblit.wicket.WicketUtils;
+import com.gitblit.wicket.pages.EditTeamPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.Link;
@@ -26,9 +26,8 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 
-import com.gitblit.models.TeamModel;
-import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.pages.EditTeamPage;
+import java.text.MessageFormat;
+import java.util.List;
 
 public class TeamsPanel extends BasePanel {
 
@@ -37,7 +36,7 @@ public class TeamsPanel extends BasePanel {
 	public TeamsPanel(String wicketId, final boolean showAdmin) {
 		super(wicketId);
 
-		Fragment adminLinks = new Fragment("adminPanel", "adminLinks", this);
+        Fragment adminLinks = new Fragment("adminPanel", "adminLinks", TeamsPanel.this);
 		adminLinks.add(new BookmarkablePageLink<Void>("newTeam", EditTeamPage.class));
 		add(adminLinks.setVisible(showAdmin));
 
@@ -65,7 +64,7 @@ public class TeamsPanel extends BasePanel {
 						: ""));
 				item.add(new Label("repositories",
 						entry.repositories.size() > 0 ? ("" + entry.repositories.size()) : ""));
-				Fragment teamLinks = new Fragment("teamLinks", "teamAdminLinks", this);
+                Fragment teamLinks = new Fragment("teamLinks", "teamAdminLinks", TeamsPanel.this);
 				teamLinks.add(new BookmarkablePageLink<Void>("editTeam", EditTeamPage.class,
 						WicketUtils.newTeamnameParameter(entry.name)));
 				Link<Void> deleteLink = new Link<Void>("deleteTeam") {
@@ -83,7 +82,7 @@ public class TeamsPanel extends BasePanel {
 						}
 					}
 				};
-				deleteLink.add(new JavascriptEventConfirmation("onclick", MessageFormat.format(
+                deleteLink.add(new JavascriptEventConfirmation("click", MessageFormat.format(
 						"Delete team \"{0}\"?", entry.name)));
 				teamLinks.add(deleteLink);
 				item.add(teamLinks);

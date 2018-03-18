@@ -15,26 +15,19 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.wicket.behavior.HeaderContributor;
-import org.apache.wicket.markup.html.basic.Label;
-
 import com.gitblit.Keys;
 import com.gitblit.models.ProjectModel;
 import com.gitblit.utils.StringUtils;
 import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.freemarker.FreemarkerPanel;
 import com.gitblit.wicket.ng.NgController;
+import org.apache.wicket.markup.html.basic.Label;
+
+import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * A client-side filterable rich project list which uses Freemarker, Wicket,
@@ -121,7 +114,7 @@ public class FilterableProjectList extends BasePanel {
 		// inject an AngularJS controller with static data
 		NgController ctrl = new NgController(ngCtrl);
 		ctrl.addVariable(ngList, list);
-		add(new HeaderContributor(ctrl));
+        add(ctrl);
 	}
 
 	protected class ProjectListItem implements Serializable {

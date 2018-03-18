@@ -15,35 +15,31 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import org.apache.wicket.Component;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.ExternalLink;
-
 import com.gitblit.Keys;
 import com.gitblit.models.Menu.MenuDivider;
 import com.gitblit.models.Menu.MenuItem;
 import com.gitblit.models.Menu.ParameterMenuItem;
-import com.gitblit.models.NavLink.DropDownPageMenuNavLink;
 import com.gitblit.models.NavLink;
+import com.gitblit.models.NavLink.DropDownPageMenuNavLink;
 import com.gitblit.models.ProjectModel;
 import com.gitblit.models.RepositoryModel;
 import com.gitblit.models.UserModel;
 import com.gitblit.servlet.SyndicationServlet;
+import com.gitblit.utils.GitBlitRequestUtils;
 import com.gitblit.utils.MarkdownUtils;
 import com.gitblit.utils.StringUtils;
-import com.gitblit.wicket.CacheControl;
+import com.gitblit.wicket.*;
 import com.gitblit.wicket.CacheControl.LastModified;
-import com.gitblit.wicket.GitBlitWebApp;
-import com.gitblit.wicket.GitBlitWebSession;
-import com.gitblit.wicket.GitblitRedirectException;
-import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.panels.FilterableRepositoryList;
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.ExternalLink;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 @CacheControl(LastModified.PROJECT)
 public class ProjectPage extends DashboardPage {
@@ -107,7 +103,7 @@ public class ProjectPage extends DashboardPage {
 		add(new Label("projectTitle", project.getDisplayName()));
 		add(new Label("projectDescription", project.description));
 
-		String feedLink = SyndicationServlet.asLink(getRequest().getRelativePathPrefixToContextRoot(), projectName, null, 0);
+        String feedLink = SyndicationServlet.asLink(GitBlitRequestUtils.getRelativePathPrefixToContextRoot(), projectName, null, 0);
 		add(new ExternalLink("syndication", feedLink));
 
 		add(WicketUtils.syndicationDiscoveryLink(SyndicationServlet.getTitle(project.getDisplayName(),

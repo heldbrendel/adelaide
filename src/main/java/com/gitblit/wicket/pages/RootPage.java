@@ -15,59 +15,18 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.behavior.HeaderContributor;
-import org.apache.wicket.markup.html.IHeaderContributor;
-import org.apache.wicket.markup.html.IHeaderResponse;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.WebRequest;
-import org.apache.wicket.protocol.http.WebResponse;
-
 import com.gitblit.Constants;
 import com.gitblit.Constants.AuthenticationType;
 import com.gitblit.Keys;
 import com.gitblit.extensions.NavLinkExtension;
 import com.gitblit.extensions.UserMenuExtension;
-import com.gitblit.models.Menu.ExternalLinkMenuItem;
-import com.gitblit.models.Menu.MenuDivider;
-import com.gitblit.models.Menu.MenuItem;
-import com.gitblit.models.Menu.PageLinkMenuItem;
-import com.gitblit.models.Menu.ParameterMenuItem;
-import com.gitblit.models.Menu.ToggleMenuItem;
+import com.gitblit.models.Menu.*;
 import com.gitblit.models.NavLink;
 import com.gitblit.models.NavLink.PageNavLink;
 import com.gitblit.models.RepositoryModel;
 import com.gitblit.models.TeamModel;
 import com.gitblit.models.UserModel;
+import com.gitblit.utils.GitBlitRequestUtils;
 import com.gitblit.utils.ModelUtils;
 import com.gitblit.utils.StringUtils;
 import com.gitblit.wicket.GitBlitWebSession;
@@ -77,6 +36,28 @@ import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.panels.AvatarImage;
 import com.gitblit.wicket.panels.LinkPanel;
 import com.gitblit.wicket.panels.NavigationPanel;
+import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.MessageFormat;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 /**
  * Root page is a topbar, navigable page like Repositories, Users, or
@@ -86,6 +67,8 @@ import com.gitblit.wicket.panels.NavigationPanel;
  *
  */
 public abstract class RootPage extends BasePage {
+
+    private static final long serialVersionUID = 1L;
 
 	boolean showAdmin;
 
@@ -105,13 +88,13 @@ public abstract class RootPage extends BasePage {
 	protected void setupPage(String repositoryName, String pageName) {
 
 		// CSS header overrides
-		add(new HeaderContributor(new IHeaderContributor() {
+        add(new Behavior() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void renderHead(IHeaderResponse response) {
+            public void renderHead(Component component, IHeaderResponse response) {
 				StringBuilder buffer = new StringBuilder();
-				buffer.append("<style type=\"text/css\">\n");
+//				buffer.append("<style type=\"text/css\">\n");
 				buffer.append(".navbar-inner {\n");
 				final String headerBackground = app().settings().getString(Keys.web.headerBackgroundColor, null);
 				if (!StringUtils.isEmpty(headerBackground)) {
@@ -143,10 +126,10 @@ public abstract class RootPage extends BasePage {
 					buffer.append(MessageFormat.format("color: {0} !important;\n", headerHover));
 					buffer.append("}\n");
 				}
-				buffer.append("</style>\n");
-				response.renderString(buffer.toString());
+//				buffer.append("</style>\n");
+                response.render(CssHeaderItem.forCSS(buffer.toString(), "rootCss"));
 				}
-			}));
+        });
 
 		boolean authenticateView = app().settings().getBoolean(Keys.web.authenticateViewPages, false);
 		boolean authenticateAdmin = app().settings().getBoolean(Keys.web.authenticateAdminPages, true);
@@ -255,8 +238,8 @@ public abstract class RootPage extends BasePage {
 				params.remove("user");
 
 				// remove days back parameter if it is the default value
-				if (params.containsKey("db")
-						&& params.getInt("db") == app().settings().getInteger(Keys.web.activityDuration, 7)) {
+                if (!params.get("db").isEmpty()
+                        && params.get("db").toInt() == app().settings().getInteger(Keys.web.activityDuration, 7)) {
 					params.remove("db");
 				}
 				return params;
@@ -271,8 +254,8 @@ public abstract class RootPage extends BasePage {
 
 	private void loginUser(UserModel user) {
 		if (user != null) {
-			HttpServletRequest request = ((WebRequest) getRequest()).getHttpServletRequest();
-			HttpServletResponse response = ((WebResponse) getResponse()).getHttpServletResponse();
+            HttpServletRequest request = GitBlitRequestUtils.getServletRequest();
+            HttpServletResponse response = GitBlitRequestUtils.getServletResponse();
 
 			// Set the user into the session
 			GitBlitWebSession session = GitBlitWebSession.get();
@@ -281,8 +264,8 @@ public abstract class RootPage extends BasePage {
 			session.replaceSession();
 			session.setUser(user);
 
-			request = ((WebRequest) getRequest()).getHttpServletRequest();
-			response = ((WebResponse) getResponse()).getHttpServletResponse();
+            request = GitBlitRequestUtils.getServletRequest();
+            response = GitBlitRequestUtils.getServletResponse();
 			request.getSession().setAttribute(Constants.ATTRIB_AUTHTYPE, AuthenticationType.CREDENTIALS);
 
 			// Set Cookie
@@ -317,7 +300,7 @@ public abstract class RootPage extends BasePage {
 
 	}
 
-	protected List<com.gitblit.models.Menu.MenuItem> getRepositoryFilterItems(PageParameters params) {
+    protected List<MenuItem> getRepositoryFilterItems(PageParameters params) {
 		final UserModel user = GitBlitWebSession.get().getUser();
 		Set<MenuItem> filters = new LinkedHashSet<MenuItem>();
 		List<RepositoryModel> repositories = getRepositoryModels();
@@ -393,8 +376,8 @@ public abstract class RootPage extends BasePage {
 			clonedParams = new PageParameters(params);
 		}
 
-		if (!clonedParams.containsKey("db")) {
-			clonedParams.put("db",  daysBack);
+        if (clonedParams.get("db").isEmpty()) {
+            clonedParams.add("db", daysBack);
 		}
 
 		List<MenuItem> items = new ArrayList<MenuItem>();
@@ -434,7 +417,7 @@ public abstract class RootPage extends BasePage {
 		String set = WicketUtils.getSet(params);
 		String regex = WicketUtils.getRegEx(params);
 		String team = WicketUtils.getTeam(params);
-		int daysBack = params.getInt("db", 0);
+        int daysBack = params.get("db").toInt(0);
 		int maxDaysBack = app().settings().getInteger(Keys.web.activityDurationMaximum, 30);
 
 		List<RepositoryModel> availableModels = getRepositoryModels();
@@ -569,7 +552,7 @@ public abstract class RootPage extends BasePage {
 					String username = RootPage.this.username.getObject();
 					char[] password = RootPage.this.password.getObject().toCharArray();
 
-					HttpServletRequest request = ((WebRequest)RequestCycle.get().getRequest()).getHttpServletRequest();
+                    HttpServletRequest request = GitBlitRequestUtils.getServletRequest();
 
 					UserModel user = app().authentication().authenticate(username, password, request.getRemoteAddr());
 					if (user == null) {
@@ -613,9 +596,9 @@ public abstract class RootPage extends BasePage {
 			GitBlitWebSession session = GitBlitWebSession.get();
 			UserModel user = session.getUser();
 			boolean editCredentials = app().authentication().supportsCredentialChanges(user);
-			HttpServletRequest request = ((WebRequest) getRequest()).getHttpServletRequest();
+            HttpServletRequest request = GitBlitRequestUtils.getServletRequest();
 			AuthenticationType authenticationType = (AuthenticationType) request.getAttribute(Constants.ATTRIB_AUTHTYPE);
-			boolean standardLogin = (null != authenticationType) ? authenticationType.isStandard() : true;
+            boolean standardLogin = (null == authenticationType) || authenticationType.isStandard();
 
 			if (app().settings().getBoolean(Keys.web.allowGravatar, true)) {
 				add(new AvatarImage("username", user, "navbarGravatar", 20, false));
@@ -687,7 +670,7 @@ public abstract class RootPage extends BasePage {
 		 * @return a submenu fragment
 		 */
 		private Fragment newSubmenu(String wicketId, String submenuTitle, List<MenuItem> menuItems) {
-			Fragment submenu = new Fragment(wicketId, "submenuFragment", this);
+            Fragment submenu = new Fragment(wicketId, "submenuFragment", RootPage.this);
 			submenu.add(new Label("submenuTitle", submenuTitle).setRenderBodyOnly(true));
 			ListDataProvider<MenuItem> menuItemsDp = new ListDataProvider<MenuItem>(menuItems);
 			DataView<MenuItem> submenuItems = new DataView<MenuItem>("submenuItem", menuItemsDp) {

@@ -15,19 +15,6 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
-
 import com.gitblit.Constants;
 import com.gitblit.Keys;
 import com.gitblit.models.RefModel;
@@ -38,6 +25,18 @@ import com.gitblit.wicket.pages.CommitDiffPage;
 import com.gitblit.wicket.pages.CommitPage;
 import com.gitblit.wicket.pages.GitSearchPage;
 import com.gitblit.wicket.pages.TreePage;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class SearchPanel extends BasePanel {
 
@@ -46,8 +45,8 @@ public class SearchPanel extends BasePanel {
 	private boolean hasMore;
 
 	public SearchPanel(String wicketId, final String repositoryName, final String objectId,
-			final String value, Constants.SearchType searchType, Repository r, int limit, int pageOffset,
-			boolean showRemoteRefs) {
+                       final String value, Constants.SearchType searchType, Repository r, int limit, int pageOffset,
+                       boolean showRemoteRefs) {
 		super(wicketId);
 		boolean pageResults = limit <= 0;
 		int itemsPerPage = app().settings().getInteger(Keys.web.itemsPerPage, 50);

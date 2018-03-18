@@ -15,19 +15,6 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.behavior.SimpleAttributeModifier;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
-import org.eclipse.jgit.lib.Repository;
-
 import com.gitblit.Constants;
 import com.gitblit.models.RepositoryModel;
 import com.gitblit.models.UserModel;
@@ -42,6 +29,18 @@ import com.gitblit.wicket.TicketsUI.Indicator;
 import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.pages.TicketsPage;
 import com.gitblit.wicket.pages.UserPage;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.eclipse.jgit.lib.Repository;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -101,7 +100,7 @@ public class TicketListPanel extends BasePanel {
 				if (ticket.updatedAt == null) {
 					item.add(new Label("updated").setVisible(false));
 				} else {
-					Fragment updated = new Fragment("updated", "updatedFragment", this);
+                    Fragment updated = new Fragment("updated", "updatedFragment", TicketListPanel.this);
 					UserModel updater = app().users().getUserModel(ticket.updatedBy);
 					if (updater != null) {
 						updated.add(new LinkPanel("updatedBy", null, updater.getDisplayName(),
@@ -143,7 +142,7 @@ public class TicketListPanel extends BasePanel {
 						}
 
 						String background = MessageFormat.format("background-color:{0};", tLabel.color);
-						label.add(new SimpleAttributeModifier("style", background));
+                        label.add(new AttributeModifier("style", background));
 						labelItem.add(label);
 					}
 				};

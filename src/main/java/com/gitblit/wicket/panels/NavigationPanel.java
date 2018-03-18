@@ -15,14 +15,6 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.util.List;
-
-import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
-
 import com.gitblit.models.NavLink;
 import com.gitblit.models.NavLink.DropDownMenuNavLink;
 import com.gitblit.models.NavLink.DropDownPageMenuNavLink;
@@ -30,6 +22,13 @@ import com.gitblit.models.NavLink.ExternalNavLink;
 import com.gitblit.models.NavLink.PageNavLink;
 import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.pages.BasePage;
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.markup.repeater.data.ListDataProvider;
+
+import java.util.List;
 
 public class NavigationPanel extends Panel {
 

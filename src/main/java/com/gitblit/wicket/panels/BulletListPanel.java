@@ -15,14 +15,14 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BulletListPanel extends Panel {
 

@@ -15,26 +15,6 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.eclipse.jgit.lib.Repository;
-
 import com.gitblit.Constants;
 import com.gitblit.Constants.AccessPermission;
 import com.gitblit.Constants.AuthorizationControl;
@@ -53,6 +33,20 @@ import com.gitblit.wicket.GitBlitWebSession;
 import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.panels.MarkdownTextArea;
 import com.google.common.base.Optional;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.eclipse.jgit.lib.Repository;
+
+import java.util.*;
 
 /**
  * Page for editing a ticket.
@@ -62,11 +56,13 @@ import com.google.common.base.Optional;
  */
 public class EditTicketPage extends RepositoryPage {
 
-	static final String NIL = "<nil>";
+    private static final long serialVersionUID = 1L;
+
+    static final String NIL = "<nil>";
 
 	static final String ESC_NIL = StringUtils.escapeForHtml(NIL,  false);
 
-	private IModel<TicketModel.Type> typeModel;
+    private IModel<Type> typeModel;
 
 	private IModel<String> titleModel;
 
@@ -136,7 +132,7 @@ public class EditTicketPage extends RepositoryPage {
 		} else {
 			typeChoices = Arrays.asList(TicketModel.Type.choices());
 		}
-		form.add(new DropDownChoice<TicketModel.Type>("type", typeModel, typeChoices));
+        form.add(new DropDownChoice<Type>("type", typeModel, typeChoices));
 
 		form.add(new TextField<String>("title", titleModel));
 		form.add(new TextField<String>("topic", topicModel));
@@ -163,8 +159,8 @@ public class EditTicketPage extends RepositoryPage {
 		} else {
 			statusChoices = Arrays.asList(TicketModel.Status.requestWorkflow);
 		}
-		Fragment status = new Fragment("status", "statusFragment", this);
-		status.add(new DropDownChoice<TicketModel.Status>("status", statusModel, statusChoices));
+        Fragment status = new Fragment("status", "statusFragment", EditTicketPage.this);
+        status.add(new DropDownChoice<Status>("status", statusModel, statusChoices));
 		form.add(status);
 
 		List<TicketModel.Severity> severityChoices = Arrays.asList(TicketModel.Severity.choices());
@@ -200,7 +196,7 @@ public class EditTicketPage extends RepositoryPage {
 			}
 			Collections.sort(responsibles);
 			responsibles.add(new TicketResponsible(NIL, "", ""));
-			Fragment responsible = new Fragment("responsible", "responsibleFragment", this);
+            Fragment responsible = new Fragment("responsible", "responsibleFragment", EditTicketPage.this);
 			responsible.add(new DropDownChoice<TicketResponsible>("responsible", responsibleModel, responsibles));
 			form.add(responsible.setVisible(!responsibles.isEmpty()));
 
@@ -224,12 +220,12 @@ public class EditTicketPage extends RepositoryPage {
 			}
 
 			// milestone
-			Fragment milestone = new Fragment("milestone", "milestoneFragment", this);
+            Fragment milestone = new Fragment("milestone", "milestoneFragment", EditTicketPage.this);
 			milestone.add(new DropDownChoice<TicketMilestone>("milestone", milestoneModel, milestones));
 			form.add(milestone.setVisible(!milestones.isEmpty()));
 
 			// priority
-			Fragment priority = new Fragment("priority", "priorityFragment", this);
+            Fragment priority = new Fragment("priority", "priorityFragment", EditTicketPage.this);
 			List<TicketModel.Priority> priorityChoices = Arrays.asList(TicketModel.Priority.choices());
 			priority.add(new DropDownChoice<TicketModel.Priority>("priority", priorityModel, priorityChoices));
 			form.add(priority);
@@ -245,7 +241,7 @@ public class EditTicketPage extends RepositoryPage {
 			branches.remove(Repository.shortenRefName(getRepositoryModel().mergeTo));
 			branches.add(0, Repository.shortenRefName(getRepositoryModel().mergeTo));
 
-			Fragment mergeto = new Fragment("mergeto", "mergeToFragment", this);
+            Fragment mergeto = new Fragment("mergeto", "mergeToFragment", EditTicketPage.this);
 			mergeto.add(new DropDownChoice<String>("mergeto", mergeToModel, branches));
 			form.add(mergeto.setVisible(!branches.isEmpty()));
 		} else {

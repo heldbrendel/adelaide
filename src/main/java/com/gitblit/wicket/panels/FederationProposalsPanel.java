@@ -15,9 +15,9 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.text.MessageFormat;
-import java.util.List;
-
+import com.gitblit.models.FederationProposal;
+import com.gitblit.wicket.WicketUtils;
+import com.gitblit.wicket.pages.ReviewProposalPage;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -25,9 +25,8 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 
-import com.gitblit.models.FederationProposal;
-import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.pages.ReviewProposalPage;
+import java.text.MessageFormat;
+import java.util.List;
 
 public class FederationProposalsPanel extends BasePanel {
 
@@ -76,7 +75,7 @@ public class FederationProposalsPanel extends BasePanel {
 						}
 					}
 				};
-				deleteLink.add(new JavascriptEventConfirmation("onclick", MessageFormat.format(
+                deleteLink.add(new JavascriptEventConfirmation("click", MessageFormat.format(
 						"Delete proposal \"{0}\"?", entry.name)));
 				item.add(deleteLink);
 				WicketUtils.setAlternatingBackground(item, counter);

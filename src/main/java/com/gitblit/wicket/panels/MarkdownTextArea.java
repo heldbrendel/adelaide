@@ -15,6 +15,8 @@
  */
 package com.gitblit.wicket.panels;
 
+import com.gitblit.utils.MarkdownUtils;
+import com.gitblit.wicket.GitBlitWebApp;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -23,9 +25,6 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.time.Duration;
-
-import com.gitblit.utils.MarkdownUtils;
-import com.gitblit.wicket.GitBlitWebApp;
 
 public class MarkdownTextArea extends TextArea {
 
@@ -38,25 +37,25 @@ public class MarkdownTextArea extends TextArea {
 	public MarkdownTextArea(String id, final IModel<String> previewModel, final Label previewLabel) {
 		super(id);
 		setModel(new PropertyModel(this, "text"));
-		add(new AjaxFormComponentUpdatingBehavior("onblur") {
+        add(new AjaxFormComponentUpdatingBehavior("blur") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
 				renderPreview(previewModel);
 				if (target != null) {
-					target.addComponent(previewLabel);
+                    target.add(previewLabel);
 				}
 			}
 		});
-		add(new AjaxFormComponentUpdatingBehavior("onchange") {
+        add(new AjaxFormComponentUpdatingBehavior("change") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
 				renderPreview(previewModel);
 				if (target != null) {
-					target.addComponent(previewLabel);
+                    target.add(previewLabel);
 				}
 			}
 		});
@@ -97,7 +96,7 @@ public class MarkdownTextArea extends TextArea {
 //		private static final long serialVersionUID = 1L;
 //
 //		public RichTextSetActiveTextFieldAttributeModifier(String markupId) {
-//			super("onClick", true, new Model("richTextSetActiveTextField('" + markupId + "');"));
+//			super("Click", true, new Model("richTextSetActiveTextField('" + markupId + "');"));
 //		}
 //	}
 

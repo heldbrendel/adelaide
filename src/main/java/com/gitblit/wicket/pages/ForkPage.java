@@ -15,18 +15,17 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.text.MessageFormat;
-
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.basic.Label;
-import org.slf4j.LoggerFactory;
-
 import com.gitblit.models.RepositoryModel;
 import com.gitblit.models.UserModel;
 import com.gitblit.wicket.GitBlitWebApp;
 import com.gitblit.wicket.GitBlitWebSession;
 import com.gitblit.wicket.GitblitRedirectException;
 import com.gitblit.wicket.WicketUtils;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.slf4j.LoggerFactory;
+
+import java.text.MessageFormat;
 
 public class ForkPage extends RepositoryPage {
 

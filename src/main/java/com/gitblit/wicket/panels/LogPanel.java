@@ -24,8 +24,8 @@ import com.gitblit.utils.StringUtils;
 import com.gitblit.wicket.ExternalImage;
 import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.pages.*;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -48,7 +48,7 @@ public class LogPanel extends BasePanel {
 	private boolean hasMore;
 
 	public LogPanel(String wicketId, final String repositoryName, final String objectId,
-			Repository r, int limit, int pageOffset, boolean showRemoteRefs) {
+                    Repository r, int limit, int pageOffset, boolean showRemoteRefs) {
 		super(wicketId);
 		boolean pageResults = limit <= 0;
 		int itemsPerPage = app().settings().getInteger(Keys.web.itemsPerPage, 50);
@@ -80,7 +80,7 @@ public class LogPanel extends BasePanel {
 			graph.setVisible(false);
 		} else {
 			// set the rowspan on the graph row and +1 for the graph row itself
-			graph.add(new SimpleAttributeModifier("rowspan", "" + (commits.size() + 1)));
+            graph.add(new AttributeModifier("rowspan", "" + (commits.size() + 1)));
 			graph.add(new ExternalImage("image", BranchGraphServlet.asLink(baseUrl, repositoryName, commits.get(0).name(), commits.size())));
 		}
 
@@ -119,7 +119,7 @@ public class LogPanel extends BasePanel {
 
 				// merge icon
 				if (isMerge) {
-                    item.add(WicketUtils.newImage("commitIcon", "images/commit_merge_16x16.png"));
+                    item.add(WicketUtils.newImage("commitIcon", "commit_merge_16x16.png"));
 				} else {
 					item.add(WicketUtils.newBlankImage("commitIcon"));
 				}

@@ -15,14 +15,13 @@
  */
 package com.gitblit.wicket.pages;
 
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-
 import com.gitblit.Constants;
 import com.gitblit.wicket.CacheControl;
 import com.gitblit.wicket.CacheControl.LastModified;
 import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.panels.SearchPanel;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 @CacheControl(LastModified.REPOSITORY)
 public class GitSearchPage extends RepositoryPage {

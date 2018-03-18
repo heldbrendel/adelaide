@@ -15,16 +15,17 @@
  */
 package com.gitblit.wicket.pages;
 
+import com.gitblit.Constants;
 import com.gitblit.servlet.RawServlet;
 import com.gitblit.utils.DiffUtils;
 import com.gitblit.utils.HtmlBuilder;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.http.WicketURLEncoder;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.util.encoding.UrlEncoder;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffEntry.Side;
 import org.jsoup.nodes.Element;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -43,7 +44,7 @@ public class ImageDiffHandler implements DiffUtils.BinaryDiffHandler {
 	private int imgDiffCount = 0;
 
 	public ImageDiffHandler(final BasePage page, final String repositoryName, final String oldCommitId, final String newCommitId,
-			final List<String> imageExtensions) {
+                            final List<String> imageExtensions) {
 		this.page = page;
 		this.repositoryName = repositoryName;
 		this.oldCommitId = oldCommitId;
@@ -88,12 +89,12 @@ public class ImageDiffHandler implements DiffUtils.BinaryDiffHandler {
 				// Blink comparator: find Pluto!
 				controls.appendElement("a").attr("class", "imgdiff-link imgdiff-blink").attr("href", "#")
 						.attr("title", page.getString("gb.blinkComparator"))
-                        .appendElement("img").attr("src", getStaticResourceUrl("images/blink32.png")).attr("width", "20");
+                        .appendElement("img").attr("src", getStaticResourceUrl("blink32.png")).attr("width", "20");
 				// Pixel subtraction, initially not displayed, will be shown by imgdiff.js depending on feature test.
 				// (Uses CSS mix-blend-mode, which isn't supported on all browsers yet).
 				controls.appendElement("a").attr("class", "imgdiff-link imgdiff-subtract").attr("href", "#")
 						.attr("title", page.getString("gb.imgdiffSubtract")).attr("style", "display:none;")
-                        .appendElement("img").attr("src", getStaticResourceUrl("images/sub32.png")).attr("width", "20");
+                        .appendElement("img").attr("src", getStaticResourceUrl("sub32.png")).attr("width", "20");
 				return builder.toString();
 			}
 			break;
@@ -144,8 +145,8 @@ public class ImageDiffHandler implements DiffUtils.BinaryDiffHandler {
 	 * Returns a URL that will fetch the designated static resource from within GitBlit.
 	 */
 	protected String getStaticResourceUrl(String contextRelativePath) {
-		return WebApplication.get().getRequestCycleProcessor().getRequestCodingStrategy().rewriteStaticRelativeUrl(contextRelativePath);
-	}
+        return RequestCycle.get().getUrlRenderer().renderFullUrl(Url.parse(contextRelativePath));
+    }
 
 	/**
 	 * Encode a URL component of a {@link RawServlet} URL in the special way that the servlet expects it. Note that
@@ -164,6 +165,6 @@ public class ImageDiffHandler implements DiffUtils.BinaryDiffHandler {
 		// Actually, this should be done in RawServlet.asLink(). As it is now, this may be incorrect if that
 		// operation ever uses query parameters instead of paths, or if it is fixed to urlencode its path
 		// components. But I don't want to touch that static method in RawServlet.
-		return WicketURLEncoder.PATH_INSTANCE.encode(component, StandardCharsets.UTF_8.name()).replaceAll("%2[fF]", "/");
+        return UrlEncoder.PATH_INSTANCE.encode(component, Constants.ENCODING).replaceAll("%2[fF]", "/");
 	}
 }

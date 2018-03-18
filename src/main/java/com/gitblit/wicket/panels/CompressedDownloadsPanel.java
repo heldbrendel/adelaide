@@ -15,16 +15,15 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.util.List;
-
+import com.gitblit.Keys;
+import com.gitblit.servlet.DownloadZipServlet;
+import com.gitblit.servlet.DownloadZipServlet.Format;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 
-import com.gitblit.Keys;
-import com.gitblit.servlet.DownloadZipServlet;
-import com.gitblit.servlet.DownloadZipServlet.Format;
+import java.util.List;
 
 public class CompressedDownloadsPanel extends BasePanel {
 

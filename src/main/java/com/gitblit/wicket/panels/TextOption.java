@@ -15,12 +15,11 @@
  */
 package com.gitblit.wicket.panels;
 
+import com.gitblit.utils.StringUtils;
+import com.gitblit.wicket.WicketUtils;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
-
-import com.gitblit.utils.StringUtils;
-import com.gitblit.wicket.WicketUtils;
 
 /**
  * A re-usable textfield option panel.

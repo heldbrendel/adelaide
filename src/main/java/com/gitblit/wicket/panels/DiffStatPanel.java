@@ -15,14 +15,13 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.text.MessageFormat;
-
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Panel;
-
 import com.gitblit.utils.DiffUtils;
 import com.gitblit.utils.DiffUtils.NormalizedDiffStat;
 import com.gitblit.wicket.WicketUtils;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.Panel;
+
+import java.text.MessageFormat;
 
 /**
  * Display a diffstat.

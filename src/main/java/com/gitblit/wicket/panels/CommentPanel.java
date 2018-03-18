@@ -15,22 +15,21 @@
  */
 package com.gitblit.wicket.panels;
 
-import org.apache.wicket.PageParameters;
+import com.gitblit.models.RepositoryModel;
+import com.gitblit.models.TicketModel;
+import com.gitblit.models.TicketModel.Change;
+import com.gitblit.models.UserModel;
+import com.gitblit.utils.GitBlitRequestUtils;
+import com.gitblit.wicket.WicketUtils;
+import com.gitblit.wicket.pages.BasePage;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.RequestUtils;
-import org.apache.wicket.request.target.basic.RedirectRequestTarget;
-
-import com.gitblit.models.RepositoryModel;
-import com.gitblit.models.TicketModel;
-import com.gitblit.models.TicketModel.Change;
-import com.gitblit.models.UserModel;
-import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.pages.BasePage;
+import org.apache.wicket.request.http.handler.RedirectRequestHandler;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class CommentPanel extends BasePanel {
 	private static final long serialVersionUID = 1L;
@@ -50,7 +49,7 @@ public class CommentPanel extends BasePanel {
 	private String repositoryName;
 
 	public CommentPanel(String id, final UserModel user, final TicketModel ticket,
-			final Change change, final Class<? extends BasePage> pageClass) {
+                        final Change change, final Class<? extends BasePage> pageClass) {
 		super(id);
 		this.user = user;
 		this.ticket = ticket;
@@ -69,7 +68,7 @@ public class CommentPanel extends BasePanel {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onSubmit(AjaxRequestTarget target, Form<?> form) {
+            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				String txt = markdownEditor.getText();
 				if (change == null) {
 					// new comment
@@ -103,9 +102,8 @@ public class CommentPanel extends BasePanel {
              */
             private void redirectTo(Class<? extends BasePage> pageClass, PageParameters parameters)
             {
-                String relativeUrl = urlFor(pageClass, parameters).toString();
-                String canonicalUrl = RequestUtils.toAbsolutePath(relativeUrl);
-                getRequestCycle().setRequestTarget(new RedirectRequestTarget(canonicalUrl));
+                String absoluteUrl = GitBlitRequestUtils.toAbsoluteUrl(pageClass, parameters);
+                getRequestCycle().scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(absoluteUrl));
             }
 			
 		}.setVisible(ticket != null && ticket.number > 0));

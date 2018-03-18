@@ -15,13 +15,12 @@
  */
 package com.gitblit.wicket.panels;
 
-import org.eclipse.jgit.lib.PersonIdent;
-
 import com.gitblit.AvatarGenerator;
 import com.gitblit.Keys;
 import com.gitblit.models.UserModel;
 import com.gitblit.wicket.ExternalImage;
 import com.gitblit.wicket.WicketUtils;
+import org.eclipse.jgit.lib.PersonIdent;
 
 /**
  * Represents a Gravatar image.

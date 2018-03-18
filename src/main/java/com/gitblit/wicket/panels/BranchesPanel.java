@@ -15,13 +15,16 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.wicket.PageParameters;
+import com.gitblit.Constants;
+import com.gitblit.models.RefModel;
+import com.gitblit.models.RepositoryModel;
+import com.gitblit.models.UserModel;
+import com.gitblit.servlet.RawServlet;
+import com.gitblit.servlet.SyndicationServlet;
+import com.gitblit.utils.*;
+import com.gitblit.wicket.GitBlitWebSession;
+import com.gitblit.wicket.WicketUtils;
+import com.gitblit.wicket.pages.*;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -31,29 +34,16 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.model.StringResourceModel;
-import org.apache.wicket.protocol.http.RequestUtils;
-import org.apache.wicket.request.target.basic.RedirectRequestTarget;
+import org.apache.wicket.request.http.handler.RedirectRequestHandler;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 
-import com.gitblit.Constants;
-import com.gitblit.models.RefModel;
-import com.gitblit.models.RepositoryModel;
-import com.gitblit.models.UserModel;
-import com.gitblit.servlet.RawServlet;
-import com.gitblit.servlet.SyndicationServlet;
-import com.gitblit.utils.CommitCache;
-import com.gitblit.utils.JGitUtils;
-import com.gitblit.utils.RefLogUtils;
-import com.gitblit.utils.StringUtils;
-import com.gitblit.wicket.GitBlitWebSession;
-import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.pages.BranchesPage;
-import com.gitblit.wicket.pages.CommitPage;
-import com.gitblit.wicket.pages.GitSearchPage;
-import com.gitblit.wicket.pages.LogPage;
-import com.gitblit.wicket.pages.MetricsPage;
-import com.gitblit.wicket.pages.TreePage;
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class BranchesPanel extends BasePanel {
 
@@ -62,7 +52,7 @@ public class BranchesPanel extends BasePanel {
 	private final boolean hasBranches;
 
 	public BranchesPanel(String wicketId, final RepositoryModel model, Repository r,
-			final int maxCount, final boolean showAdmin) {
+                         final int maxCount, final boolean showAdmin) {
 		super(wicketId);
 
 		// branches
@@ -140,21 +130,21 @@ public class BranchesPanel extends BasePanel {
 				item.add(shortlog);
 
 				if (maxCount <= 0) {
-					Fragment fragment = new Fragment("branchLinks", showDelete? "branchPageAdminLinks" : "branchPageLinks", this);
+                    Fragment fragment = new Fragment("branchLinks", showDelete ? "branchPageAdminLinks" : "branchPageLinks", BranchesPanel.this);
 					fragment.add(new BookmarkablePageLink<Void>("log", LogPage.class, shortUniqRef));
 					fragment.add(new BookmarkablePageLink<Void>("tree", TreePage.class, shortUniqRef));
 					String rawUrl = RawServlet.asLink(getContextUrl(), model.name, Repository.shortenRefName(entry.getName()), null);
 					fragment.add(new ExternalLink("raw", rawUrl));
 					fragment.add(new BookmarkablePageLink<Void>("metrics", MetricsPage.class, shortUniqRef));
 					fragment.add(new ExternalLink("syndication", SyndicationServlet.asLink(
-							getRequest().getRelativePathPrefixToContextRoot(), model.name,
+                            GitBlitRequestUtils.getRelativePathPrefixToContextRoot(), model.name,
 							Repository.shortenRefName(entry.getName()), 0)));
 					if (showDelete) {
 						fragment.add(createDeleteBranchLink(model, entry));
 					}
 					item.add(fragment);
 				} else {
-					Fragment fragment = new Fragment("branchLinks", "branchPanelLinks", this);
+                    Fragment fragment = new Fragment("branchLinks", "branchPanelLinks", BranchesPanel.this);
 					fragment.add(new BookmarkablePageLink<Void>("log", LogPage.class, shortUniqRef));
 					fragment.add(new BookmarkablePageLink<Void>("tree", TreePage.class, shortUniqRef));
 					String rawUrl = RawServlet.asLink(getContextUrl(), model.name, Repository.shortenRefName(entry.getName()), null);
@@ -231,13 +221,12 @@ public class BranchesPanel extends BasePanel {
 
 				// redirect to the owning page
 				PageParameters params = WicketUtils.newRepositoryParameter(repositoryModel.name);
-				String relativeUrl = urlFor(getPage().getClass(), params).toString();
-				String absoluteUrl = RequestUtils.toAbsolutePath(relativeUrl);
-				getRequestCycle().setRequestTarget(new RedirectRequestTarget(absoluteUrl));
+                String absoluteUrl = GitBlitRequestUtils.toAbsoluteUrl(getPage().getClass(), params);
+                getRequestCycle().scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(absoluteUrl));
 			}
 		};
 
-		deleteLink.add(new JavascriptEventConfirmation("onclick", MessageFormat.format(
+        deleteLink.add(new JavascriptEventConfirmation("click", MessageFormat.format(
 				"Delete branch \"{0}\"?", entry.displayName )));
 		return deleteLink;
 	}

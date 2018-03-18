@@ -15,14 +15,14 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import com.gitblit.Constants.AccessPermission;
+import com.gitblit.Constants.PermissionType;
+import com.gitblit.Constants.RegistrantType;
+import com.gitblit.models.RegistrantAccessPermission;
+import com.gitblit.models.UserModel;
+import com.gitblit.utils.DeepCopier;
+import com.gitblit.utils.StringUtils;
+import com.gitblit.wicket.WicketUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -40,14 +40,8 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.eclipse.jgit.lib.PersonIdent;
 
-import com.gitblit.Constants.AccessPermission;
-import com.gitblit.Constants.PermissionType;
-import com.gitblit.Constants.RegistrantType;
-import com.gitblit.models.RegistrantAccessPermission;
-import com.gitblit.models.UserModel;
-import com.gitblit.utils.DeepCopier;
-import com.gitblit.utils.StringUtils;
-import com.gitblit.wicket.WicketUtils;
+import java.text.MessageFormat;
+import java.util.*;
 
 /**
  * Allows user to manipulate registrant access permissions.
@@ -208,13 +202,13 @@ public class RegistrantPermissionsPanel extends BasePanel {
 				permissionChoice.setEnabled(entry.mutable);
 				permissionChoice.setOutputMarkupId(true);
 				if (entry.mutable) {
-					permissionChoice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+                    permissionChoice.add(new AjaxFormComponentUpdatingBehavior("change") {
 
 						private static final long serialVersionUID = 1L;
 
 						@Override
 						protected void onUpdate(AjaxRequestTarget target) {
-							target.addComponent(permissionChoice);
+                            target.add(permissionChoice);
 						}
 					});
 				}
@@ -256,7 +250,7 @@ public class RegistrantPermissionsPanel extends BasePanel {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				// add permission to our list
-				RegistrantAccessPermission rp = (RegistrantAccessPermission) form.getModel().getObject();
+                RegistrantAccessPermission rp = (RegistrantAccessPermission) getForm().getModel().getObject();
 				if (rp.permission == null) {
 					return;
 				}
@@ -277,7 +271,7 @@ public class RegistrantPermissionsPanel extends BasePanel {
 				registrants.remove(rp.registrant);
 
 				// force the panel to refresh
-				target.addComponent(RegistrantPermissionsPanel.this);
+                target.add(RegistrantPermissionsPanel.this);
 			}
 		};
 		addPermissionForm.add(button);
@@ -312,6 +306,11 @@ public class RegistrantPermissionsPanel extends BasePanel {
 		public String getIdValue(AccessPermission type, int index) {
 			return Integer.toString(index);
 		}
+
+        @Override
+        public AccessPermission getObject(String id, IModel<? extends List<? extends AccessPermission>> choices) {
+            return choices.getObject().get(Integer.valueOf(id));
+        }
 	}
 
 	private class ShowStateButton extends AjaxButton {
@@ -339,7 +338,7 @@ public class RegistrantPermissionsPanel extends BasePanel {
 		@Override
 		protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 			RegistrantPermissionsPanel.this.activeState = buttonState;
-			target.addComponent(RegistrantPermissionsPanel.this);
-		}
-	};
+            target.add(RegistrantPermissionsPanel.this);
+        }
+    }
 }

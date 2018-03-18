@@ -15,25 +15,6 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.text.MessageFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.wicket.Component;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.behavior.HeaderContributor;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.panel.Fragment;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
-
 import com.gitblit.Keys;
 import com.gitblit.models.Metric;
 import com.gitblit.models.RepositoryModel;
@@ -50,11 +31,24 @@ import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.charting.Chart;
 import com.gitblit.wicket.charting.Charts;
 import com.gitblit.wicket.charting.Flotr2Charts;
-import com.gitblit.wicket.panels.BranchesPanel;
-import com.gitblit.wicket.panels.LinkPanel;
-import com.gitblit.wicket.panels.LogPanel;
-import com.gitblit.wicket.panels.RepositoryUrlPanel;
-import com.gitblit.wicket.panels.TagsPanel;
+import com.gitblit.wicket.panels.*;
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.markup.repeater.Item;
+import org.apache.wicket.markup.repeater.data.DataView;
+import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+
+import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @CacheControl(LastModified.REPOSITORY)
 public class SummaryPage extends RepositoryPage {
@@ -144,7 +138,7 @@ public class SummaryPage extends RepositoryPage {
 			if (markupDoc == null || markupDoc.markup == null) {
 				add(new Label("readme").setVisible(false));
 			} else {
-				Fragment fragment = new Fragment("readme", MarkupSyntax.PLAIN.equals(markupDoc.syntax) ? "plaintextPanel" : "markdownPanel", this);
+                Fragment fragment = new Fragment("readme", MarkupSyntax.PLAIN.equals(markupDoc.syntax) ? "plaintextPanel" : "markdownPanel", SummaryPage.this);
 				fragment.add(new Label("readmeFile", markupDoc.documentPath));
 				// Add the html to the page
 				Component content = new Label("readmeContent", markupDoc.html).setEscapeModelStrings(false);
@@ -160,7 +154,7 @@ public class SummaryPage extends RepositoryPage {
 			add(new Label("commitsChart").setVisible(false));
 		} else {
 			Charts charts = createCharts(metrics);
-			add(new HeaderContributor(charts));
+            add(charts);
 		}
 	}
 

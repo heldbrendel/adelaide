@@ -15,35 +15,34 @@
  */
 package com.gitblit.wicket;
 
-import org.apache.wicket.AbstractRestartResponseException;
+import com.gitblit.utils.GitBlitRequestUtils;
 import org.apache.wicket.Page;
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.RequestCycle;
-import org.apache.wicket.protocol.http.RequestUtils;
-import org.apache.wicket.request.target.basic.RedirectRequestTarget;
+import org.apache.wicket.RestartResponseException;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.handler.RedirectRequestHandler;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * This exception bypasses the servlet container rewriting relative redirect
  * urls.  The container can and does decode the carefully crafted %2F path
  * separators on a redirect.  :(  Bad, bad servlet container.
- *
+ * <p>
  * org.eclipse.jetty.server.Response#L447: String path=uri.getDecodedPath();
  *
  * @author James Moger
  */
-public class GitblitRedirectException extends AbstractRestartResponseException {
+public class GitblitRedirectException extends RestartResponseException {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public <C extends Page> GitblitRedirectException(Class<C> pageClass) {
-		this(pageClass, null);
-	}
+    public <C extends Page> GitblitRedirectException(Class<C> pageClass) {
+        this(pageClass, null);
+    }
 
-	public <C extends Page> GitblitRedirectException(Class<C> pageClass, PageParameters params) {
-		RequestCycle cycle = RequestCycle.get();
-		String relativeUrl = cycle.urlFor(pageClass, params).toString();
-		String absoluteUrl = RequestUtils.toAbsolutePath(relativeUrl);
-		cycle.setRequestTarget(new RedirectRequestTarget(absoluteUrl));
-		cycle.setRedirect(true);
-	}
+    public <C extends Page> GitblitRedirectException(Class<C> pageClass, PageParameters params) {
+        super(pageClass, params);
+        RequestCycle cycle = RequestCycle.get();
+        String absoluteUrl = GitBlitRequestUtils.toAbsoluteUrl(pageClass, params);
+        cycle.scheduleRequestHandlerAfterCurrent(new RedirectRequestHandler(absoluteUrl));
+    }
 }

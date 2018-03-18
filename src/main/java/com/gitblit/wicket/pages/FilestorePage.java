@@ -15,16 +15,17 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-
+import com.gitblit.Constants;
+import com.gitblit.Keys;
+import com.gitblit.models.FilestoreModel;
+import com.gitblit.models.FilestoreModel.Status;
+import com.gitblit.models.UserModel;
+import com.gitblit.wicket.CacheControl;
+import com.gitblit.wicket.CacheControl.LastModified;
+import com.gitblit.wicket.FilestoreUI;
+import com.gitblit.wicket.GitBlitWebSession;
+import com.gitblit.wicket.WicketUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.wicket.PageParameters;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -32,17 +33,11 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import com.gitblit.Constants;
-import com.gitblit.Keys;
-import com.gitblit.models.FilestoreModel;
-import com.gitblit.models.FilestoreModel.Status;
-import com.gitblit.models.UserModel;
-import com.gitblit.wicket.CacheControl;
-import com.gitblit.wicket.FilestoreUI;
-import com.gitblit.wicket.GitBlitWebSession;
-import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.CacheControl.LastModified;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Page to display the current status of the filestore.
@@ -156,8 +151,8 @@ public class FilestorePage extends RootPage {
 				}
 			}
 		}
-		
-		DataView<FilestoreModel> filesView = new DataView<FilestoreModel>("fileRow", 
+
+        DataView<FilestoreModel> filesView = new DataView<FilestoreModel>("fileRow",
 				new SortableFilestoreProvider(filteredResults) , itemsPerPage) {
 			private static final long serialVersionUID = 1L;
 			private int counter;
@@ -240,10 +235,10 @@ public class FilestorePage extends RootPage {
 	}
 		
 	protected enum SortBy {
-		ok, pending, inprogress, error, deleted;
-	}
-	
-	private static class SortableFilestoreProvider extends SortableDataProvider<FilestoreModel> {
+        ok, pending, inprogress, error, deleted
+    }
+
+    private static class SortableFilestoreProvider extends SortableDataProvider<FilestoreModel, String> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -254,7 +249,7 @@ public class FilestorePage extends RootPage {
 		}
 
 		@Override
-		public int size() {
+        public long size() {
 			if (list == null) {
 				return 0;
 			}
@@ -267,15 +262,16 @@ public class FilestorePage extends RootPage {
 		}
 
 		@Override
-		public Iterator<FilestoreModel> iterator(int first, int count) {
+        public Iterator<? extends FilestoreModel> iterator(long first, long count) {
 			Collections.sort(list, new Comparator<FilestoreModel>() {
 				@Override
 				public int compare(FilestoreModel o1, FilestoreModel o2) {
 					return o2.getChangedOn().compareTo(o1.getChangedOn());
 				}
 			});
-			return list.subList(first, first + count).iterator();
-		}
+            return list.subList(Math.toIntExact(first), Math.toIntExact(first + count)).iterator();
+        }
+
 	}
 	
 }

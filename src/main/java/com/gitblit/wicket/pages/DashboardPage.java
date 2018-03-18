@@ -15,35 +15,10 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.TreeSet;
-
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.behavior.HeaderContributor;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Fragment;
-import org.eclipse.jgit.lib.Repository;
-
 import com.gitblit.Keys;
-import com.gitblit.models.DailyLogEntry;
+import com.gitblit.models.*;
 import com.gitblit.models.Menu.ParameterMenuItem;
 import com.gitblit.models.NavLink.DropDownPageMenuNavLink;
-import com.gitblit.models.Metric;
-import com.gitblit.models.NavLink;
-import com.gitblit.models.RefLogEntry;
-import com.gitblit.models.RepositoryCommit;
-import com.gitblit.models.RepositoryModel;
-import com.gitblit.models.UserModel;
 import com.gitblit.utils.ArrayUtils;
 import com.gitblit.utils.RefLogUtils;
 import com.gitblit.utils.StringUtils;
@@ -53,6 +28,13 @@ import com.gitblit.wicket.charting.Charts;
 import com.gitblit.wicket.charting.Flotr2Charts;
 import com.gitblit.wicket.panels.DigestsPanel;
 import com.gitblit.wicket.panels.LinkPanel;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.eclipse.jgit.lib.Repository;
+
+import java.text.MessageFormat;
+import java.util.*;
 
 public abstract class DashboardPage extends RootPage {
 
@@ -89,7 +71,7 @@ public abstract class DashboardPage extends RootPage {
 			}
 		}
 
-		Fragment activityFragment = new Fragment("activity", "activityFragment", this);
+        Fragment activityFragment = new Fragment("activity", "activityFragment", DashboardPage.this);
 		add(activityFragment);
 		activityFragment.add(new Label("feedTitle", feedTitle));
 		if (digests.size() == 0) {
@@ -240,8 +222,8 @@ public abstract class DashboardPage extends RootPage {
 			chart.setShowLegend(false);
 			charts.addChart(chart);
 
-			add(new HeaderContributor(charts));
-			frag.add(new Fragment("charts", "chartsFragment", this));
+            add(charts);
+            frag.add(new Fragment("charts", "chartsFragment", DashboardPage.this));
 		} else {
 			frag.add(new Label("charts").setVisible(false));
 		}

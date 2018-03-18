@@ -15,12 +15,12 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.util.List;
-
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.IModel;
 import org.parboiled.common.StringUtils;
+
+import java.util.List;
 
 /**
  * A re-usable choice option panel.

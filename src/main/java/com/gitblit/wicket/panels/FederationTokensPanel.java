@@ -15,10 +15,12 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import com.gitblit.Constants.FederationRequest;
+import com.gitblit.Constants.FederationToken;
+import com.gitblit.Keys;
+import com.gitblit.utils.FederationUtils;
+import com.gitblit.wicket.WicketUtils;
+import com.gitblit.wicket.pages.SendProposalPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -26,12 +28,9 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 
-import com.gitblit.Constants.FederationRequest;
-import com.gitblit.Constants.FederationToken;
-import com.gitblit.Keys;
-import com.gitblit.utils.FederationUtils;
-import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.pages.SendProposalPage;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class FederationTokensPanel extends BasePanel {
 

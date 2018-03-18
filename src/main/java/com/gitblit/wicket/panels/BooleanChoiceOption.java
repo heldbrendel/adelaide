@@ -15,8 +15,6 @@
  */
 package com.gitblit.wicket.panels;
 
-import java.util.List;
-
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.basic.Label;
@@ -24,6 +22,8 @@ import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.model.IModel;
 import org.parboiled.common.StringUtils;
+
+import java.util.List;
 
 /**
  * A re-usable conditional choice option panel.
@@ -61,14 +61,14 @@ public class BooleanChoiceOption<T> extends BasePanel {
 		add(choice.setMarkupId("choice").setEnabled(choice.getChoices().size() > 0));
 		choice.setEnabled(checkbox.getModelObject());
 
-		checkbox.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+        checkbox.add(new AjaxFormComponentUpdatingBehavior("change") {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
 				choice.setEnabled(checkbox.getModelObject());
-				target.addComponent(choice);
+                target.add(choice);
 				if (!choice.isEnabled()) {
 					choice.setModelObject(null);
 				}

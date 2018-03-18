@@ -15,49 +15,8 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
-import org.apache.wicket.behavior.SimpleAttributeModifier;
-import org.apache.wicket.extensions.markup.html.form.palette.Palette;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.util.CollectionModel;
-import org.apache.wicket.model.util.ListModel;
-import org.eclipse.jgit.lib.Repository;
-
 import com.gitblit.Constants;
-import com.gitblit.Constants.AccessRestrictionType;
-import com.gitblit.Constants.AuthorizationControl;
-import com.gitblit.Constants.CommitMessageRenderer;
-import com.gitblit.Constants.FederationStrategy;
-import com.gitblit.Constants.MergeType;
-import com.gitblit.Constants.RegistrantType;
+import com.gitblit.Constants.*;
 import com.gitblit.GitBlitException;
 import com.gitblit.Keys;
 import com.gitblit.models.RegistrantAccessPermission;
@@ -69,16 +28,34 @@ import com.gitblit.utils.StringUtils;
 import com.gitblit.wicket.GitBlitWebSession;
 import com.gitblit.wicket.StringChoiceRenderer;
 import com.gitblit.wicket.WicketUtils;
-import com.gitblit.wicket.panels.AccessPolicyPanel;
+import com.gitblit.wicket.panels.*;
 import com.gitblit.wicket.panels.BasePanel.JavascriptEventConfirmation;
-import com.gitblit.wicket.panels.BooleanOption;
-import com.gitblit.wicket.panels.BulletListPanel;
-import com.gitblit.wicket.panels.ChoiceOption;
-import com.gitblit.wicket.panels.RegistrantPermissionsPanel;
-import com.gitblit.wicket.panels.RepositoryNamePanel;
-import com.gitblit.wicket.panels.TextOption;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
+import org.apache.wicket.extensions.markup.html.form.palette.Palette;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.util.CollectionModel;
+import org.apache.wicket.model.util.ListModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.eclipse.jgit.lib.Repository;
+
+import java.text.MessageFormat;
+import java.util.*;
 
 public class EditRepositoryPage extends RootSubPage {
+
+    private static final long serialVersionUID = 1L;
 
 	private final boolean isCreate;
 
@@ -367,8 +344,10 @@ public class EditRepositoryPage extends RootSubPage {
 
 					// custom fields
 					repositoryModel.customFields = new LinkedHashMap<String, String>();
-					for (int i = 0; i < customFieldsListView.size(); i++) {
-						ListItem<String> child = (ListItem<String>) customFieldsListView.get(i);
+                    Iterator<Component> customFieldsListViewIterator = customFieldsListView.iterator();
+                    while (customFieldsListViewIterator.hasNext()) {
+
+                        ListItem<String> child = (ListItem<String>) customFieldsListViewIterator.next();
 						String key = child.getModelObject();
 
 						TextField<String> field = (TextField<String>) child.get("customFieldValue");
@@ -389,7 +368,6 @@ public class EditRepositoryPage extends RootSubPage {
 					error(e.getMessage());
 					return;
 				}
-				setRedirect(false);
 				setResponsePage(SummaryPage.class, WicketUtils.newRepositoryParameter(repositoryModel.name));
 			}
 		};
@@ -409,7 +387,7 @@ public class EditRepositoryPage extends RootSubPage {
 		}
 
 		// do not let the browser pre-populate these fields
-		form.add(new SimpleAttributeModifier("autocomplete", "off"));
+        form.add(new AttributeModifier("autocomplete", "off"));
 
 
 		//
@@ -644,9 +622,9 @@ public class EditRepositoryPage extends RootSubPage {
 					repositoryModel.authorizationControl = AuthorizationControl.NAMED;
 				}
 
-				target.addComponent(verifyCommitter);
-				target.addComponent(usersPalette);
-				target.addComponent(teamsPalette);
+                target.add(verifyCommitter);
+                target.add(usersPalette);
+                target.add(teamsPalette);
 			}
 		};
 
@@ -708,7 +686,7 @@ public class EditRepositoryPage extends RootSubPage {
 		};
 
 		if (canDelete) {
-			delete.add(new JavascriptEventConfirmation("onclick", MessageFormat.format(
+            delete.add(new JavascriptEventConfirmation("click", MessageFormat.format(
 				getString("gb.deleteRepository"), repositoryModel)));
 		}
 		form.add(delete.setVisible(canDelete));
@@ -782,6 +760,11 @@ public class EditRepositoryPage extends RootSubPage {
 		public String getIdValue(FederationStrategy type, int index) {
 			return Integer.toString(index);
 		}
+
+        @Override
+        public FederationStrategy getObject(String id, IModel<? extends List<? extends FederationStrategy>> choices) {
+            return choices.getObject().get(Integer.valueOf(id));
+        }
 	}
 
 	private class GCPeriodRenderer implements IChoiceRenderer<Integer> {
@@ -804,6 +787,11 @@ public class EditRepositoryPage extends RootSubPage {
 		public String getIdValue(Integer value, int index) {
 			return Integer.toString(index);
 		}
+
+        @Override
+        public Integer getObject(String id, IModel<? extends List<? extends Integer>> choices) {
+            return choices.getObject().get(Integer.valueOf(id));
+        }
 	}
 
 	private class MaxActivityCommitsRenderer implements IChoiceRenderer<Integer> {
@@ -828,5 +816,10 @@ public class EditRepositoryPage extends RootSubPage {
 		public String getIdValue(Integer value, int index) {
 			return Integer.toString(index);
 		}
+
+        @Override
+        public Integer getObject(String id, IModel<? extends List<? extends Integer>> choices) {
+            return choices.getObject().get(Integer.valueOf(id));
+        }
 	}
 }

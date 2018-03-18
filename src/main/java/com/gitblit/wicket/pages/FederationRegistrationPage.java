@@ -15,18 +15,17 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.wicket.PageParameters;
+import com.gitblit.models.FederationModel;
+import com.gitblit.models.FederationModel.RepositoryStatus;
+import com.gitblit.wicket.WicketUtils;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import com.gitblit.models.FederationModel;
-import com.gitblit.models.FederationModel.RepositoryStatus;
-import com.gitblit.wicket.WicketUtils;
+import java.util.Collections;
+import java.util.List;
 
 public class FederationRegistrationPage extends RootSubPage {
 

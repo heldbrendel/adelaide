@@ -15,19 +15,17 @@
  */
 package com.gitblit.wicket.pages;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.wicket.PageParameters;
-import org.apache.wicket.Session;
-import org.apache.wicket.markup.html.basic.Label;
-
 import com.gitblit.Constants.AccessRestrictionType;
 import com.gitblit.Constants.AuthorizationControl;
 import com.gitblit.models.RepositoryModel;
 import com.gitblit.models.UserModel;
 import com.gitblit.utils.ModelUtils;
 import com.gitblit.utils.StringUtils;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * RootSubPage is a non-topbar navigable RootPage. It also has a page header.
@@ -57,7 +55,8 @@ public abstract class RootSubPage extends RootPage {
 			// Wicket seems to get confused as to when it really should
 			// generate a page map for complex pages.  Conditionally ensure we
 			// have a page map for complex AJAX pages like the EditNNN pages.
-			Session.get().pageMapForName(null, true);
+            //TODO: check if no longer needed
+//			Session.get().pageMapForName(null, true);
 			setVersioned(true);
 		}
 	}

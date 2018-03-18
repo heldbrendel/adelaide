@@ -15,13 +15,12 @@
  */
 package com.gitblit.wicket.panels;
 
-import org.apache.wicket.markup.html.basic.Label;
-import org.eclipse.jgit.revwalk.RevCommit;
-
 import com.gitblit.Constants;
 import com.gitblit.utils.StringUtils;
 import com.gitblit.wicket.WicketUtils;
 import com.gitblit.wicket.pages.CommitPage;
+import org.apache.wicket.markup.html.basic.Label;
+import org.eclipse.jgit.revwalk.RevCommit;
 
 public class CommitHeaderPanel extends BasePanel {
 
