@@ -15,12 +15,6 @@
  */
 package com.gitblit.auth;
 
-import java.io.File;
-
-import org.jvnet.libpam.PAM;
-import org.jvnet.libpam.PAMException;
-import org.jvnet.libpam.impl.CLibrary;
-
 import com.gitblit.Constants;
 import com.gitblit.Constants.AccountType;
 import com.gitblit.Constants.Role;
@@ -28,12 +22,19 @@ import com.gitblit.Keys;
 import com.gitblit.auth.AuthenticationProvider.UsernamePasswordAuthenticationProvider;
 import com.gitblit.models.TeamModel;
 import com.gitblit.models.UserModel;
+import lombok.extern.slf4j.Slf4j;
+import org.jvnet.libpam.PAM;
+import org.jvnet.libpam.PAMException;
+import org.jvnet.libpam.impl.CLibrary;
+
+import java.io.File;
 
 /**
  * Implementation of PAM authentication for Linux/Unix/MacOSX.
  *
  * @author James Moger
  */
+@Slf4j
 public class PAMAuthProvider extends UsernamePasswordAuthenticationProvider {
 
     public PAMAuthProvider() {
@@ -53,9 +54,9 @@ public class PAMAuthProvider extends UsernamePasswordAuthenticationProvider {
 			}
 		}
 		if (passwdFile == null) {
-			logger.error("PAM Authentication could not find a passwd database!");
+			log.error("PAM Authentication could not find a passwd database!");
 		} else if (!passwdFile.canRead()) {
-			logger.error("PAM Authentication can not read passwd database {}! PAM authentications may fail!", passwdFile);
+			log.error("PAM Authentication can not read passwd database {}! PAM authentications may fail!", passwdFile);
 		}
     }
 
@@ -97,7 +98,7 @@ public class PAMAuthProvider extends UsernamePasswordAuthenticationProvider {
     @Override
     public UserModel authenticate(String username, char[] password) {
 		if (CLibrary.libc.getpwnam(username) == null) {
-			logger.warn("Can not get PAM passwd for " + username);
+			log.warn("Can not get PAM passwd for " + username);
 			return null;
 		}
 
@@ -107,7 +108,7 @@ public class PAMAuthProvider extends UsernamePasswordAuthenticationProvider {
 			pam = new PAM(serviceName);
 			pam.authenticate(username, new String(password));
 		} catch (PAMException e) {
-			logger.error(e.getMessage());
+			log.error(e.getMessage());
 			return null;
 		} finally {
 			if (pam != null) {

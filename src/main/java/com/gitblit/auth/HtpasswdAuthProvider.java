@@ -16,6 +16,19 @@
  */
 package com.gitblit.auth;
 
+import com.gitblit.Constants;
+import com.gitblit.Constants.AccountType;
+import com.gitblit.Constants.Role;
+import com.gitblit.Keys;
+import com.gitblit.auth.AuthenticationProvider.UsernamePasswordAuthenticationProvider;
+import com.gitblit.models.TeamModel;
+import com.gitblit.models.UserModel;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.Crypt;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.codec.digest.Md5Crypt;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.text.MessageFormat;
@@ -24,19 +37,6 @@ import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.digest.Crypt;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.codec.digest.Md5Crypt;
-
-import com.gitblit.Constants;
-import com.gitblit.Constants.AccountType;
-import com.gitblit.Constants.Role;
-import com.gitblit.Keys;
-import com.gitblit.auth.AuthenticationProvider.UsernamePasswordAuthenticationProvider;
-import com.gitblit.models.TeamModel;
-import com.gitblit.models.UserModel;
 
 
 /**
@@ -64,6 +64,7 @@ import com.gitblit.models.UserModel;
  * @author Florian Zschocke
  *
  */
+@Slf4j
 public class HtpasswdAuthProvider extends UsernamePasswordAuthenticationProvider {
 
     private static final String KEY_HTPASSWD_FILE = Keys.realm.htpasswd.userfile;
@@ -91,19 +92,14 @@ public class HtpasswdAuthProvider extends UsernamePasswordAuthenticationProvider
      * In addition the setup tries to read and parse the htpasswd file to be used
      * for authentication.
      *
-     * @param settings
      * @since 0.7.0
      */
     @Override
     public void setup() {
         String os = System.getProperty("os.name").toLowerCase();
-        if (os.startsWith("windows") || os.startsWith("netware")) {
-            supportPlainTextPwd = true;
-        } else {
-            supportPlainTextPwd = false;
-        }
+        supportPlainTextPwd = os.startsWith("windows") || os.startsWith("netware");
         read();
-        logger.debug("Read " + htUsers.size() + " users from htpasswd file: " + this.htpasswdFile);
+        log.debug("Read " + htUsers.size() + " users from htpasswd file: " + this.htpasswdFile);
     }
 
     @Override
@@ -159,7 +155,7 @@ public class HtpasswdAuthProvider extends UsernamePasswordAuthenticationProvider
             // test Apache MD5 variant encrypted password
             if (storedPwd.startsWith("$apr1$")) {
                 if (storedPwd.equals(Md5Crypt.apr1Crypt(passwd, storedPwd))) {
-                    logger.debug("Apache MD5 encoded password matched for user '" + username + "'");
+                    log.debug("Apache MD5 encoded password matched for user '" + username + "'");
                     authenticated = true;
                 }
             }
@@ -167,24 +163,24 @@ public class HtpasswdAuthProvider extends UsernamePasswordAuthenticationProvider
             else if (storedPwd.startsWith("{SHA}")) {
                 String passwd64 = Base64.encodeBase64String(DigestUtils.sha1(passwd));
                 if (storedPwd.substring("{SHA}".length()).equals(passwd64)) {
-                    logger.debug("Unsalted SHA-1 encoded password matched for user '" + username + "'");
+                    log.debug("Unsalted SHA-1 encoded password matched for user '" + username + "'");
                     authenticated = true;
                 }
             }
             // test libc crypt() encoded password
             else if (supportCryptPwd() && storedPwd.equals(Crypt.crypt(passwd, storedPwd))) {
-                logger.debug("Libc crypt encoded password matched for user '" + username + "'");
+                log.debug("Libc crypt encoded password matched for user '" + username + "'");
                 authenticated = true;
             }
             // test clear text
             else if (supportPlaintextPwd() && storedPwd.equals(passwd)){
-                logger.debug("Clear text password matched for user '" + username + "'");
+                log.debug("Clear text password matched for user '" + username + "'");
                 authenticated = true;
             }
 
 
             if (authenticated) {
-                logger.debug("Htpasswd authenticated: " + username);
+                log.debug("Htpasswd authenticated: " + username);
 
                 UserModel curr = userManager.getUserModel(username);
                 UserModel user;
@@ -253,7 +249,7 @@ public class HtpasswdAuthProvider extends UsernamePasswordAuthenticationProvider
                     }
                 }
             } catch (Exception e) {
-                logger.error(MessageFormat.format("Failed to read {0}", htpasswdFile), e);
+                log.error(MessageFormat.format("Failed to read {0}", htpasswdFile), e);
             } finally {
                 if (scanner != null) {
                 	scanner.close();

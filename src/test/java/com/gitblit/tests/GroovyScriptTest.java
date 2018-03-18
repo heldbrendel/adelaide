@@ -15,23 +15,13 @@
  */
 package com.gitblit.tests;
 
+import com.gitblit.GitBlitException;
+import com.gitblit.models.RepositoryModel;
+import com.gitblit.models.TeamModel;
+import com.gitblit.models.UserModel;
+import com.gitblit.utils.StringUtils;
 import groovy.lang.Binding;
 import groovy.util.GroovyScriptEngine;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.ReceiveCommand;
@@ -39,11 +29,10 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.gitblit.GitBlitException;
-import com.gitblit.models.RepositoryModel;
-import com.gitblit.models.TeamModel;
-import com.gitblit.models.UserModel;
-import com.gitblit.utils.StringUtils;
+import java.io.*;
+import java.text.MessageFormat;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Test class for Groovy scripts. Mostly this is to facilitate development.
@@ -297,7 +286,7 @@ public class GroovyScriptTest extends GitblitUnitTest {
 		binding.setVariable("user", user);
 		binding.setVariable("commands", commands);
 		binding.setVariable("url", gitblitUrl);
-		binding.setVariable("logger", logger);
+		binding.setVariable("log", logger);
 		binding.setVariable("clientLogger", clientLogger);
 
 		Object result = gse.run(script, binding);
@@ -312,7 +301,7 @@ public class GroovyScriptTest extends GitblitUnitTest {
 	class MockGitblit {
 		List<MockMail> messages = new ArrayList<MockMail>();
 
-		public Repository getRepository(String name) throws Exception {
+		public Repository getRepository(String name) {
 			return GitBlitSuite.getHelloworldRepository();
 		}
 

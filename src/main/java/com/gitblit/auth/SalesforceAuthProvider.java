@@ -12,7 +12,9 @@ import com.sforce.soap.partner.GetUserInfoResult;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class SalesforceAuthProvider extends UsernamePasswordAuthenticationProvider {
 
 	public SalesforceAuthProvider() {
@@ -44,7 +46,7 @@ public class SalesforceAuthProvider extends UsernamePasswordAuthenticationProvid
 
 			if (!org.equals("0")) {
 				if (!org.equals(info.getOrganizationId())) {
-					logger.warn("Access attempted by user of an invalid org: "
+					log.warn("Access attempted by user of an invalid org: "
 							+ info.getUserName() + ", org: "
 							+ info.getOrganizationName() + "("
 							+ info.getOrganizationId() + ")");
@@ -53,7 +55,7 @@ public class SalesforceAuthProvider extends UsernamePasswordAuthenticationProvid
 				}
 			}
 
-			logger.info("Authenticated user " + info.getUserName()
+			log.info("Authenticated user " + info.getUserName()
 					+ " using org " + info.getOrganizationName() + "("
 					+ info.getOrganizationId() + ")");
 
@@ -74,7 +76,7 @@ public class SalesforceAuthProvider extends UsernamePasswordAuthenticationProvid
 
 			return user;
 		} catch (ConnectionException e) {
-			logger.error("Failed to authenticate", e);
+			log.error("Failed to authenticate", e);
 		}
 
 		return null;
@@ -122,10 +124,10 @@ public class SalesforceAuthProvider extends UsernamePasswordAuthenticationProvid
 		return true;
 	}
 
-    @Override
-    public boolean supportsRoleChanges(UserModel user, Role role) {
-        return true;
-    }
+	@Override
+	public boolean supportsRoleChanges(UserModel user, Role role) {
+		return true;
+	}
 
 	@Override
 	public boolean supportsRoleChanges(TeamModel team, Role role) {

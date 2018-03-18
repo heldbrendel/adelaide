@@ -15,15 +15,14 @@
  */
 package com.gitblit.utils;
 
-import java.io.CharConversionException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
+import com.gitblit.IStoredSettings;
+import com.gitblit.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gitblit.IStoredSettings;
-import com.gitblit.Keys;
+import java.io.CharConversionException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * This is the support class for all container specific code.
@@ -44,7 +43,7 @@ public class ContainerUtils
     public static class CVE_2007_0450 {
         /**
          * This method will test for know issues in certain containers where %2F
-         * is blocked from use in URLs. It will emit a warning to the logger if
+         * is blocked from use in URLs. It will emit a warning to the log if
          * the configuration of Tomcat causes the URL processing to fail on %2F.
          */
         public static void test(IStoredSettings settings) {
@@ -59,7 +58,7 @@ public class ContainerUtils
          * This method will test for know issues in certain versions of Tomcat,
          * JBOSS, glassfish, and other embedded uses of Tomcat where %2F is
          * blocked from use in certain URL s. It will emit a warning to the
-         * logger if the configuration of Tomcat causes the URL processing to
+         * log if the configuration of Tomcat causes the URL processing to
          * fail on %2F.
          *
          * @return true if it recognizes Tomcat, false if it does not recognize

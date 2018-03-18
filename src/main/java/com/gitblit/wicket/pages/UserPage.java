@@ -281,7 +281,7 @@ public class UserPage extends RootPage {
 
                     setResponsePage(UserPage.class, WicketUtils.newUsernameParameter(user.username));
                 } catch (GitBlitException e) {
-                    // logger.error("Failed to update user " + user.username, e);
+                    // log.error("Failed to update user " + user.username, e);
                     // error(getString("gb.failedToUpdateUser"), false);
                 }
             }

@@ -15,12 +15,6 @@
  */
 package com.gitblit.auth;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-
-import org.apache.commons.io.IOUtils;
-
 import com.gitblit.Constants;
 import com.gitblit.Constants.AccountType;
 import com.gitblit.Constants.Role;
@@ -31,11 +25,18 @@ import com.gitblit.models.UserModel;
 import com.gitblit.utils.ConnectionUtils;
 import com.gitblit.utils.StringUtils;
 import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 
 /**
  * Implementation of Redmine authentication.<br>
  * you can login to gitblit with Redmine user id and api key.
  */
+@Slf4j
 public class RedmineAuthProvider extends UsernamePasswordAuthenticationProvider {
 
     private String testingJson;
@@ -101,19 +102,19 @@ public class RedmineAuthProvider extends UsernamePasswordAuthenticationProvider 
         	// first attempt by username/password
         	jsonString = getCurrentUserAsJson(username, password);
         } catch (Exception e1) {
-        	logger.warn("Failed to authenticate via username/password against Redmine");
+            log.warn("Failed to authenticate via username/password against Redmine");
         	try {
         		// second attempt is by apikey
         		jsonString = getCurrentUserAsJson(null, password);
         		username = null;
         	} catch (Exception e2) {
-        		logger.error("Failed to authenticate via apikey against Redmine", e2);
+                log.error("Failed to authenticate via apikey against Redmine", e2);
         		return null;
         	}
         }
 
         if (StringUtils.isEmpty(jsonString)) {
-        	logger.error("Received empty authentication response from Redmine");
+            log.error("Received empty authentication response from Redmine");
         	return null;
         }
 
@@ -121,7 +122,7 @@ public class RedmineAuthProvider extends UsernamePasswordAuthenticationProvider 
         try {
         	current = new Gson().fromJson(jsonString, RedmineCurrent.class);
         } catch (Exception e) {
-        	logger.error("Failed to deserialize Redmine json response: " + jsonString, e);
+            log.error("Failed to deserialize Redmine json response: " + jsonString, e);
         	return null;
         }
 

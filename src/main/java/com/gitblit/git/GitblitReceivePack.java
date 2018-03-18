@@ -15,33 +15,27 @@
  */
 package com.gitblit.git;
 
-import static org.eclipse.jgit.transport.BasePackPushConnection.CAPABILITY_SIDE_BAND_64K;
+import com.gitblit.Constants;
+import com.gitblit.Constants.AccessRestrictionType;
+import com.gitblit.IStoredSettings;
+import com.gitblit.Keys;
+import com.gitblit.client.Translation;
+import com.gitblit.extensions.ReceiveHook;
+import com.gitblit.manager.IGitblit;
+import com.gitblit.models.RepositoryModel;
+import com.gitblit.models.TicketModel;
+import com.gitblit.models.TicketModel.Change;
+import com.gitblit.models.TicketModel.Field;
+import com.gitblit.models.TicketModel.Status;
+import com.gitblit.models.TicketModel.TicketLink;
+import com.gitblit.models.UserModel;
+import com.gitblit.tickets.BranchTicketService;
+import com.gitblit.tickets.ITicketService;
+import com.gitblit.tickets.TicketNotifier;
+import com.gitblit.utils.*;
 import groovy.lang.Binding;
 import groovy.util.GroovyScriptEngine;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.concurrent.TimeUnit;
-
-import org.eclipse.jgit.lib.AnyObjectId;
-import org.eclipse.jgit.lib.BatchRefUpdate;
-import org.eclipse.jgit.lib.NullProgressMonitor;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.PersonIdent;
-import org.eclipse.jgit.lib.ProgressMonitor;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.RefUpdate;
-import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.PostReceiveHook;
@@ -52,32 +46,13 @@ import org.eclipse.jgit.transport.ReceivePack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gitblit.Constants;
-import com.gitblit.Constants.AccessRestrictionType;
-import com.gitblit.IStoredSettings;
-import com.gitblit.Keys;
-import com.gitblit.client.Translation;
-import com.gitblit.extensions.ReceiveHook;
-import com.gitblit.manager.IGitblit;
-import com.gitblit.models.RepositoryModel;
-import com.gitblit.models.TicketModel;
-import com.gitblit.models.UserModel;
-import com.gitblit.models.TicketModel.Change;
-import com.gitblit.models.TicketModel.Field;
-import com.gitblit.models.TicketModel.Patchset;
-import com.gitblit.models.TicketModel.Status;
-import com.gitblit.models.TicketModel.TicketAction;
-import com.gitblit.models.TicketModel.TicketLink;
-import com.gitblit.tickets.BranchTicketService;
-import com.gitblit.tickets.ITicketService;
-import com.gitblit.tickets.TicketNotifier;
-import com.gitblit.utils.ArrayUtils;
-import com.gitblit.utils.ClientLogger;
-import com.gitblit.utils.CommitCache;
-import com.gitblit.utils.JGitUtils;
-import com.gitblit.utils.RefLogUtils;
-import com.gitblit.utils.StringUtils;
-import com.google.common.collect.Lists;
+import java.io.File;
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+
+import static org.eclipse.jgit.transport.BasePackPushConnection.CAPABILITY_SIDE_BAND_64K;
 
 
 /**
@@ -191,7 +166,7 @@ public class GitblitReceivePack extends ReceivePack implements PreReceiveHook, P
 		// The empty test is not explicitly required, it's written here to
 		// clarify special-case behavior.
 
-		return commands.isEmpty() ? true : user.canPush(repository);
+		return commands.isEmpty() || user.canPush(repository);
 	}
 
 	/**
@@ -687,8 +662,6 @@ public class GitblitReceivePack extends ReceivePack implements PreReceiveHook, P
 	/**
 	 * Runs the specified Groovy hook scripts.
 	 *
-	 * @param repository
-	 * @param user
 	 * @param commands
 	 * @param scripts
 	 */
@@ -705,7 +678,7 @@ public class GitblitReceivePack extends ReceivePack implements PreReceiveHook, P
 		binding.setVariable("user", user);
 		binding.setVariable("commands", commands);
 		binding.setVariable("url", gitblitUrl);
-		binding.setVariable("logger", LOGGER);
+		binding.setVariable("log", LOGGER);
 		binding.setVariable("clientLogger", new ClientLogger(this));
 		for (String script : scripts) {
 			if (StringUtils.isEmpty(script)) {

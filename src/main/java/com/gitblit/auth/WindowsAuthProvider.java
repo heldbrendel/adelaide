@@ -15,15 +15,6 @@
  */
 package com.gitblit.auth;
 
-import java.util.Set;
-import java.util.TreeSet;
-
-import waffle.windows.auth.IWindowsAccount;
-import waffle.windows.auth.IWindowsAuthProvider;
-import waffle.windows.auth.IWindowsComputer;
-import waffle.windows.auth.IWindowsIdentity;
-import waffle.windows.auth.impl.WindowsAuthProviderImpl;
-
 import com.gitblit.Constants;
 import com.gitblit.Constants.AccountType;
 import com.gitblit.Constants.Role;
@@ -33,12 +24,22 @@ import com.gitblit.models.TeamModel;
 import com.gitblit.models.UserModel;
 import com.gitblit.utils.StringUtils;
 import com.sun.jna.platform.win32.Win32Exception;
+import lombok.extern.slf4j.Slf4j;
+import waffle.windows.auth.IWindowsAccount;
+import waffle.windows.auth.IWindowsAuthProvider;
+import waffle.windows.auth.IWindowsComputer;
+import waffle.windows.auth.IWindowsIdentity;
+import waffle.windows.auth.impl.WindowsAuthProviderImpl;
+
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Implementation of a Windows authentication provider.
  *
  * @author James Moger
  */
+@Slf4j
 public class WindowsAuthProvider extends UsernamePasswordAuthenticationProvider {
 
     private IWindowsAuthProvider waffle;
@@ -52,11 +53,11 @@ public class WindowsAuthProvider extends UsernamePasswordAuthenticationProvider 
 
         waffle = new WindowsAuthProviderImpl();
         IWindowsComputer computer = waffle.getCurrentComputer();
-        logger.info("Windows Authentication Provider");
-        logger.info("      name = " + computer.getComputerName());
-        logger.info("    status = " + describeJoinStatus(computer.getJoinStatus()));
-        logger.info("  memberOf = " + computer.getMemberOf());
-        //logger.info("  groups     = " + Arrays.asList(computer.getGroups()));
+        log.info("Windows Authentication Provider");
+        log.info("      name = " + computer.getComputerName());
+        log.info("    status = " + describeJoinStatus(computer.getJoinStatus()));
+        log.info("  memberOf = " + computer.getMemberOf());
+        //log.info("  groups     = " + Arrays.asList(computer.getGroups()));
     }
 
     protected String describeJoinStatus(String value) {
@@ -136,12 +137,12 @@ public class WindowsAuthProvider extends UsernamePasswordAuthenticationProvider 
 				identity = waffle.logonDomainUser(username, defaultDomain, new String(password));
 			}
 		} catch (Win32Exception e) {
-			logger.error(e.getMessage());
+            log.error(e.getMessage());
 			return null;
 		}
 
 		if (identity.isGuest() && !settings.getBoolean(Keys.realm.windows.allowGuests, false)) {
-			logger.warn("Guest account access is disabled");
+            log.warn("Guest account access is disabled");
 			identity.dispose();
 			return null;
 		}
