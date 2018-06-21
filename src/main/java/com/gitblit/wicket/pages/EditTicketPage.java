@@ -257,7 +257,7 @@ public class EditTicketPage extends RepositoryPage {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void onSubmit(AjaxRequestTarget target) {
 				long ticketId = 0L;
 				try {
 					String h = WicketUtils.getObject(getPageParameters());

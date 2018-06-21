@@ -29,8 +29,8 @@ version = '2.0.0-SNAPSHOT'
 
 description = """Gitblit"""
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 10
+targetCompatibility = 10
 
 repositories {
     jcenter()
@@ -80,7 +80,7 @@ dependencies {
 
     compile 'org.eclipse.jetty.aggregate:jetty-all:9.2.13.v20150730' // TODO update?
 
-    def wicketVersion = '7.10.0'
+    def wicketVersion = '8.0.0'
     compile "org.apache.wicket:wicket:$wicketVersion"
     compile "org.apache.wicket:wicket-auth-roles:$wicketVersion"
     compile "org.apache.wicket:wicket-extensions:$wicketVersion"
