@@ -123,7 +123,7 @@ dependencies {
     compile group: 'com.rometools', name: 'rome', version: '1.10.0'
     compile group: 'com.toedter', name: 'jcalendar', version: '1.4'
     compile group: 'com.unboundid', name: 'unboundid-ldapsdk', version: '4.0.6'
-    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.14'
+    compile 'org.codehaus.groovy:groovy-all:2.5.0'
     compile group: 'org.freemarker', name: 'freemarker', version: '2.3.28'
     compile group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
     compile group: 'org.kohsuke', name: 'libpam4j', version: '1.10'
