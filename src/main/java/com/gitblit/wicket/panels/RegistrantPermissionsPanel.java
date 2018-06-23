@@ -309,7 +309,11 @@ public class RegistrantPermissionsPanel extends BasePanel {
 
         @Override
         public AccessPermission getObject(String id, IModel<? extends List<? extends AccessPermission>> choices) {
-            return choices.getObject().get(Integer.valueOf(id));
+            if (id == null || id.isEmpty()) {
+                return null;
+            } else {
+                return choices.getObject().get(Integer.valueOf(id));
+            }
         }
 	}
 

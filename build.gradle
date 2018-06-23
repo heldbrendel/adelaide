@@ -161,6 +161,8 @@ compileJava.mustRunAfter generatePropertiesKeys
 
 jar.enabled = true
 war {
+    archiveName 'gitblit.war'
+
     classpath = classpath.filter { file ->
         (!file.name.startsWith('jetty-all-'))
     }
