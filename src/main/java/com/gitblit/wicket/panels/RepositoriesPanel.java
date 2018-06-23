@@ -214,28 +214,28 @@ public class RepositoriesPanel extends BasePanel {
 				}
 
 				if (entry.isSparkleshared()) {
-                    row.add(WicketUtils.newImage("sparkleshareIcon", "star_16x16.png",
+					row.add(WicketUtils.newImage("sparkleshareIcon", "images/star_16x16.png",
 							getString("gb.isSparkleshared")));
 				} else {
 					row.add(WicketUtils.newClearPixel("sparkleshareIcon").setVisible(false));
 				}
 
 				if (!entry.isMirror && entry.isFrozen) {
-                    row.add(WicketUtils.newImage("frozenIcon", "cold_16x16.png",
+					row.add(WicketUtils.newImage("frozenIcon", "images/cold_16x16.png",
 							getString("gb.isFrozen")));
 				} else {
 					row.add(WicketUtils.newClearPixel("frozenIcon").setVisible(false));
 				}
 
 				if (entry.isFederated) {
-                    row.add(WicketUtils.newImage("federatedIcon", "federated_16x16.png",
+					row.add(WicketUtils.newImage("federatedIcon", "images/federated_16x16.png",
 							getString("gb.isFederated")));
 				} else {
 					row.add(WicketUtils.newClearPixel("federatedIcon").setVisible(false));
 				}
 
 				if (entry.isMirror) {
-                    row.add(WicketUtils.newImage("accessRestrictionIcon", "mirror_16x16.png",
+					row.add(WicketUtils.newImage("accessRestrictionIcon", "images/mirror_16x16.png",
 							getString("gb.isMirror")));
 				} else {
 					switch (entry.accessRestriction) {
@@ -243,15 +243,15 @@ public class RepositoriesPanel extends BasePanel {
 						row.add(WicketUtils.newBlankImage("accessRestrictionIcon"));
 						break;
 					case PUSH:
-                        row.add(WicketUtils.newImage("accessRestrictionIcon", "lock_go_16x16.png",
+						row.add(WicketUtils.newImage("accessRestrictionIcon", "images/lock_go_16x16.png",
 								accessRestrictionTranslations.get(entry.accessRestriction)));
 						break;
 					case CLONE:
-                        row.add(WicketUtils.newImage("accessRestrictionIcon", "lock_pull_16x16.png",
+						row.add(WicketUtils.newImage("accessRestrictionIcon", "images/lock_pull_16x16.png",
 								accessRestrictionTranslations.get(entry.accessRestriction)));
 						break;
 					case VIEW:
-                        row.add(WicketUtils.newImage("accessRestrictionIcon", "shield_16x16.png",
+						row.add(WicketUtils.newImage("accessRestrictionIcon", "images/shield_16x16.png",
 								accessRestrictionTranslations.get(entry.accessRestriction)));
 						break;
 					default:

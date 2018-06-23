@@ -66,31 +66,31 @@ public class AccessPolicyPanel extends BasePanel {
 
 		AccessPolicy anonymousPolicy = new AccessPolicy(getString("gb.anonymousPolicy"),
 				getString("gb.anonymousPolicyDescription"),
-                "blank.png",
+				"images/blank.png",
 				AuthorizationControl.AUTHENTICATED,
 				AccessRestrictionType.NONE);
 
 		AccessPolicy authenticatedPushPolicy = new AccessPolicy(getString("gb.authenticatedPushPolicy"),
 				getString("gb.authenticatedPushPolicyDescription"),
-                "lock_go_16x16.png",
+				"images/lock_go_16x16.png",
 				AuthorizationControl.AUTHENTICATED,
 				AccessRestrictionType.PUSH);
 
 		AccessPolicy namedPushPolicy = new AccessPolicy(getString("gb.namedPushPolicy"),
 				getString("gb.namedPushPolicyDescription"),
-                "lock_go_16x16.png",
+				"images/lock_go_16x16.png",
 				AuthorizationControl.NAMED,
 				AccessRestrictionType.PUSH);
 
 		AccessPolicy clonePolicy = new AccessPolicy(getString("gb.clonePolicy"),
 				getString("gb.clonePolicyDescription"),
-                "lock_pull_16x16.png",
+				"images/lock_pull_16x16.png",
 				AuthorizationControl.NAMED,
 				AccessRestrictionType.CLONE);
 
 		AccessPolicy viewPolicy = new AccessPolicy(getString("gb.viewPolicy"),
 				getString("gb.viewPolicyDescription"),
-                "shield_16x16.png",
+				"images/shield_16x16.png",
 				AuthorizationControl.NAMED,
 				AccessRestrictionType.VIEW);
 

@@ -153,74 +153,14 @@ tomcat {
 
 def distributionDir = 'src/main/distrib'
 
-task copyDistribution(type: Copy) {
-    from "$distributionDir/data"
-    into 'data'
-}
-
-task copyDefaultsProperties(type: Copy) {
-    from "$distributionDir/data/defaults.properties"
-    into 'src/main/resources/'
-}
-
-task copyClientAppsJson(type: Copy) {
-    from "$distributionDir/data/clientapps.json"
-    into 'src/main/resources/'
-}
-
 task generatePropertiesKeys() {
     // TODO convert properties keys from $distributionDir/data/defaults.properties to class com.gitblit.Keys
 }
 
-task copyResourcesToClasses(type: Copy) {
-    from('src/main/resources') {
-        exclude 'thumbs.db'
-    }
-    into 'build/classes/java/main'
-}
-
-task copyWebappToClasses(type: Copy) {
-    from('src/main/webapp') {
-        exclude 'thumbs.db'
-    }
-    into 'build/classes/java/main'
-}
-
-task runGitBlit << {
-    println 'run'
-}
-
-runGitBlit.dependsOn copyDistribution
-runGitBlit.dependsOn copyDefaultsProperties
-runGitBlit.dependsOn copyClientAppsJson
-
-runGitBlit.dependsOn generatePropertiesKeys
-runGitBlit.dependsOn compileJava
-
-runGitBlit.dependsOn copyResourcesToClasses
-runGitBlit.dependsOn copyWebappToClasses
-
 compileJava.mustRunAfter generatePropertiesKeys
-
-run.dependsOn runGitBlit
 
 jar.enabled = true
 war {
-    webInf {
-        from("$distributionDir/data") {
-            include 'users.conf', 'projects.conf', 'defaults.properties', 'gitblit.properties',
-                    'git/project.mkd',
-                    'groovy/sendmail.groovy', 'groovy/sendmail-html.groovy',
-                    'groovy/jenkins.groovy', 'groovy/protect-refs.groovy',
-                    'groovy/blockpush.groovy', 'groovy/localclone.groovy',
-                    'groovy/fogbugz.groovy', 'groovy/thebuggenie.groovy',
-                    'groovy/fisheye.groovy', 'groovy/redmine-fetch.groovy',
-                    'groovy/subgit.groovy',
-                    'gitignore/*.gitignore'
-        }
-        into 'data'
-    }
-
     classpath = classpath.filter { file ->
         (!file.name.startsWith('jetty-all-'))
     }

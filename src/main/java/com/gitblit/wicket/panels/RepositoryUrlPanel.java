@@ -160,7 +160,7 @@ public class RepositoryUrlPanel extends BasePanel {
 
 		// access restriction icon and tooltip
 		if (repository.isMirror) {
-            urlPanel.add(WicketUtils.newImage("accessRestrictionIcon", "mirror_16x16.png",
+			urlPanel.add(WicketUtils.newImage("accessRestrictionIcon", "images/mirror_16x16.png",
 					getString("gb.isMirror")));
 		} else if (app().services().isServingRepositories()) {
 			switch (repository.accessRestriction) {
@@ -168,15 +168,15 @@ public class RepositoryUrlPanel extends BasePanel {
 				urlPanel.add(WicketUtils.newClearPixel("accessRestrictionIcon").setVisible(false));
 				break;
 			case PUSH:
-                urlPanel.add(WicketUtils.newImage("accessRestrictionIcon", "lock_go_16x16.png",
+				urlPanel.add(WicketUtils.newImage("accessRestrictionIcon", "images/lock_go_16x16.png",
 						getAccessRestrictions().get(repository.accessRestriction)));
 				break;
 			case CLONE:
-                urlPanel.add(WicketUtils.newImage("accessRestrictionIcon", "lock_pull_16x16.png",
+				urlPanel.add(WicketUtils.newImage("accessRestrictionIcon", "images/lock_pull_16x16.png",
 						getAccessRestrictions().get(repository.accessRestriction)));
 				break;
 			case VIEW:
-                urlPanel.add(WicketUtils.newImage("accessRestrictionIcon", "shield_16x16.png",
+				urlPanel.add(WicketUtils.newImage("accessRestrictionIcon", "images/shield_16x16.png",
 						getAccessRestrictions().get(repository.accessRestriction)));
 				break;
 			default:

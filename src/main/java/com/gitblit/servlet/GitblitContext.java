@@ -349,7 +349,7 @@ public class GitblitContext extends GuiceServletContextListener {
 		baseFolder.mkdirs();
 
 		// try to extract the data folder resource to the baseFolder
-		extractResources(context, "/webapp/WEB-INF/data/", baseFolder);
+		extractResources(context, "/WEB-INF/data/", baseFolder);
 
 		// delegate all config to baseFolder/gitblit.properties file
 		File localSettings = new File(baseFolder, "gitblit.properties");
