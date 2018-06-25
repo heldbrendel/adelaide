@@ -15,32 +15,25 @@
  */
 package com.gitblit.servlet;
 
-import java.io.IOException;
-import java.security.Principal;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.gitblit.Constants;
 import com.gitblit.Constants.Role;
 import com.gitblit.manager.IAuthenticationManager;
 import com.gitblit.models.UserModel;
 import com.gitblit.utils.DeepCopier;
 import com.gitblit.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.security.Principal;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The AuthenticationFilter is a servlet filter that preprocesses requests that
@@ -66,7 +59,7 @@ public abstract class AuthenticationFilter implements Filter {
 	}
 
 	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
+	public void init(FilterConfig filterConfig) {
 	}
 
 	@Override
@@ -100,13 +93,18 @@ public abstract class AuthenticationFilter implements Filter {
 	 * @return url
 	 */
 	protected String getFullUrl(HttpServletRequest httpRequest) {
-		String servletUrl = httpRequest.getContextPath() + httpRequest.getServletPath();
-		String url = httpRequest.getRequestURI().substring(servletUrl.length());
+		logger.debug("--> getFullUrl(httpRequest = [{}])", httpRequest);
+
+		//String servletUrl = httpRequest.getContextPath() + httpRequest.getServletPath();
+		//String url = httpRequest.getRequestURI().substring(servletUrl.length());
+		String url = httpRequest.getServletPath();
 		String params = httpRequest.getQueryString();
 		if (url.length() > 0 && url.charAt(0) == '/') {
 			url = url.substring(1);
 		}
+
 		String fullUrl = url + (StringUtils.isEmpty(params) ? "" : ("?" + params));
+		logger.debug("<-- getFullUrl: {}", fullUrl);
 		return fullUrl;
 	}
 
