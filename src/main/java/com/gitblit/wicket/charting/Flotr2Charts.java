@@ -21,7 +21,6 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.resource.PackageResourceReference;
 
 import javax.servlet.ServletContext;
 
@@ -41,8 +40,8 @@ public class Flotr2Charts extends Charts {
         ServletContext servletContext = WebApplication.get().getServletContext();
         String contextPath = servletContext.getContextPath();
 
-        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(Flotr2Charts.class, "/flotr2/flotr2.min.js")));
-        response.render(CssHeaderItem.forReference(new PackageResourceReference(Flotr2Charts.class, "/flotr2/flotr2.custom.css")));
+        response.render(JavaScriptHeaderItem.forUrl("flotr2/flotr2.min.js"));
+        response.render(CssHeaderItem.forUrl("flotr2/flotr2.custom.css"));
 
         // prepare draw chart function
         StringBuilder sb = new StringBuilder();

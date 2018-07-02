@@ -140,10 +140,11 @@ dependencies {
     testCompile group: 'org.seleniumhq.selenium', name: 'selenium-firefox-driver', version: '2.28.0'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'
 
-    def tomcatVersion = '8.5.28'
-    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
-    tomcat "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
-    tomcat "org.apache.tomcat.embed:tomcat-embed-logging-juli:8.5.2"
+
+    def tomcatVersion = '8.5.32'
+    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-logging-juli:8.5.2",
+            "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
 }
 
 tomcat {

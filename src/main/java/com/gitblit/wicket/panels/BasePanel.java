@@ -112,15 +112,14 @@ public abstract class BasePanel extends Panel {
 		private String initialValue = "";
 
 		public JavascriptTextPrompt(String event, String msg, String value) {
-            super(event, new Model<String>(msg));
+            super(event, new Model<>(msg));
 			initialValue = value;
 		}
 
 		@Override
 		protected String newValue(final String currentValue, final String message) {
-			String result = "var userText = prompt('" + message + "','"
+            return "var userText = prompt('" + message + "','"
 					+ (initialValue == null ? "" : initialValue) + "'); " + "return userText; ";
-			return result;
 		}
 	}
 }

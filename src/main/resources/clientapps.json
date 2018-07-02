@@ -6,7 +6,7 @@
     "legal": "released under the GPLv2 open source license",
     "command": "git clone ${repoUrl}",
     "productUrl": "http://git-scm.com",
-    "icon": "git-black_32x32.png",
+    "icon": "images/git-black_32x32.png",
     "isActive": true
   },
   {
@@ -19,7 +19,7 @@
     "transports": [
       "ssh"
     ],
-    "icon": "barnum_32x32.png",
+    "icon": "images/barnum_32x32.png",
     "isActive": false
   },
   {
@@ -34,7 +34,7 @@
       "macintosh",
       "linux"
     ],
-    "icon": "smartgithg_32x32.png",
+    "icon": "images/smartgithg_32x32.png",
     "isActive": true
   },
   {
@@ -48,7 +48,7 @@
       "windows",
       "macintosh"
     ],
-    "icon": "sourcetree_32x32.png",
+    "icon": "images/sourcetree_32x32.png",
     "isActive": true
   },
   {
@@ -61,7 +61,7 @@
     "platforms": [
       "macintosh"
     ],
-    "icon": "tower_32x32.png",
+    "icon": "images/tower_32x32.png",
     "isActive": true
   },
   {
@@ -78,7 +78,7 @@
     "platforms": [
       "macintosh"
     ],
-    "icon": "github_32x32.png",
+    "icon": "images/github_32x32.png",
     "isActive": true
   },
   {
@@ -95,7 +95,7 @@
     "platforms": [
       "windows"
     ],
-    "icon": "github_32x32.png",
+    "icon": "images/github_32x32.png",
     "isActive": true
   },
   {
@@ -113,7 +113,7 @@
       "macintosh",
       "linux"
     ],
-    "icon": "sparkleshare_32x32.png",
+    "icon": "images/sparkleshare_32x32.png",
     "minimumPermission": "RW+",
     "isActive": false
   },
@@ -127,7 +127,7 @@
     "platforms": [
       "windows"
     ],
-    "icon": "tortoise32.png",
+    "icon": "images/tortoise32.png",
     "isActive": true
   }
 ]

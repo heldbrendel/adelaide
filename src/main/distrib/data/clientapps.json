@@ -6,7 +6,7 @@
 		"legal": "released under the GPLv2 open source license",
 		"command": "git clone ${repoUrl}",
 		"productUrl": "http://git-scm.com",
-		"icon": "git-black_32x32.png",
+      "icon": "images/git-black_32x32.png",
 		"isActive": true
 	},
 	{
@@ -17,7 +17,7 @@
 		"command": "pt clone ${repoUrl}",
 		"productUrl": "http://barnum.gitblit.com",
 		"transports": [ "ssh" ],
-		"icon": "barnum_32x32.png",
+      "icon": "images/barnum_32x32.png",
 		"isActive": false
 	},	
 	{
@@ -28,7 +28,7 @@
 		"cloneUrl": "smartgit://cloneRepo/${repoUrl}",
 		"productUrl": "http://www.syntevo.com/smartgithg",
 		"platforms": [ "windows", "macintosh", "linux" ],
-		"icon": "smartgithg_32x32.png",
+      "icon": "images/smartgithg_32x32.png",
 		"isActive": true
 	},
 	{
@@ -39,7 +39,7 @@
 		"cloneUrl": "sourcetree://cloneRepo/${repoUrl}",
 		"productUrl": "http://sourcetreeapp.com",
 		"platforms": [ "windows", "macintosh" ],
-		"icon": "sourcetree_32x32.png",
+      "icon": "images/sourcetree_32x32.png",
 		"isActive": true
 	},
 	{
@@ -50,7 +50,7 @@
 		"cloneUrl": "gittower://openRepo/${repoUrl}",
 		"productUrl": "http://www.git-tower.com",
 		"platforms": [ "macintosh" ],
-		"icon": "tower_32x32.png",
+      "icon": "images/tower_32x32.png",
 		"isActive": true
 	},
 	{
@@ -62,7 +62,7 @@
 		"productUrl": "http://mac.github.com",
 		"transports": [ "http", "https" ],
 		"platforms": [ "macintosh" ],
-		"icon": "github_32x32.png",
+      "icon": "images/github_32x32.png",
 		"isActive": true
 	},
 	{
@@ -74,7 +74,7 @@
 		"productUrl": "http://windows.github.com",
 		"transports": [ "http", "https" ],
 		"platforms": [ "windows" ],
-		"icon": "github_32x32.png",
+      "icon": "images/github_32x32.png",
 		"isActive": true
 	},
 	{
@@ -86,7 +86,7 @@
 		"productUrl": "http://sparkleshare.org",
 		"transports": [ "ssh" ],
 		"platforms": [ "windows", "macintosh", "linux" ],
-		"icon": "sparkleshare_32x32.png",
+      "icon": "images/sparkleshare_32x32.png",
 		"minimumPermission" : "RW+",
 		"isActive": false
 	},
@@ -98,7 +98,7 @@
 		"cloneUrl": "tgit://clone/${repoUrl}",
 		"productUrl": "http://www.tortoisegit.org",
 		"platforms": [ "windows" ],
-		"icon": "tortoise32.png",
+      "icon": "images/tortoise32.png",
 		"isActive": true
 	}
 ]

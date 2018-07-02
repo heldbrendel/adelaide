@@ -45,7 +45,6 @@ import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.http.handler.RedirectRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.ContextRelativeResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.resource.JQueryResourceReference;
 import org.apache.wicket.util.time.Duration;
@@ -90,10 +89,10 @@ public abstract class BasePage extends SessionPage {
         response.render(JavaScriptHeaderItem.forReference(JQueryResourceReference.get()));
 
         if (app().settings().getBoolean(Keys.web.useResponsiveLayout, true)) {
-            response.render(CssHeaderItem.forReference(Application.get().getSharedResources().get("/bootstrap/css/bootstrap-responsive.css")));
+            response.render(CssHeaderItem.forUrl("bootstrap/css/bootstrap-responsive.css"));
         }
         if (app().settings().getBoolean(Keys.web.hideHeader, false)) {
-            response.render(CssHeaderItem.forReference(new ContextRelativeResourceReference("/hideheader.css", false)));
+            response.render(CssHeaderItem.forUrl("stylesheets/hideheader.css"));
         }
     }
 
