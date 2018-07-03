@@ -119,7 +119,7 @@ public class GitblitAuthority extends JFrame implements X509Log {
 	}
 
 	public void initialize(String baseFolder) {
-        setIconImage(new ImageIcon(getClass().getResource("/images/gitblt-favicon.png")).getImage());
+		setIconImage(new ImageIcon(getClass().getResource("images/gitblt-favicon.png")).getImage());
 		setTitle("Gitblit Certificate Authority v" + Constants.getVersion() + " (" + Constants.getBuildDate() + ")");
 		setContentPane(getUI());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -492,7 +492,7 @@ public class GitblitAuthority extends JFrame implements X509Log {
 		usersPanel.add(new JScrollPane(table), BorderLayout.CENTER);
 		usersPanel.setMinimumSize(new Dimension(400, 10));
 
-        certificateDefaultsButton = new JButton(new ImageIcon(getClass().getResource("/images/settings_16x16.png")));
+		certificateDefaultsButton = new JButton(new ImageIcon(getClass().getResource("images/settings_16x16.png")));
 		certificateDefaultsButton.setFocusable(false);
 		certificateDefaultsButton.setToolTipText(Translation.get("gb.newCertificateDefaults"));
 		certificateDefaultsButton.addActionListener(new ActionListener() {
@@ -550,7 +550,7 @@ public class GitblitAuthority extends JFrame implements X509Log {
 
 				int result = JOptionPane.showConfirmDialog(GitblitAuthority.this,
 						panel, Translation.get("gb.newCertificateDefaults"), JOptionPane.OK_CANCEL_OPTION,
-                        JOptionPane.QUESTION_MESSAGE, new ImageIcon(getClass().getResource("/images/settings_32x32.png")));
+						JOptionPane.QUESTION_MESSAGE, new ImageIcon(getClass().getResource("images/settings_32x32.png")));
 				if (result == JOptionPane.OK_OPTION) {
 					try {
 						oids.update(metadata);
@@ -568,7 +568,7 @@ public class GitblitAuthority extends JFrame implements X509Log {
 			}
 		});
 
-        newSSLCertificate = new JButton(new ImageIcon(getClass().getResource("/images/rosette_16x16.png")));
+		newSSLCertificate = new JButton(new ImageIcon(getClass().getResource("images/rosette_16x16.png")));
 		newSSLCertificate.setFocusable(false);
 		newSSLCertificate.setToolTipText(Translation.get("gb.newSSLCertificate"));
 		newSSLCertificate.addActionListener(new ActionListener() {
@@ -632,7 +632,7 @@ public class GitblitAuthority extends JFrame implements X509Log {
 			}
 		});
 
-        JButton emailBundle = new JButton(new ImageIcon(getClass().getResource("/images/mail_16x16.png")));
+		JButton emailBundle = new JButton(new ImageIcon(getClass().getResource("images/mail_16x16.png")));
 		emailBundle.setFocusable(false);
 		emailBundle.setToolTipText(Translation.get("gb.emailCertificateBundle"));
 		emailBundle.addActionListener(new ActionListener() {
@@ -675,7 +675,7 @@ public class GitblitAuthority extends JFrame implements X509Log {
 			}
 		});
 
-        JButton logButton = new JButton(new ImageIcon(getClass().getResource("/images/script_16x16.png")));
+		JButton logButton = new JButton(new ImageIcon(getClass().getResource("images/script_16x16.png")));
 		logButton.setFocusable(false);
 		logButton.setToolTipText(Translation.get("gb.log"));
 		logButton.addActionListener(new ActionListener() {

@@ -47,7 +47,7 @@ public abstract class SubscriptionsDialog extends JDialog {
 		super();
 		this.feeds = registrations;
 		setTitle(Translation.get("gb.subscribe"));
-        setIconImage(new ImageIcon(getClass().getResource("/images/gitblt-favicon.png")).getImage());
+		setIconImage(new ImageIcon(getClass().getResource("images/gitblt-favicon.png")).getImage());
 		initialize();
 		setSize(600, 400);
 	}

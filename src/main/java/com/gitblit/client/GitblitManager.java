@@ -62,7 +62,7 @@ public class GitblitManager extends JFrame implements RegistrationsDialog.Regist
 
 	private void initialize() {
 		setContentPane(getCenterPanel());
-        setIconImage(new ImageIcon(getClass().getResource("/images/gitblt-favicon.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("images/gitblt-favicon.png")).getImage());
 		setTitle("Gitblit Manager v" + Constants.getVersion() + " (" + Constants.getBuildDate() + ")");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
@@ -238,7 +238,7 @@ public class GitblitManager extends JFrame implements RegistrationsDialog.Regist
 
 	private void rebuildRecentMenu() {
 		recentMenu.removeAll();
-        ImageIcon icon = new ImageIcon(getClass().getResource("/images/gitblt-favicon.png"));
+        ImageIcon icon = new ImageIcon(getClass().getResource("images/gitblt-favicon.png"));
 		List<GitblitRegistration> list = new ArrayList<GitblitRegistration>(registrations.values());
 		Collections.sort(list, new Comparator<GitblitRegistration>() {
 			@Override

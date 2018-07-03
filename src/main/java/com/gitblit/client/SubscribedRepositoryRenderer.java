@@ -40,8 +40,8 @@ public class SubscribedRepositoryRenderer extends NameRenderer {
 	public SubscribedRepositoryRenderer(GitblitClient gitblit) {
 		super();
 		this.gitblit = gitblit;
-        blankIcon = new ImageIcon(getClass().getResource("/images/blank.png"));
-        subscribedIcon = new ImageIcon(getClass().getResource("/images/bullet_feed.png"));
+        blankIcon = new ImageIcon(getClass().getResource("images/blank.png"));
+        subscribedIcon = new ImageIcon(getClass().getResource("images/bullet_feed.png"));
 	}
 
 	@Override

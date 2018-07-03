@@ -60,8 +60,8 @@ public class MessageRenderer extends JPanel implements TableCellRenderer, Serial
 		super(new FlowLayout(FlowLayout.LEFT, Utils.MARGIN, 1));
 		this.gitblit = gitblit;
 
-        mergeIcon = new ImageIcon(getClass().getResource("/images/commit_merge_16x16.png"));
-        blankIcon = new ImageIcon(getClass().getResource("/images/blank.png"));
+        mergeIcon = new ImageIcon(getClass().getResource("images/commit_merge_16x16.png"));
+        blankIcon = new ImageIcon(getClass().getResource("images/blank.png"));
 
 		messageLabel = new JLabel();
 

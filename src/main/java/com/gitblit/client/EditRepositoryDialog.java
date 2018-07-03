@@ -134,7 +134,7 @@ public class EditRepositoryDialog extends JDialog {
 		setResizable(false);
 		setTitle(Translation.get("gb.edit") + ": " + aRepository.name);
 		setIconImage(new ImageIcon(getClass()
-                .getResource("/images/gitblt-favicon.png")).getImage());
+                .getResource("images/gitblt-favicon.png")).getImage());
 	}
 
 	@Override

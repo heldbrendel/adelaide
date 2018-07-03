@@ -99,7 +99,7 @@ public class EditUserDialog extends JDialog {
 		initialize(protocolVersion, anUser);
 		setModal(true);
 		setTitle(Translation.get("gb.edit") + ": " + anUser.username);
-        setIconImage(new ImageIcon(getClass().getResource("/images/gitblt-favicon.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("images/gitblt-favicon.png")).getImage());
 	}
 
 	@Override

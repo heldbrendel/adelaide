@@ -232,7 +232,7 @@ public class SettingsPanel extends JPanel {
 		String defaultOption = options[0];
 		int selection = JOptionPane.showOptionDialog(SettingsPanel.this, settingPanel,
 				settingModel.name, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-                new ImageIcon(getClass().getResource("/images/settings_16x16.png")), options,
+                new ImageIcon(getClass().getResource("images/settings_16x16.png")), options,
 				defaultOption);
 		if (selection <= 0) {
 			return;

@@ -57,7 +57,7 @@ public class RegistrationsDialog extends JDialog {
 		this.registrations = registrations;
 		this.listener = listener;
 		setTitle(Translation.get("gb.manage"));
-        setIconImage(new ImageIcon(getClass().getResource("/images/gitblt-favicon.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("images/gitblt-favicon.png")).getImage());
 		initialize();
 		setSize(600, 400);
 	}

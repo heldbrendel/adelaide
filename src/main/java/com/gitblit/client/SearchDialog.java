@@ -72,7 +72,7 @@ public class SearchDialog extends JFrame {
 		this.gitblit = gitblit;
 		this.isSearch = isSearch;
 		setTitle(Translation.get(isSearch ? "gb.search" : "gb.log"));
-        setIconImage(new ImageIcon(getClass().getResource("/images/gitblt-favicon.png")).getImage());
+		setIconImage(new ImageIcon(getClass().getResource("images/gitblt-favicon.png")).getImage());
 		initialize();
 		setSize(900, 550);
 	}
@@ -142,7 +142,7 @@ public class SearchDialog extends JFrame {
 		NameRenderer nameRenderer = new NameRenderer();
 		tableModel = new FeedEntryTableModel();
 		header = new HeaderPanel(Translation.get(isSearch ? "gb.search" : "gb.log"),
-                isSearch ? "search-icon.png" : "images/commit_changes_16x16.png");
+				isSearch ? "images/search-icon.png" : "images/commit_changes_16x16.png");
 		table = Utils.newTable(tableModel, Utils.DATE_FORMAT);
 
 		String name = table.getColumnName(FeedEntryTableModel.Columns.Author.ordinal());

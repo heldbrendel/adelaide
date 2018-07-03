@@ -63,7 +63,7 @@ public class EditRegistrationDialog extends JDialog {
 	}
 
 	private void initialize(GitblitRegistration reg, boolean isLogin) {
-        setIconImage(new ImageIcon(getClass().getResource("/images/gitblt-favicon.png")).getImage());
+		setIconImage(new ImageIcon(getClass().getResource("images/gitblt-favicon.png")).getImage());
 		canceled = true;
 		urlField = new JTextField(reg == null ? "" : reg.url, 30);
 		nameField = new JTextField(reg == null ? "" : reg.name);

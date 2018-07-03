@@ -40,11 +40,11 @@ public class CertificateStatusRenderer extends DefaultTableCellRenderer {
 
 	public CertificateStatusRenderer() {
 		super();
-        unknownIcon = new ImageIcon(getClass().getResource("/images/bullet_white.png"));
-        revokedIcon = new ImageIcon(getClass().getResource("/images/bullet_delete.png"));
-        expiredIcon = new ImageIcon(getClass().getResource("/images/bullet_red.png"));
-        expiringIcon = new ImageIcon(getClass().getResource("/images/bullet_orange.png"));
-        okIcon = new ImageIcon(getClass().getResource("/images/bullet_green.png"));
+		unknownIcon = new ImageIcon(getClass().getResource("images/bullet_white.png"));
+		revokedIcon = new ImageIcon(getClass().getResource("images/bullet_delete.png"));
+		expiredIcon = new ImageIcon(getClass().getResource("images/bullet_red.png"));
+		expiringIcon = new ImageIcon(getClass().getResource("images/bullet_orange.png"));
+		okIcon = new ImageIcon(getClass().getResource("images/bullet_green.png"));
 	}
 
 	@Override

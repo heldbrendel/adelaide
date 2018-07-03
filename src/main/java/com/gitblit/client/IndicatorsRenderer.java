@@ -55,16 +55,16 @@ public class IndicatorsRenderer extends JPanel implements TableCellRenderer, Ser
 
 	public IndicatorsRenderer() {
 		super(new FlowLayout(FlowLayout.RIGHT, 1, 0));
-        blankIcon = new ImageIcon(getClass().getResource("/images/blank.png"));
-        pushIcon = new ImageIcon(getClass().getResource("/images/lock_go_16x16.png"));
-        pullIcon = new ImageIcon(getClass().getResource("/images/lock_pull_16x16.png"));
-        viewIcon = new ImageIcon(getClass().getResource("/images/shield_16x16.png"));
-        doxIcon = new ImageIcon(getClass().getResource("/images/book_16x16.png"));
-        frozenIcon = new ImageIcon(getClass().getResource("/images/cold_16x16.png"));
-        federatedIcon = new ImageIcon(getClass().getResource("/images/federated_16x16.png"));
-        forkIcon = new ImageIcon(getClass().getResource("/images/commit_divide_16x16.png"));
-        sparkleshareIcon = new ImageIcon(getClass().getResource("/images/star_16x16.png"));
-        mirrorIcon = new ImageIcon(getClass().getResource("/images/mirror_16x16.png"));
+        blankIcon = new ImageIcon(getClass().getResource("images/blank.png"));
+        pushIcon = new ImageIcon(getClass().getResource("images/lock_go_16x16.png"));
+        pullIcon = new ImageIcon(getClass().getResource("images/lock_pull_16x16.png"));
+        viewIcon = new ImageIcon(getClass().getResource("images/shield_16x16.png"));
+        doxIcon = new ImageIcon(getClass().getResource("images/book_16x16.png"));
+        frozenIcon = new ImageIcon(getClass().getResource("images/cold_16x16.png"));
+        federatedIcon = new ImageIcon(getClass().getResource("images/federated_16x16.png"));
+        forkIcon = new ImageIcon(getClass().getResource("images/commit_divide_16x16.png"));
+        sparkleshareIcon = new ImageIcon(getClass().getResource("images/star_16x16.png"));
+        mirrorIcon = new ImageIcon(getClass().getResource("images/mirror_16x16.png"));
 	}
 
 	@Override

@@ -201,7 +201,7 @@ public abstract class UserCertificatePanel extends JPanel {
 
 					Object choice = JOptionPane.showInputDialog(UserCertificatePanel.this.owner,
 							Translation.get("gb.revokeCertificateReason"), Translation.get("gb.revokeCertificate"),
-                            JOptionPane.PLAIN_MESSAGE, new ImageIcon(getClass().getResource("/images/rosette_32x32.png")), choices, Translation.get("gb.unspecified"));
+                            JOptionPane.PLAIN_MESSAGE, new ImageIcon(getClass().getResource("images/rosette_32x32.png")), choices, Translation.get("gb.unspecified"));
 					if (choice == null) {
 						return;
 					}

@@ -89,7 +89,7 @@ public class EditTeamDialog extends JDialog {
 		initialize(protocolVersion, aTeam);
 		setModal(true);
 		setTitle(Translation.get("gb.edit") + ": " + aTeam.name);
-        setIconImage(new ImageIcon(getClass().getResource("/images/gitblt-favicon.png")).getImage());
+		setIconImage(new ImageIcon(getClass().getResource("images/gitblt-favicon.png")).getImage());
 	}
 
 	@Override
