@@ -128,7 +128,7 @@ public class RepositoryUrlPanel extends BasePanel {
             // Multiple repository urls, show url drop down menu
             //
             ListDataProvider<RepositoryUrl> urlsDp = new ListDataProvider<RepositoryUrl>(repositoryUrls);
-            DataView<RepositoryUrl> repoUrlMenuItems = new DataView<>("repoUrls", urlsDp) {
+            DataView<RepositoryUrl> repoUrlMenuItems = new DataView<RepositoryUrl>("repoUrls", urlsDp) {
                 private static final long serialVersionUID = 1L;
 
                 @Override

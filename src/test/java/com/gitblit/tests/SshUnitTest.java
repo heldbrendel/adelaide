@@ -15,31 +15,30 @@
  */
 package com.gitblit.tests;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.net.SocketAddress;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.PublicKey;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.sshd.client.ServerKeyVerifier;
+import com.gitblit.Constants.AccessPermission;
+import com.gitblit.transport.ssh.IPublicKeyManager;
+import com.gitblit.transport.ssh.MemoryKeyManager;
+import com.gitblit.transport.ssh.SshKey;
 import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.channel.ClientChannel;
+import org.apache.sshd.client.channel.ClientChannelEvent;
+import org.apache.sshd.client.future.AuthFuture;
+import org.apache.sshd.client.future.ConnectFuture;
+import org.apache.sshd.client.keyverifier.ServerKeyVerifier;
 import org.apache.sshd.client.session.ClientSession;
-import org.apache.sshd.common.util.SecurityUtils;
+import org.apache.sshd.common.util.security.SecurityUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
-import com.gitblit.Constants.AccessPermission;
-import com.gitblit.transport.ssh.IPublicKeyManager;
-import com.gitblit.transport.ssh.MemoryKeyManager;
-import com.gitblit.transport.ssh.SshKey;
+import java.io.*;
+import java.net.SocketAddress;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PublicKey;
+import java.util.Collections;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Base class for SSH unit tests.
@@ -110,11 +109,16 @@ public abstract class SshUnitTest extends GitblitUnitTest {
 		return testSshCommand(cmd, null);
 	}
 
-	protected String testSshCommand(String cmd, String stdin) throws IOException, InterruptedException {
+    protected String testSshCommand(String cmd, String stdin) throws IOException {
 		SshClient client = getClient();
-		ClientSession session = client.connect(username, "localhost", GitBlitSuite.sshPort).await().getSession();
+        ConnectFuture connectFuture = client.connect(username, "localhost", GitBlitSuite.sshPort);
+        connectFuture.await();
+        ClientSession session = connectFuture.getSession();
+
 		session.addPublicKeyIdentity(rwKeyPair);
-		assertTrue(session.auth().await().isSuccess());
+        AuthFuture auth = session.auth();
+        auth.await();
+        assertTrue(auth.isSuccess());
 
 		ClientChannel channel = session.createChannel(ClientChannel.CHANNEL_EXEC, cmd);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -131,7 +135,7 @@ public abstract class SshUnitTest extends GitblitUnitTest {
 		channel.setErr(err);
 		channel.open();
 
-		channel.waitFor(ClientChannel.CLOSED, 0);
+        channel.waitFor(Collections.singleton(ClientChannelEvent.CLOSED), 0);
 
 		String result = out.toString().trim();
 		channel.close(false);

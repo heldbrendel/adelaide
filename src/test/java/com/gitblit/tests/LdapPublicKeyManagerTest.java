@@ -16,31 +16,26 @@
  */
 package com.gitblit.tests;
 
-import static org.junit.Assume.assumeTrue;
-
-import java.security.GeneralSecurityException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.Signature;
-import java.security.spec.ECGenParameterSpec;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.sshd.common.util.SecurityUtils;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-
-import com.gitblit.Keys;
 import com.gitblit.Constants.AccessPermission;
+import com.gitblit.Keys;
 import com.gitblit.transport.ssh.LdapKeyManager;
 import com.gitblit.transport.ssh.SshKey;
 import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.Modification;
 import com.unboundid.ldap.sdk.ModificationType;
+import org.apache.sshd.common.util.security.SecurityUtils;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
+import java.security.*;
+import java.security.spec.ECGenParameterSpec;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assume.assumeTrue;
 
 /**
  * Test LdapPublicKeyManager going against an in-memory UnboundID
