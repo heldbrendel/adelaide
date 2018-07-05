@@ -264,7 +264,7 @@ public class ReflogPanel extends BasePanel {
 
 						// merge icon
 						if (commit.getParentCount() > 1) {
-                            commitItem.add(WicketUtils.newImage("commitIcon", "commit_merge_16x16.png"));
+							commitItem.add(WicketUtils.newImage("commitIcon", "images/commit_merge_16x16.png"));
 						} else {
 							commitItem.add(WicketUtils.newBlankImage("commitIcon"));
 						}

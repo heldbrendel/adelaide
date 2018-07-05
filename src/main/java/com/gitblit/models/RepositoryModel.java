@@ -15,23 +15,13 @@
  */
 package com.gitblit.models;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import com.gitblit.Constants.AccessRestrictionType;
-import com.gitblit.Constants.AuthorizationControl;
-import com.gitblit.Constants.CommitMessageRenderer;
-import com.gitblit.Constants.FederationStrategy;
-import com.gitblit.Constants.MergeType;
+import com.gitblit.Constants.*;
 import com.gitblit.utils.ArrayUtils;
 import com.gitblit.utils.ModelUtils;
 import com.gitblit.utils.StringUtils;
+
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * RepositoryModel is a serializable model class that represents a Gitblit
@@ -47,54 +37,78 @@ public class RepositoryModel implements Serializable, Comparable<RepositoryModel
 	// field names are reflectively mapped in EditRepository page
 	public String name;
 	public String description;
+    private String displayName;
+
 	public List<String> owners;
-	public Date lastChange;
+
+    public Date lastChange;
 	public String lastChangeAuthor;
-	public boolean hasCommits;
+
+    public boolean hasCommits;
 	public boolean showRemoteBranches;
-	public boolean useIncrementalPushTags;
+
+    public boolean useIncrementalPushTags;
 	public String incrementalPushTagPrefix;
-	public AccessRestrictionType accessRestriction;
+
+    public AccessRestrictionType accessRestriction;
 	public AuthorizationControl authorizationControl;
 	public boolean allowAuthenticated;
-	public boolean isFrozen;
-	public FederationStrategy federationStrategy;
+
+    public boolean isFrozen;
+
+    public FederationStrategy federationStrategy;
 	public List<String> federationSets;
 	public boolean isFederated;
-	public boolean skipSizeCalculation;
+
+    public boolean skipSizeCalculation;
 	public boolean skipSummaryMetrics;
-	public String frequency;
-	public boolean isBare;
+
+    public String frequency;
+
+    public boolean isBare;
 	public boolean isMirror;
-	public String origin;
+
+    public String origin;
 	public String HEAD;
 	public List<String> availableRefs;
 	public List<String> indexedBranches;
-	public String size;
-	public List<String> preReceiveScripts;
+
+    public String size;
+
+    public List<String> preReceiveScripts;
 	public List<String> postReceiveScripts;
 	public List<String> mailingLists;
-	public Map<String, String> customFields;
-	public String projectPath;
-	private String displayName;
-	public boolean allowForks;
+
+    public Map<String, String> customFields;
+
+    public String projectPath;
+
+    public boolean allowForks;
 	public Set<String> forks;
-	public String originRepository;
+
+    public String originRepository;
 	public boolean verifyCommitter;
-	public String gcThreshold;
+
+    public String gcThreshold;
 	public int gcPeriod;
-	public int maxActivityCommits;
-	public List<String> metricAuthorExclusions;
-	public CommitMessageRenderer commitMessageRenderer;
-	public boolean acceptNewPatchsets;
+
+    public int maxActivityCommits;
+
+    public List<String> metricAuthorExclusions;
+
+    public CommitMessageRenderer commitMessageRenderer;
+
+    public boolean acceptNewPatchsets;
 	public boolean acceptNewTickets;
 	public boolean requireApproval;
-	public String mergeTo;
+
+    public String mergeTo;
 	public MergeType mergeType;
 
 	public transient boolean isCollectingGarbage;
 	public Date lastGC;
-	public String sparkleshareId;
+
+    public String sparkleshareId;
 
 	public RepositoryModel() {
 		this("", "", "", new Date(0));

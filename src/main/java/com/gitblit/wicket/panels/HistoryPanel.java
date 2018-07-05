@@ -161,7 +161,7 @@ public class HistoryPanel extends BasePanel {
 
 				// merge icon
 				if (entry.getParentCount() > 1) {
-                    item.add(WicketUtils.newImage("commitIcon", "commit_merge_16x16.png"));
+					item.add(WicketUtils.newImage("commitIcon", "images/commit_merge_16x16.png"));
 				} else {
 					item.add(WicketUtils.newBlankImage("commitIcon"));
 				}
